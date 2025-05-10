@@ -1,329 +1,311 @@
-// TedouaR Robotics Hub - Encyclopedia JavaScript
+// encyclopedia.js - Manage robot data and display
+
+// Sample robot data for testing
+window.robotsData = {
+    "r001": {
+        "id": "r001",
+        "name": "Atlas",
+        "manufacturer": "Boston Dynamics",
+        "description": "A bipedal humanoid robot designed for a variety of search and rescue tasks. Atlas can navigate rough terrain and manipulate objects in its environment.",
+        "featured": true,
+        "categories": ["humanoid", "research"],
+        "image": "images/robots/atlas.jpg",
+        "specs": {
+            "height": "1.5 meters",
+            "weight": "80 kg",
+            "powerSource": "Electric (battery)",
+            "battery": "3 hours operation",
+            "sensors": ["LIDAR", "Stereo Vision", "IMU"],
+            "dof": 28,
+            "payload": "11 kg"
+        },
+        "applications": [
+            "Search and rescue",
+            "Research and development",
+            "Military applications",
+            "Disaster response"
+        ],
+        "videos": [
+            {
+                "title": "Atlas Parkour",
+                "url": "https://www.youtube.com/embed/tF4DML7FIWk"
+            }
+        ]
+    },
+    "r002": {
+        "id": "r002",
+        "name": "Spot",
+        "manufacturer": "Boston Dynamics",
+        "description": "A four-legged robot that can navigate terrain that wheeled robots cannot. Spot can carry payloads, climb stairs and operate in environments that are challenging for other robots.",
+        "featured": true,
+        "categories": ["quadruped", "industrial"],
+        "image": "images/robots/spot.jpg",
+        "specs": {
+            "height": "0.84 meters",
+            "weight": "32.5 kg",
+            "powerSource": "Electric (battery)",
+            "battery": "90 minutes operation",
+            "sensors": ["Stereo Cameras", "LIDAR", "IMU"],
+            "dof": 12,
+            "payload": "14 kg"
+        },
+        "applications": [
+            "Industrial inspection",
+            "Construction monitoring",
+            "Public safety",
+            "Entertainment"
+        ],
+        "videos": [
+            {
+                "title": "Spot Robot: Navigating Challenging Terrain",
+                "url": "https://www.youtube.com/embed/wlkCQXHEgjA"
+            }
+        ]
+    },
+    "r003": {
+        "id": "r003",
+        "name": "NAO",
+        "manufacturer": "SoftBank Robotics",
+        "description": "A small humanoid robot designed for education and research. NAO can interact with humans, recognize faces, and be programmed for a variety of applications.",
+        "featured": true,
+        "categories": ["humanoid", "educational"],
+        "image": "images/robots/nao.jpg",
+        "specs": {
+            "height": "58 cm",
+            "weight": "5.4 kg",
+            "powerSource": "Electric (battery)",
+            "battery": "90 minutes operation",
+            "sensors": ["Cameras", "Microphones", "Tactile Sensors", "Sonar"],
+            "dof": 25,
+            "payload": "N/A"
+        },
+        "applications": [
+            "Education",
+            "Research",
+            "Healthcare",
+            "Customer service"
+        ],
+        "videos": [
+            {
+                "title": "NAO Robot Capabilities",
+                "url": "https://www.youtube.com/embed/2STTNYNF4lk"
+            }
+        ]
+    },
+    "r004": {
+        "id": "r004",
+        "name": "UR10e",
+        "manufacturer": "Universal Robots",
+        "description": "A collaborative industrial robot arm that can work safely alongside humans. The UR10e can be easily programmed for a wide range of applications in manufacturing.",
+        "featured": false,
+        "categories": ["industrial", "collaborative"],
+        "image": "images/robots/ur10e.jpg",
+        "specs": {
+            "reach": "1.3 meters",
+            "weight": "33.5 kg",
+            "powerSource": "Electric",
+            "payload": "12.5 kg",
+            "sensors": ["Force Torque Sensor", "Position Sensors"],
+            "dof": 6,
+            "repeatability": "±0.05 mm"
+        },
+        "applications": [
+            "Pick and place",
+            "Assembly",
+            "Packaging and palletizing",
+            "Machine tending",
+            "Quality inspection"
+        ],
+        "videos": [
+            {
+                "title": "UR10e Demonstration",
+                "url": "https://www.youtube.com/embed/xZJIzLGGa0g"
+            }
+        ]
+    },
+    "r005": {
+        "id": "r005",
+        "name": "Roomba i7+",
+        "manufacturer": "iRobot",
+        "description": "A robotic vacuum cleaner that can map homes, empty its own dust bin, and be controlled via a smartphone app. The Roomba i7+ uses sensors to navigate and clean efficiently.",
+        "featured": false,
+        "categories": ["consumer", "service"],
+        "image": "images/robots/roomba.jpg",
+        "specs": {
+            "height": "9.2 cm",
+            "diameter": "34 cm",
+            "weight": "3.4 kg",
+            "powerSource": "Electric (battery)",
+            "battery": "90 minutes operation",
+            "sensors": ["Cameras", "Cliff Sensors", "Obstacle Sensors"],
+            "navigation": "vSLAM",
+            "dustbin": "550 ml"
+        },
+        "applications": [
+            "Home cleaning",
+            "Floor maintenance",
+            "Dust and debris collection"
+        ],
+        "videos": [
+            {
+                "title": "Roomba i7+ Features",
+                "url": "https://www.youtube.com/embed/qhB4GRXjUUo"
+            }
+        ]
+    },
+    "r006": {
+        "id": "r006",
+        "name": "Curiosity Rover",
+        "manufacturer": "NASA JPL",
+        "description": "A car-sized rover designed to explore the crater Gale on Mars as part of NASA's Mars Science Laboratory mission. Curiosity was designed to assess whether Mars ever had an environment able to support small life forms called microbes.",
+        "featured": false,
+        "categories": ["space", "research"],
+        "image": "images/robots/curiosity.jpg",
+        "specs": {
+            "length": "3 meters",
+            "weight": "899 kg",
+            "powerSource": "Radioisotope thermoelectric generator",
+            "mission": "Mars Science Laboratory",
+            "sensors": ["Cameras", "Spectrometers", "Radiation Detectors"],
+            "communication": "Deep Space Network",
+            "speed": "0.14 km/h"
+        },
+        "applications": [
+            "Mars exploration",
+            "Scientific research",
+            "Geological analysis",
+            "Climate studies"
+        ],
+        "videos": [
+            {
+                "title": "Curiosity Rover on Mars",
+                "url": "https://www.youtube.com/embed/e1ebHThBPlk"
+            }
+        ]
+    }
+};
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Sample robot data (in a real implementation, this would be fetched from a database)
-    const robotsData = {
-        'spot': {
-            id: 'spot',
-            name: 'Spot',
-            manufacturer: 'Boston Dynamics',
-            description: 'An agile mobile robot that navigates terrain with unprecedented mobility, allowing you to automate routine inspection tasks and data capture safely.',
-            details: 'Spot is designed to go where wheeled robots cannot, while carrying payloads with endurance far beyond aerial drones. With 360° vision and obstacle avoidance, Spot can be driven remotely or taught routes to follow autonomously.',
-            categories: ['industrial', 'quadruped'],
-            featured: true,
-            popular: true,
-            image: 'images/robots/spot.jpg',
-            specs: [
-                { label: 'Height', value: '0.84 m' },
-                { label: 'Width', value: '0.43 m' },
-                { label: 'Length', value: '1.1 m' },
-                { label: 'Weight', value: '32.5 kg' },
-                { label: 'Runtime', value: '90 minutes' },
-                { label: 'Max Speed', value: '1.6 m/s' },
-                { label: 'DoF', value: '12' },
-                { label: 'Max Incline', value: '30 degrees' }
-            ],
-            applications: [
-                { name: 'Industrial Inspection', description: 'Automate routine inspections in industrial facilities.' },
-                { name: 'Construction Monitoring', description: 'Capture site data consistently and frequently to track progress.' },
-                { name: 'Public Safety', description: 'Assess hazardous situations and provide situational awareness.' }
-            ],
-            videos: ['https://www.youtube.com/embed/wlkCQXHEgjA']
-        },
-        'atlas': {
-            id: 'atlas',
-            name: 'Atlas',
-            manufacturer: 'Boston Dynamics',
-            description: 'Atlas is the most dynamic humanoid robot in the world, designed to navigate rough terrain and perform complex physical tasks.',
-            details: 'Atlas uses its whole body, including legs, arms, and torso, to perform tasks, just like a human would. It can manipulate the world by using its hands to lift, carry, and toss heavy objects.',
-            categories: ['humanoid', 'research'],
-            featured: true,
-            popular: true,
-            image: 'images/robots/atlas.jpg',
-            specs: [
-                { label: 'Height', value: '1.5 m' },
-                { label: 'Width', value: '0.61 m' },
-                { label: 'Weight', value: '89 kg' },
-                { label: 'DoF', value: '28' },
-                { label: 'Power', value: 'Electric and hydraulic' },
-                { label: 'Sensors', value: 'Depth cameras, IMU, proprioception' }
-            ],
-            applications: [
-                { name: 'Research', description: 'Advance the state of robotics through experimental testing.' },
-                { name: 'Disaster Response', description: 'Navigate complex environments after natural disasters.' }
-            ],
-            videos: ['https://www.youtube.com/embed/_sBBaNYex3E']
-        },
-        'anymal': {
-            id: 'anymal',
-            name: 'ANYmal',
-            manufacturer: 'ANYbotics',
-            description: 'ANYmal is an autonomous four-legged robot designed for inspection and monitoring tasks in challenging environments.',
-            details: 'With its ability to navigate stairs, climb over obstacles, and walk on various types of terrain, ANYmal is ideal for industrial inspections, oil and gas installations, and construction sites. It features advanced sensors for mapping and object detection.',
-            categories: ['industrial', 'quadruped'],
-            featured: false,
-            popular: true,
-            image: 'images/robots/anymal.jpg',
-            specs: [
-                { label: 'Height', value: '0.7 m' },
-                { label: 'Width', value: '0.5 m' },
-                { label: 'Length', value: '0.79 m' },
-                { label: 'Weight', value: '30 kg' },
-                { label: 'Runtime', value: '2-4 hours' },
-                { label: 'Max Speed', value: '1.0 m/s' }
-            ],
-            applications: [
-                { name: 'Industrial Inspection', description: 'Perform routine inspections in industrial facilities.' },
-                { name: 'Oil & Gas', description: 'Monitor offshore platforms and refineries.' },
-                { name: 'Security', description: 'Autonomous patrol and surveillance.' }
-            ],
-            videos: ['https://www.youtube.com/embed/5rX11qvzJRk']
-        },
-        'pepper': {
-            id: 'pepper',
-            name: 'Pepper',
-            manufacturer: 'SoftBank Robotics',
-            description: 'Pepper is a semi-humanoid robot designed to recognize human emotions and adapt its behavior to the mood of the people around it.',
-            details: 'Standing 120 cm tall, Pepper is equipped with a 3D camera and various sensors to perceive its environment. It can navigate autonomously, recognize faces and basic human emotions, and engage in conversation through its touchscreen display and voice recognition capabilities.',
-            categories: ['service', 'humanoid'],
-            featured: false,
-            popular: true,
-            image: 'images/robots/pepper.jpg',
-            specs: [
-                { label: 'Height', value: '1.2 m' },
-                { label: 'Weight', value: '28 kg' },
-                { label: 'Runtime', value: '12 hours' },
-                { label: 'Max Speed', value: '0.83 m/s' },
-                { label: 'DoF', value: '20' },
-                { label: 'Languages', value: 'English, Japanese, French, etc.' }
-            ],
-            applications: [
-                { name: 'Customer Service', description: 'Greet and assist customers in retail environments.' },
-                { name: 'Healthcare', description: 'Provide companionship and basic assistance in healthcare settings.' },
-                { name: 'Education', description: 'Interactive learning assistant in educational settings.' }
-            ],
-            videos: ['https://www.youtube.com/embed/lWUXiT5m17k']
-        },
-        'roomba': {
-            id: 'roomba',
-            name: 'Roomba',
-            manufacturer: 'iRobot',
-            description: 'Roomba is an autonomous robotic vacuum cleaner that navigates and cleans homes with minimal human intervention.',
-            details: 'Since its introduction in 2002, Roomba has evolved to include advanced navigation systems, self-emptying capabilities, and smart home integration. Modern models can map homes, recognize obstacles, and be controlled remotely via smartphone apps.',
-            categories: ['consumer', 'service'],
-            featured: false,
-            popular: true,
-            image: 'images/robots/roomba.jpg',
-            specs: [
-                { label: 'Height', value: '9.1 cm' },
-                { label: 'Diameter', value: '33.5 cm' },
-                { label: 'Weight', value: '3.4 kg' },
-                { label: 'Runtime', value: 'Up to 90 minutes' },
-                { label: 'Suction Power', value: 'Up to 2200 Pa' },
-                { label: 'Navigation', value: 'vSLAM technology' }
-            ],
-            applications: [
-                { name: 'Home Cleaning', description: 'Autonomous vacuum cleaning for residential spaces.' },
-                { name: 'Pet Hair Removal', description: 'Specialized cleaning for homes with pets.' },
-                { name: 'Smart Home Integration', description: 'Integration with voice assistants and smart home systems.' }
-            ],
-            videos: ['https://www.youtube.com/embed/t-_u8v6JvaU']
-        },
-        'perseverance': {
-            id: 'perseverance',
-            name: 'Perseverance',
-            manufacturer: 'NASA',
-            description: 'The Perseverance rover is designed to explore the surface of Mars, searching for signs of ancient microbial life and collecting samples for potential return to Earth.',
-            details: 'Launched in July 2020 and landed on Mars in February 2021, Perseverance carries seven primary science instruments, a sample caching system, and the Ingenuity helicopter—a technology demonstration to test powered flight on Mars. The rover continues NASA\'s exploration of the Red Planet.',
-            categories: ['space', 'rover'],
-            featured: true,
-            popular: false,
-            image: 'images/robots/perseverance.jpg',
-            specs: [
-                { label: 'Length', value: '3 m' },
-                { label: 'Width', value: '2.7 m' },
-                { label: 'Height', value: '2.2 m' },
-                { label: 'Weight', value: '1,025 kg' },
-                { label: 'Power', value: 'MMRTG (radioisotope)' },
-                { label: 'Top Speed', value: '0.15 km/h' },
-                { label: 'Mission Duration', value: 'At least one Mars year (687 Earth days)' }
-            ],
-            applications: [
-                { name: 'Astrobiology', description: 'Search for signs of ancient microbial life.' },
-                { name: 'Geology', description: 'Study the planet\'s geology and climate.' },
-                { name: 'Sample Collection', description: 'Collect samples for potential return to Earth.' },
-                { name: 'Technology Demonstration', description: 'Test oxygen production from the Martian atmosphere.' }
-            ],
-            videos: ['https://www.youtube.com/embed/gYQwuYZbA6o']
-        },
-        'cyberdog': {
-            id: 'cyberdog',
-            name: 'CyberDog',
-            manufacturer: 'Xiaomi',
-            description: 'CyberDog is an open-source quadruped robot platform developed by Xiaomi, designed to be both a consumer product and a platform for developers.',
-            details: 'Powered by NVIDIA's Jetson Xavier NX platform, CyberDog features multiple cameras and sensors for real-time object tracking and autonomous navigation. It can perform various movements, recognize voice commands, and follow its owner.',
-            categories: ['consumer', 'quadruped'],
-            featured: false,
-            popular: false,
-            image: 'images/robots/cyberdog.jpg',
-            specs: [
-                { label: 'Height', value: '0.4 m' },
-                { label: 'Length', value: '0.9 m' },
-                { label: 'Weight', value: '14 kg' },
-                { label: 'Max Speed', value: '3.2 m/s' },
-                { label: 'DoF', value: '12' },
-                { label: 'Computing', value: 'NVIDIA Jetson Xavier NX' },
-                { label: 'Battery', value: 'Lithium-ion' }
-            ],
-            applications: [
-                { name: 'Companionship', description: 'Interactive robotic pet and assistant.' },
-                { name: 'Research', description: 'Open-source platform for robotics development.' },
-                { name: 'Entertainment', description: 'Performing tricks and demonstrations.' }
-            ],
-            videos: ['https://www.youtube.com/embed/TZ5FEcW9X5U']
-        }
-    };
-
-    // Get encyclopedia elements
-    const robotGrid = document.querySelector('.robot-grid');
-    const categoryFilters = document.querySelectorAll('.category-filter');
-    const searchInput = document.getElementById('robot-search');
-    const sortSelect = document.getElementById('sort-select');
-    
     // Check if we're on the encyclopedia page
-    if (!robotGrid) return;
+    const isEncyclopediaPage = document.querySelector('.encyclopedia-container');
     
-    // Get URL parameters for initial filtering
+    if (isEncyclopediaPage) {
+        initializeEncyclopedia();
+    }
+    
+    // Initialize detailed robot view if on robot-detail page
+    const isRobotDetailPage = document.querySelector('.robot-detail-container');
+    
+    if (isRobotDetailPage) {
+        initializeRobotDetail();
+    }
+});
+
+// Initialize the encyclopedia page
+function initializeEncyclopedia() {
+    const robotGrid = document.querySelector('.robot-grid');
+    const searchInput = document.getElementById('search-robots');
+    const categoryFilter = document.getElementById('category-filter');
+    const sortOption = document.getElementById('sort-option');
+    
+    // Get URL parameters (for filtering from other pages)
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
     
-    // Initialize filters
-    let activeFilters = categoryParam ? [categoryParam] : [];
-    let searchTerm = '';
-    let sortOption = 'name-asc';
-    
-    // Initialize category filter buttons
-    if (categoryFilters) {
-        categoryFilters.forEach(filter => {
-            const category = filter.getAttribute('data-category');
-            
-            // Set active state based on URL parameter
-            if (categoryParam && category === categoryParam) {
-                filter.classList.add('active');
-            }
-            
-            // Add click event listener
-            filter.addEventListener('click', function() {
-                // Toggle active state
-                this.classList.toggle('active');
-                
-                // Update active filters
-                const category = this.getAttribute('data-category');
-                
-                if (this.classList.contains('active')) {
-                    // Add filter
-                    activeFilters.push(category);
-                } else {
-                    // Remove filter
-                    activeFilters = activeFilters.filter(f => f !== category);
-                }
-                
-                // Update display
-                updateRobotDisplay();
-            });
-        });
+    // Set initial category filter if provided in URL
+    if (categoryParam && categoryFilter) {
+        categoryFilter.value = categoryParam;
     }
     
-    // Initialize search input
+    // Apply initial filters
+    filterAndSortRobots();
+    
+    // Set up event listeners for filtering and sorting
     if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            searchTerm = this.value.trim().toLowerCase();
-            updateRobotDisplay();
-        });
+        searchInput.addEventListener('input', filterAndSortRobots);
     }
     
-    // Initialize sort select
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-            sortOption = this.value;
-            updateRobotDisplay();
-        });
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterAndSortRobots);
     }
     
-    // Initial display
-    updateRobotDisplay();
+    if (sortOption) {
+        sortOption.addEventListener('change', filterAndSortRobots);
+    }
     
-    // Function to update robot display based on filters, search, and sort
-    function updateRobotDisplay() {
-        if (!robotGrid) return;
-        
-        // Clear current display
-        robotGrid.innerHTML = '';
+    // Function to filter and sort robots
+    function filterAndSortRobots() {
+        // Get filter values
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const categoryValue = categoryFilter ? categoryFilter.value : 'all';
+        const sortValue = sortOption ? sortOption.value : 'name-asc';
         
         // Filter robots
-        let filteredRobots = Object.values(robotsData);
-        
-        // Apply category filters
-        if (activeFilters.length > 0) {
-            if (activeFilters.includes('featured')) {
-                filteredRobots = filteredRobots.filter(robot => robot.featured);
-            } else if (activeFilters.includes('popular')) {
-                filteredRobots = filteredRobots.filter(robot => robot.popular);
-            } else if (activeFilters.includes('new')) {
-                // In a real implementation, this would filter by date added
-                // For this demo, we'll just show some random robots
-                filteredRobots = filteredRobots.filter((_, index) => index % 2 === 0);
-            } else {
-                // Filter by regular categories
-                filteredRobots = filteredRobots.filter(robot => 
-                    activeFilters.some(filter => robot.categories.includes(filter))
-                );
-            }
-        }
-        
-        // Apply search term
-        if (searchTerm) {
-            filteredRobots = filteredRobots.filter(robot => 
-                robot.name.toLowerCase().includes(searchTerm) ||
-                robot.manufacturer.toLowerCase().includes(searchTerm) ||
-                robot.description.toLowerCase().includes(searchTerm) ||
-                robot.categories.some(cat => cat.toLowerCase().includes(searchTerm))
-            );
-        }
+        let filteredRobots = Object.values(window.robotsData).filter(robot => {
+            // Filter by search term
+            const matchesSearch = 
+                robot.name.toLowerCase().includes(searchTerm) || 
+                robot.manufacturer.toLowerCase().includes(searchTerm) || 
+                robot.description.toLowerCase().includes(searchTerm);
+            
+            // Filter by category
+            const matchesCategory = 
+                categoryValue === 'all' || 
+                (categoryValue === 'featured' && robot.featured) || 
+                (robot.categories && robot.categories.includes(categoryValue));
+            
+            return matchesSearch && matchesCategory;
+        });
         
         // Sort robots
-        switch (sortOption) {
+        switch (sortValue) {
             case 'name-asc':
                 filteredRobots.sort((a, b) => a.name.localeCompare(b.name));
                 break;
             case 'name-desc':
                 filteredRobots.sort((a, b) => b.name.localeCompare(a.name));
                 break;
-            case 'manufacturer':
+            case 'manufacturer-asc':
                 filteredRobots.sort((a, b) => a.manufacturer.localeCompare(b.manufacturer));
                 break;
-            default:
-                // Default to name ascending
-                filteredRobots.sort((a, b) => a.name.localeCompare(b.name));
+            case 'manufacturer-desc':
+                filteredRobots.sort((a, b) => b.manufacturer.localeCompare(a.manufacturer));
+                break;
         }
         
-        // Show no results message if needed
-        if (filteredRobots.length === 0) {
-            robotGrid.innerHTML = '<div class="no-results">No robots found matching your criteria. Try adjusting your filters or search term.</div>';
+        // Update the grid
+        updateRobotGrid(filteredRobots);
+    }
+    
+    // Function to update the robot grid with filtered and sorted robots
+    function updateRobotGrid(robots) {
+        if (!robotGrid) return;
+        
+        // Clear existing robots
+        robotGrid.innerHTML = '';
+        
+        if (robots.length === 0) {
+            // No results message
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results';
+            noResults.textContent = 'No robots found matching your criteria. Try adjusting your filters.';
+            robotGrid.appendChild(noResults);
             return;
         }
         
-        // Create robot cards
-        filteredRobots.forEach(robot => {
+        // Add filtered robots to grid
+        robots.forEach(robot => {
             const robotCard = document.createElement('div');
             robotCard.className = 'robot-card';
             
             // Create category pills HTML
             let categoryPills = '';
-            robot.categories.forEach(category => {
-                const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
-                categoryPills += `<span class="category-pill">${categoryName}</span>`;
-            });
+            if (robot.categories) {
+                robot.categories.forEach(category => {
+                    const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+                    categoryPills += `<span class="category-pill">${categoryName}</span>`;
+                });
+            }
             
             robotCard.innerHTML = `
                 <a href="robot-detail.html?id=${robot.id}" class="robot-card-link">
@@ -346,7 +328,204 @@ document.addEventListener('DOMContentLoaded', function() {
             robotGrid.appendChild(robotCard);
         });
     }
+}
 
-    // Expose robot data to window for use in other scripts
-    window.robotsData = robotsData;
-});
+// Initialize the robot detail page
+function initializeRobotDetail() {
+    // Get robot ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const robotId = urlParams.get('id');
+    
+    if (!robotId || !window.robotsData[robotId]) {
+        // Robot not found, redirect to encyclopedia
+        window.location.href = 'encyclopedia.html';
+        return;
+    }
+    
+    // Get robot data
+    const robot = window.robotsData[robotId];
+    
+    // Update page title
+    document.title = `${robot.name} - TedouaR Robotics Hub`;
+    
+    // Update robot details
+    updateRobotDetails(robot);
+    
+    // Set up tab navigation
+    setupTabs();
+    
+    // Set up sharing functionality
+    setupSharing(robot);
+}
+
+// Update robot details on the detail page
+function updateRobotDetails(robot) {
+    // Update basic info
+    const robotName = document.querySelector('.robot-name');
+    const robotManufacturer = document.querySelector('.robot-manufacturer');
+    const robotDescription = document.querySelector('.robot-description');
+    const robotImage = document.querySelector('.robot-detail-image img');
+    const robotCategories = document.querySelector('.robot-categories');
+    
+    if (robotName) robotName.textContent = robot.name;
+    if (robotManufacturer) robotManufacturer.textContent = robot.manufacturer;
+    if (robotDescription) robotDescription.textContent = robot.description;
+    if (robotImage) robotImage.src = robot.image;
+    
+    // Update categories
+    if (robotCategories && robot.categories) {
+        robotCategories.innerHTML = '';
+        
+        robot.categories.forEach(category => {
+            const categoryPill = document.createElement('span');
+            categoryPill.className = 'category-pill';
+            categoryPill.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            robotCategories.appendChild(categoryPill);
+        });
+    }
+    
+    // Update specifications
+    const specsContainer = document.querySelector('.tab-content[data-tab="specifications"]');
+    
+    if (specsContainer && robot.specs) {
+        const specsList = document.createElement('div');
+        specsList.className = 'specs-list';
+        
+        for (const [key, value] of Object.entries(robot.specs)) {
+            const specItem = document.createElement('div');
+            specItem.className = 'spec-item';
+            
+            const specName = document.createElement('div');
+            specName.className = 'spec-name';
+            specName.textContent = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+            
+            const specValue = document.createElement('div');
+            specValue.className = 'spec-value';
+            
+            if (Array.isArray(value)) {
+                specValue.textContent = value.join(', ');
+            } else {
+                specValue.textContent = value;
+            }
+            
+            specItem.appendChild(specName);
+            specItem.appendChild(specValue);
+            specsList.appendChild(specItem);
+        }
+        
+        specsContainer.innerHTML = '';
+        specsContainer.appendChild(specsList);
+    }
+    
+    // Update applications
+    const applicationsContainer = document.querySelector('.tab-content[data-tab="applications"]');
+    
+    if (applicationsContainer && robot.applications) {
+        const applicationsList = document.createElement('ul');
+        applicationsList.className = 'applications-list';
+        
+        robot.applications.forEach(application => {
+            const applicationItem = document.createElement('li');
+            applicationItem.textContent = application;
+            applicationsList.appendChild(applicationItem);
+        });
+        
+        applicationsContainer.innerHTML = '';
+        applicationsContainer.appendChild(applicationsList);
+    }
+    
+    // Update videos
+    const videosContainer = document.querySelector('.tab-content[data-tab="videos"]');
+    
+    if (videosContainer && robot.videos && robot.videos.length > 0) {
+        videosContainer.innerHTML = '';
+        
+        robot.videos.forEach(video => {
+            const videoItem = document.createElement('div');
+            videoItem.className = 'video-item';
+            
+            const videoTitle = document.createElement('h3');
+            videoTitle.textContent = video.title;
+            
+            const videoFrame = document.createElement('div');
+            videoFrame.className = 'video-frame';
+            videoFrame.innerHTML = `<iframe width="100%" height="315" src="${video.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            
+            videoItem.appendChild(videoTitle);
+            videoItem.appendChild(videoFrame);
+            videosContainer.appendChild(videoItem);
+        });
+    } else if (videosContainer) {
+        videosContainer.innerHTML = '<p class="no-videos">No videos available for this robot.</p>';
+    }
+}
+
+// Set up tab navigation on the detail page
+function setupTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    if (tabButtons.length === 0 || tabContents.length === 0) return;
+    
+    // Set first tab as active by default
+    tabButtons[0].classList.add('active');
+    tabContents[0].classList.add('active');
+    
+    // Add click event to tab buttons
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Get tab target
+            const tabTarget = button.getAttribute('data-tab');
+            
+            // Remove active class from all tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            button.classList.add('active');
+            
+            const targetContent = document.querySelector(`.tab-content[data-tab="${tabTarget}"]`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+}
+
+// Set up sharing functionality
+function setupSharing(robot) {
+    const shareButtons = document.querySelectorAll('.share-button');
+    
+    if (!shareButtons) return;
+    
+    const pageUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent(`${robot.name} - TedouaR Robotics Hub`);
+    
+    shareButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const platform = button.getAttribute('data-platform');
+            let shareUrl = '';
+            
+            switch (platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+                    break;
+                case 'linkedin':
+                    shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${pageUrl}&title=${pageTitle}`;
+                    break;
+                case 'email':
+                    shareUrl = `mailto:?subject=${pageTitle}&body=Check out this robot: ${window.location.href}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        });
+    });
+}
