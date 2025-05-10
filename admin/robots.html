@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Robots - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html">
+                    <!-- SVG Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="150" height="50" class="logo">
+                      <!-- Definition of gradient and glow -->
+                      <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#0cebeb"/>
+                          <stop offset="100%" stop-color="#20e3b2"/>
+                        </linearGradient>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feGaussianBlur stdDeviation="2" result="blur"/>
+                          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                        </filter>
+                      </defs>
+                      
+                      <!-- Path for the 'T' element -->
+                      <path d="M30.96965,130.265109c4.504842-2.783085,98.787866-5.009554,85.997348-5.009554-117.352536,2.860933-40.72106,19.243294-40.493897,14.6112" transform="translate(4.592093-3.339704)" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" filter="url(#glow)"/>
+                      
+                      <!-- Text elements -->
+                      <text dx="0" dy="0" font-family="Arial, sans-serif" font-size="15" font-weight="400" font-style="italic" transform="matrix(2.322194-.031029 0.010676 0.798958 74.435681 137.109235)" fill="url(#logoGradient)" filter="url(#glow)">
+                        <tspan y="0" font-weight="400">edouaR</tspan>
+                      </text>
+                      
+                      <text x="110" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">ROBOTICS</text>
+                    </svg>
+                </a>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="sidebar-menu-text">Dashboard</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="robots.html" class="active">
+                        <div class="sidebar-menu-icon"><i class="fas fa-robot"></i></div>
+                        <div class="sidebar-menu-text">Robots</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-users"></i></div>
+                        <div class="sidebar-menu-text">Users</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="categories.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-tags"></i></div>
+                        <div class="sidebar-menu-text">Categories</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="news.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="sidebar-menu-text">News</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-cog"></i></div>
+                        <div class="sidebar-menu-text">Settings</div>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="../index.html" class="view-site">View Site</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title">Manage Robots</h1>
+                
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                    <img src="../images/admin/admin-avatar.jpg" alt="Admin Avatar" class="user-avatar">
+                </div>
+            </div>
+            
+            <!-- Robot Actions -->
+            <div class="robot-actions">
+                <button class="btn btn-primary" id="add-robot-btn"><i class="fas fa-plus"></i> Add Robot</button>
+                <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
+                <div class="search-container" style="max-width: 300px; margin-left: auto;">
+                    <input type="text" class="search" id="robot-search" placeholder="Search robots...">
+                    <div class="search-icon"><i class="fas fa-search"></i></div>
+                </div>
+            </div>
+            
+            <!-- Robots Table -->
+            <div class="card">
+                <table class="robot-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Image</th>
+                            <th style="width: 25%;">Name</th>
+                            <th style="width: 20%;">Manufacturer</th>
+                            <th>Categories</th>
+                            <th style="width: 100px;">Status</th>
+                            <th style="width: 120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Robot Row 1 -->
+                        <tr>
+                            <td><img src="../images/robots/spot.jpg" alt="Boston Dynamics Spot" class="robot-thumbnail"></td>
+                            <td>Spot</td>
+                            <td>Boston Dynamics</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Industrial</span>
+                                    <span class="category-pill">Quadruped</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge active">Published</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=spot" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="spot">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="spot">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Robot Row 2 -->
+                        <tr>
+                            <td><img src="../images/robots/atlas.jpg" alt="Boston Dynamics Atlas" class="robot-thumbnail"></td>
+                            <td>Atlas</td>
+                            <td>Boston Dynamics</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Humanoid</span>
+                                    <span class="category-pill">Research</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge active">Published</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=atlas" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="atlas">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="atlas">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Robot Row 3 -->
+                        <tr>
+                            <td><img src="../images/robots/anymal.jpg" alt="ANYbotics ANYmal" class="robot-thumbnail"></td>
+                            <td>ANYmal</td>
+                            <td>ANYbotics</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Industrial</span>
+                                    <span class="category-pill">Quadruped</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge active">Published</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=anymal" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="anymal">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="anymal">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Robot Row 4 -->
+                        <tr>
+                            <td><img src="../images/robots/pepper.jpg" alt="SoftBank Pepper" class="robot-thumbnail"></td>
+                            <td>Pepper</td>
+                            <td>SoftBank Robotics</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Service</span>
+                                    <span class="category-pill">Humanoid</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge active">Published</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=pepper" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="pepper">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="pepper">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Robot Row 5 -->
+                        <tr>
+                            <td><img src="../images/robots/roomba.jpg" alt="iRobot Roomba" class="robot-thumbnail"></td>
+                            <td>Roomba</td>
+                            <td>iRobot</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Service</span>
+                                    <span class="category-pill">Consumer</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge active">Published</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=roomba" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="roomba">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="roomba">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Robot Row 6 -->
+                        <tr>
+                            <td><img src="../images/robots/perseverance.jpg" alt="NASA Perseverance" class="robot-thumbnail"></td>
+                            <td>Perseverance</td>
+                            <td>NASA</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Space</span>
+                                    <span class="category-pill">Rover</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge draft">Draft</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=perseverance" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="perseverance">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="perseverance">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Robot Row 7 -->
+                        <tr>
+                            <td><img src="../images/robots/cyberdog.jpg" alt="Xiaomi Cyberdog" class="robot-thumbnail"></td>
+                            <td>Cyberdog</td>
+                            <td>Xiaomi</td>
+                            <td>
+                                <div class="category-pills">
+                                    <span class="category-pill">Consumer</span>
+                                    <span class="category-pill">Quadruped</span>
+                                </div>
+                            </td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>
+                                <div class="robot-actions-cell">
+                                    <a href="robot-edit.html?id=cyberdog" class="action-icon edit-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="action-icon view-icon" title="View" data-id="cyberdog">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="action-icon delete-icon" title="Delete" data-id="cyberdog">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn next"><i class="fas fa-angle-right"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Robot Modal (Hidden by default) -->
+    <div class="modal" id="robot-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Robot</h2>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="robot-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="robot-name" class="form-label">Robot Name</label>
+                            <input type="text" id="robot-name" name="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="robot-manufacturer" class="form-label">Manufacturer</label>
+                            <input type="text" id="robot-manufacturer" name="manufacturer" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="robot-description" class="form-label">Short Description</label>
+                        <textarea id="robot-description" name="description" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="robot-details" class="form-label">Detailed Description</label>
+                        <textarea id="robot-details" name="details" class="form-control" rows="6"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="robot-categories" class="form-label">Categories</label>
+                            <select id="robot-categories" name="categories" class="form-control" multiple required>
+                                <option value="industrial">Industrial</option>
+                                <option value="service">Service</option>
+                                <option value="humanoid">Humanoid</option>
+                                <option value="quadruped">Quadruped</option>
+                                <option value="consumer">Consumer</option>
+                                <option value="space">Space</option>
+                                <option value="rover">Rover</option>
+                                <option value="medical">Medical</option>
+                                <option value="educational">Educational</option>
+                                <option value="military">Military</option>
+                                <option value="agricultural">Agricultural</option>
+                                <option value="underwater">Underwater</option>
+                                <option value="research">Research</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="robot-status" class="form-label">Status</label>
+                            <select id="robot-status" name="status" class="form-control" required>
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                                <option value="pending">Pending Review</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="robot-image" class="form-label">Main Image</label>
+                        <div class="file-input-container">
+                            <input type="file" id="robot-image" name="image" class="file-input" accept="image/*">
+                            <div class="file-input-display">
+                                <div class="file-input-text">Choose a file or drag it here</div>
+                                <button type="button" class="btn btn-outline file-input-btn">Browse</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Technical Specifications</label>
+                        <div id="specs-container">
+                            <div class="spec-row">
+                                <input type="text" name="spec-label[]" class="form-control" placeholder="Label (e.g., Height)">
+                                <input type="text" name="spec-value[]" class="form-control" placeholder="Value (e.g., 1.5m)">
+                                <button type="button" class="remove-spec-btn"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-spec-btn" class="btn btn-outline"><i class="fas fa-plus"></i> Add Specification</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Applications</label>
+                        <div id="applications-container">
+                            <div class="application-row">
+                                <input type="text" name="application[]" class="form-control" placeholder="Application (e.g., Industrial Inspection)">
+                                <textarea name="application-desc[]" class="form-control" rows="2" placeholder="Description"></textarea>
+                                <button type="button" class="remove-application-btn"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-application-btn" class="btn btn-outline"><i class="fas fa-plus"></i> Add Application</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="robot-videos" class="form-label">Videos (YouTube URLs, one per line)</label>
+                        <textarea id="robot-videos" name="videos" class="form-control" rows="3" placeholder="https://www.youtube.com/watch?v=..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancel-robot-btn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-robot-btn">Save Robot</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal (Hidden by default) -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirm Deletion</h2>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <span id="delete-robot-name">this robot</span>? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancel-delete-btn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
