@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <!-- SVG Logo -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="180" height="60" class="logo">
+                  <!-- Definition of gradient and glow -->
+                  <defs>
+                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0cebeb"/>
+                      <stop offset="100%" stop-color="#20e3b2"/>
+                    </linearGradient>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="2" result="blur"/>
+                      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                    </filter>
+                  </defs>
+                  
+                  <!-- Path for the 'T' element -->
+                  <path d="M30.96965,130.265109c4.504842-2.783085,98.787866-5.009554,85.997348-5.009554-117.352536,2.860933-40.72106,19.243294-40.493897,14.6112" transform="translate(4.592093-3.339704)" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" filter="url(#glow)"/>
+                  
+                  <!-- Text elements -->
+                  <text dx="0" dy="0" font-family="Arial, sans-serif" font-size="15" font-weight="400" font-style="italic" transform="matrix(2.322194-.031029 0.010676 0.798958 74.435681 137.109235)" fill="url(#logoGradient)" filter="url(#glow)">
+                    <tspan y="0" font-weight="400">edouaR</tspan>
+                  </text>
+                  
+                  <text x="110" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">ROBOTICS</text>
+                </svg>
+            </a>
+            <nav class="nav-links">
+                <a href="encyclopedia.html">Encyclopedia</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html" class="active">Contact</a>
+            </nav>
+            <button class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>Have questions or suggestions? We'd love to hear from you!</p>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-form-container">
+                    <h2 class="contact-title">Send Us a Message</h2>
+                    
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" id="subject" name="subject" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                    
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>tedouar.robotics@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Phone</h3>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Address</h3>
+                                <p>123 Tech Boulevard, Innovation District<br>San Francisco, CA 94103</p>
+                            </div>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-container">
+                    <!-- Interactive map will be inserted here via JavaScript -->
+                    <div id="map" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-grid">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How can I contribute to the encyclopedia?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To contribute to our encyclopedia, you need to create an account and submit your content through our contribution form. All submissions are reviewed by our editorial team before being published. We welcome detailed information about robots, technologies, and applications that aren't yet featured on our platform.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Is there a mobile app for TedouaR Robotics Hub?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We're currently developing mobile applications for iOS and Android. They're expected to launch in late 2025. In the meantime, our website is fully responsive and works well on mobile devices.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How do I report an error or inaccuracy?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If you find an error or inaccuracy in our content, please use the "Report an Issue" button available on each robot's detail page, or contact us directly via the form on this page. We appreciate your help in maintaining the accuracy of our information.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do you offer educational resources for schools?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we offer educational packages for schools, including lesson plans, guided activities, and specialized content designed for different age groups. Please contact us with details about your educational needs for more information.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I use content from the encyclopedia in my research or publications?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our content is available for educational and research purposes under a Creative Commons Attribution-NonCommercial license. This means you can use our content in non-commercial projects as long as you provide proper attribution to TedouaR Robotics Hub. For commercial uses, please contact us for permission.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 6 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How can companies partner with TedouaR Robotics Hub?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We're open to partnerships with companies and organizations in the robotics industry. Partnerships can include content collaboration, technical validation, educational initiatives, and more. Please contact us with your proposal, and our partnership team will get back to you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Assistant Button -->
+    <div class="ai-assistant">
+        <div class="ai-button" id="ai-button">
+            <div class="ai-icon"><i class="fas fa-robot"></i></div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Chat Interface (Hidden by default) -->
+    <div class="ai-chat-container" id="ai-chat-container">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title">Robot Assistant</div>
+            <div class="ai-chat-close" id="ai-chat-close"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="ai-chat-messages" id="ai-chat-messages">
+            <div class="ai-message">
+                <div class="ai-avatar"><i class="fas fa-robot"></i></div>
+                <div class="ai-bubble">Hello! I'm your robotics guide. How can I help you explore the world of robots today?</div>
+            </div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="ai-input" placeholder="Ask me about robots...">
+            <button id="ai-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Our Mission</a></li>
+                        <li><a href="about.html#team">The Team</a></li>
+                        <li><a href="about.html#partners">Partners</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html">Robot Database</a></li>
+                        <li><a href="encyclopedia.html?category=popular">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="encyclopedia.html?category=drone">Drones & UAVs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/contact.js"></script>
+    <!-- Map integration (replace API_KEY with your actual API key) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap" async defer></script>
+</body>
+</html>
