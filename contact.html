@@ -6,6 +6,440 @@
     <title>Contact Us - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            padding-top: 90px;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #121212 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(135deg, rgba(12, 235, 235, 0.1), rgba(32, 227, 178, 0.1));
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        /* Contact Page Specific Styles */
+        .contact-section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .contact-section:nth-child(even) {
+            background-color: var(--bg-secondary);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .contact-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .contact-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            bottom: 0;
+            left: 0;
+        }
+
+        .contact-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(32, 227, 178, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 20px;
+            flex-shrink: 0;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            position: relative;
+        }
+
+        .contact-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .contact-details h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .contact-details p, .contact-details a {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .contact-details a:hover {
+            color: var(--primary-color);
+            opacity: 1;
+        }
+
+        .contact-form {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid rgba(32, 227, 178, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(32, 227, 178, 0.05), transparent);
+            z-index: -1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(32, 227, 178, 0.3);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            color: var(--bg-color);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(32, 227, 178, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(32, 227, 178, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .social-links-section {
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .social-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .social-links-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top:.20px;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(32, 227, 178, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            box-shadow: 0 10px 20px rgba(32, 227, 178, 0.3);
+        }
+
+        .newsletter-section {
+            background: linear-gradient(135deg, rgba(32, 227, 178, 0.1), rgba(12, 235, 235, 0.1));
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid rgba(32, 227, 178, 0.2);
+            border-bottom: 1px solid rgba(32, 227, 178, 0.2);
+        }
+
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(32, 227, 178, 0.1), transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .newsletter-container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .newsletter-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .newsletter-text {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            border-radius: 50px 0 0 50px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .newsletter-btn {
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            color: var(--bg-color);
+            padding: 15px 25px;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            opacity: 0.9;
+        }
+
+        .map-container {
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid rgba(32, 227, 178, 0.1);
+            margin-top: 50px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
+        @media (max-width: 992px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .contact-info {
+                order: 1;
+            }
+
+            .contact-form {
+                order: 0;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-title, .newsletter-title {
+                font-size: 2rem;
+            }
+
+            .social-links-container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .newsletter-input, .newsletter-btn {
+                width: 100%;
+                border-radius: 50px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -38,6 +472,7 @@
                 </svg>
             </a>
             <nav class="nav-links">
+                <a href="index.html">Home</a>
                 <a href="encyclopedia.html">Encyclopedia</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html" class="active">Contact</a>
@@ -52,167 +487,140 @@
         </div>
     </header>
 
-    <!-- Page Header -->
-    <section class="page-header">
-        <div class="container">
-            <h1>Contact Us</h1>
-            <p>Have questions or suggestions? We'd love to hear from you!</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Get In Touch</h1>
+            <p>Connect with us to explore collaboration opportunities, contribute to our mission, or learn more about robotics</p>
         </div>
     </section>
-    
-    <!-- Contact Section -->
-    <section class="contact-section">
-        <div class="container">
-            <div class="contact-grid">
-                <div class="contact-form-container">
-                    <h2 class="contact-title">Send Us a Message</h2>
-                    
-                    <form class="contact-form" id="contact-form">
-                        <div class="form-group">
-                            <label for="name" class="form-label">Your Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="subject" class="form-label">Subject</label>
-                            <input type="text" id="subject" name="subject" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message" class="form-label">Message</label>
-                            <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                    
-                    <div class="contact-info">
-                        <div class="contact-item">
+
+    <!-- Main Content -->
+    <main>
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <div class="container contact-container">
+                <div class="contact-info">
+                    <div>
+                        <h2 class="contact-title">Contact Information</h2>
+                        <p class="contact-text">Have questions about robotics or interested in contributing to our platform? We'd love to hear from you. Reach out through any of these channels or use the form.</p>
+                    </div>
+
+                    <div class="contact-methods">
+                        <div class="contact-method">
                             <div class="contact-icon">
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <div class="contact-details">
-                                <h3>Email</h3>
-                                <p>tedouar.robotics@gmail.com</p>
+                                <h3>Email Us</h3>
+                                <p><a href="mailto:info@tedouarrobotics.com">info@tedouarrobotics.com</a></p>
                             </div>
                         </div>
-                        
-                        <div class="contact-item">
+
+                        <div class="contact-method">
                             <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
+                                <i class="fas fa-phone-alt"></i>
                             </div>
                             <div class="contact-details">
-                                <h3>Phone</h3>
-                                <p>+1 (555) 123-4567</p>
+                                <h3>Call Us</h3>
+                                <p><a href="tel:+12025550156">+1 (202) 555-0156</a></p>
                             </div>
                         </div>
-                        
-                        <div class="contact-item">
+
+                        <div class="contact-method">
                             <div class="contact-icon">
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div class="contact-details">
-                                <h3>Address</h3>
-                                <p>123 Tech Boulevard, Innovation District<br>San Francisco, CA 94103</p>
+                                <h3>Visit Us</h3>
+                                <p>1234 Innovation Drive<br>Silicon Valley, CA 94025<br>United States</p>
                             </div>
                         </div>
-                        
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Business Hours</h3>
+                                <p>Monday - Friday: 9:00 AM - 6:00 PM (PST)<br>Weekends: By appointment only</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="map-container">
-                    <!-- Interactive map will be inserted here via JavaScript -->
-                    <div id="map" style="width: 100%; height: 100%;"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- FAQ Section -->
-    <section class="faq-section">
-        <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            
-            <div class="faq-grid">
-                <!-- FAQ Item 1 -->
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>How can I contribute to the encyclopedia?</h3>
-                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
-                    </div>
-                    <div class="faq-answer">
-                        <p>To contribute to our encyclopedia, you need to create an account and submit your content through our contribution form. All submissions are reviewed by our editorial team before being published. We welcome detailed information about robots, technologies, and applications that aren't yet featured on our platform.</p>
+
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d202818.76303996087!2d-122.37539090725652!3d37.40290597047558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb68ad0cfc739%3A0x7eb356b66bd4b50e!2sSilicon%20Valley%2C%20CA!5e0!3m2!1sen!2sus!4v1651322251229!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
-                
-                <!-- FAQ Item 2 -->
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Is there a mobile app for TedouaR Robotics Hub?</h3>
-                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
-                    </div>
-                    <div class="faq-answer">
-                        <p>We're currently developing mobile applications for iOS and Android. They're expected to launch in late 2025. In the meantime, our website is fully responsive and works well on mobile devices.</p>
-                    </div>
-                </div>
-                
-                <!-- FAQ Item 3 -->
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>How do I report an error or inaccuracy?</h3>
-                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
-                    </div>
-                    <div class="faq-answer">
-                        <p>If you find an error or inaccuracy in our content, please use the "Report an Issue" button available on each robot's detail page, or contact us directly via the form on this page. We appreciate your help in maintaining the accuracy of our information.</p>
-                    </div>
-                </div>
-                
-                <!-- FAQ Item 4 -->
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Do you offer educational resources for schools?</h3>
-                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Yes, we offer educational packages for schools, including lesson plans, guided activities, and specialized content designed for different age groups. Please contact us with details about your educational needs for more information.</p>
-                    </div>
-                </div>
-                
-                <!-- FAQ Item 5 -->
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Can I use content from the encyclopedia in my research or publications?</h3>
-                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Our content is available for educational and research purposes under a Creative Commons Attribution-NonCommercial license. This means you can use our content in non-commercial projects as long as you provide proper attribution to TedouaR Robotics Hub. For commercial uses, please contact us for permission.</p>
-                    </div>
-                </div>
-                
-                <!-- FAQ Item 6 -->
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>How can companies partner with TedouaR Robotics Hub?</h3>
-                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
-                    </div>
-                    <div class="faq-answer">
-                        <p>We're open to partnerships with companies and organizations in the robotics industry. Partnerships can include content collaboration, technical validation, educational initiatives, and more. Please contact us with your proposal, and our partnership team will get back to you.</p>
-                    </div>
+
+                <div class="contact-form">
+                    <h2 class="contact-title">Send Us a Message</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" name="message" class="form-control" required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Social Links Section -->
+        <section class="social-links-section">
+            <div class="container">
+                <h2 class="social-title glow-text">Connect With Us</h2>
+                <p>Follow us on social media to stay updated on the latest robotics news and developments</p>
+                
+                <div class="social-links-container">
+                    <a href="#" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" target="_blank" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section" id="newsletter">
+            <div class="container newsletter-container">
+                <h2 class="newsletter-title">Subscribe to Our Newsletter</h2>
+                <p class="newsletter-text">Stay up-to-date with the latest robotics news, trends, and updates from our platform. We promise not to spam!</p>
+                
+                <form class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div>
+        </section>
+    </main>
 
     <!-- AI Assistant Button -->
     <div class="ai-assistant">
@@ -246,9 +654,10 @@
                 <div class="footer-section">
                     <h3>About</h3>
                     <ul class="footer-links">
-                        <li><a href="about.html">Our Mission</a></li>
-                        <li><a href="about.html#team">The Team</a></li>
-                        <li><a href="about.html#partners">Partners</a></li>
+                        <li><a href="about.html#mission">Our Mission</a></li>
+                        <li><a href="about.html#vision">Our Vision</a></li>
+                        <li><a href="about.html#why">Why We Exist</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
                     </ul>
                 </div>
                 
@@ -256,7 +665,7 @@
                     <h3>Resources</h3>
                     <ul class="footer-links">
                         <li><a href="encyclopedia.html">Robot Database</a></li>
-                        <li><a href="encyclopedia.html?category=popular">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
                         <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
                     </ul>
                 </div>
@@ -275,8 +684,9 @@
                     <h3>Connect</h3>
                     <ul class="footer-links">
                         <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="contact.html#newsletter">Newsletter</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
                     </ul>
                 </div>
             </div>
@@ -290,8 +700,49 @@
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/ai-assistant.js"></script>
-    <script src="js/contact.js"></script>
-    <!-- Map integration (replace API_KEY with your actual API key) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap" async defer></script>
+    <script>
+        // Contact form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const subject = document.getElementById('subject').value;
+                    const message = document.getElementById('message').value;
+                    
+                    // Here you would typically send the data to a server
+                    // For now, we'll just show a success message
+                    alert(`Thank you ${name} for contacting us! We'll get back to you soon.`);
+                    
+                    // Clear the form
+                    contactForm.reset();
+                });
+            }
+
+            // Newsletter form submission
+            const newsletterForm = document.querySelector('.newsletter-form');
+            
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the email
+                    const email = newsletterForm.querySelector('.newsletter-input').value;
+                    
+                    // Here you would typically send the email to a server
+                    // For now, we'll just show a success message
+                    alert(`Thank you for subscribing with ${email}! You'll receive our newsletter soon.`);
+                    
+                    // Clear the form
+                    newsletterForm.reset();
+                });
+            }
+        });
+    </script>
 </body>
 </html>
