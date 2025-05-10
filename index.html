@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TedouaR Robotics Hub - Your Guide to the World of Robots</title>
+    <title>TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -38,6 +38,7 @@
                 </svg>
             </a>
             <nav class="nav-links">
+                <a href="index.html" class="active">Home</a>
                 <a href="encyclopedia.html">Encyclopedia</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
@@ -56,11 +57,11 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">Your Gateway to the World of Robotics</h1>
-                <p class="hero-subtitle">Explore, discover and learn about the most innovative robots from around the globe</p>
+                <h1 class="hero-title">Explore the World of Robotics</h1>
+                <p class="hero-subtitle">Your comprehensive hub for robotics knowledge, news, and community. Discover the latest innovations from Boston Dynamics, SoftBank Robotics, Universal Robots, and many more.</p>
                 <div class="hero-buttons">
-                    <a href="encyclopedia.html" class="btn btn-primary btn-large">Explore the Encyclopedia</a>
-                    <a href="#featured" class="btn btn-outline btn-large">Featured Robots</a>
+                    <a href="encyclopedia.html" class="btn btn-primary btn-large">Explore Encyclopedia</a>
+                    <a href="about.html" class="btn btn-outline btn-large">Learn More</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -69,18 +70,18 @@
         </div>
         <div class="hero-wave">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                <path fill="#121212" fill-opacity="1" d="M0,128L48,144C96,160,192,192,288,197.3C384,203,480,181,576,154.7C672,128,768,96,864,96C960,96,1056,128,1152,149.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                <path fill="#1e1e1e" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,170.7C384,181,480,171,576,144C672,117,768,75,864,69.3C960,64,1056,96,1152,112C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
             </svg>
         </div>
     </section>
 
     <!-- Featured Robots Section -->
-    <section class="featured-robots" id="featured">
+    <section class="featured-robots">
         <div class="container">
             <h2 class="section-title">Featured Robots</h2>
-            <p class="section-subtitle">Discover the most advanced and innovative robots in our collection</p>
+            <p class="section-subtitle">Explore some of the most innovative robots in the world</p>
             
-            <div class="robot-grid featured-grid">
+            <div class="robot-grid">
                 <!-- Robot cards will be populated by JavaScript -->
             </div>
             
@@ -93,44 +94,40 @@
     <!-- Categories Section -->
     <section class="categories">
         <div class="container">
-            <h2 class="section-title">Browse by Category</h2>
-            <p class="section-subtitle">Find robots based on their type and application</p>
+            <h2 class="section-title">Explore By Category</h2>
+            <p class="section-subtitle">Discover robots based on their applications and designs</p>
             
             <div class="category-grid">
                 <a href="encyclopedia.html?category=industrial" class="category-card">
-                    <div class="category-icon"><i class="fas fa-industry"></i></div>
+                    <div class="category-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
                     <h3 class="category-title">Industrial</h3>
-                    <p class="category-description">Robots designed for manufacturing, assembly, and other industrial applications</p>
+                    <p class="category-description">Robotic arms and automated systems used in manufacturing and production.</p>
                 </a>
                 
                 <a href="encyclopedia.html?category=humanoid" class="category-card">
-                    <div class="category-icon"><i class="fas fa-user-robot"></i></div>
+                    <div class="category-icon">
+                        <i class="fas fa-user-robot"></i>
+                    </div>
                     <h3 class="category-title">Humanoid</h3>
-                    <p class="category-description">Robots designed to replicate human form and behavior</p>
+                    <p class="category-description">Robots designed to mimic human form and movements.</p>
                 </a>
                 
                 <a href="encyclopedia.html?category=service" class="category-card">
-                    <div class="category-icon"><i class="fas fa-concierge-bell"></i></div>
+                    <div class="category-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
                     <h3 class="category-title">Service</h3>
-                    <p class="category-description">Robots that assist humans in everyday tasks and environments</p>
+                    <p class="category-description">Robots that assist with tasks in homes, hospitals, and public spaces.</p>
                 </a>
                 
                 <a href="encyclopedia.html?category=consumer" class="category-card">
-                    <div class="category-icon"><i class="fas fa-home"></i></div>
+                    <div class="category-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
                     <h3 class="category-title">Consumer</h3>
-                    <p class="category-description">Robots designed for personal and household use</p>
-                </a>
-                
-                <a href="encyclopedia.html?category=space" class="category-card">
-                    <div class="category-icon"><i class="fas fa-rocket"></i></div>
-                    <h3 class="category-title">Space</h3>
-                    <p class="category-description">Robots designed for exploration and work in space environments</p>
-                </a>
-                
-                <a href="encyclopedia.html?category=quadruped" class="category-card">
-                    <div class="category-icon"><i class="fas fa-paw"></i></div>
-                    <h3 class="category-title">Quadruped</h3>
-                    <p class="category-description">Four-legged robots capable of navigating difficult terrain</p>
+                    <p class="category-description">Personal robots designed for everyday use in homes.</p>
                 </a>
             </div>
         </div>
@@ -139,42 +136,42 @@
     <!-- Latest News Section -->
     <section class="latest-news">
         <div class="container">
-            <h2 class="section-title">Latest in Robotics</h2>
-            <p class="section-subtitle">Stay updated with the newest developments in the world of robotics</p>
+            <h2 class="section-title">Latest News</h2>
+            <p class="section-subtitle">Stay updated with the latest developments in robotics</p>
             
             <div class="news-grid">
                 <div class="news-card">
                     <div class="news-image">
-                        <img src="images/news/news1.jpg" alt="Robotics Breakthrough">
+                        <img src="images/robots/placeholder.jpg" alt="News Image">
                     </div>
                     <div class="news-content">
-                        <div class="news-date">May 10, 2025</div>
-                        <h3 class="news-title">New Advancements in Robotic Limb Dexterity</h3>
-                        <p class="news-excerpt">Researchers have achieved unprecedented precision in robotic manipulation, enabling robots to handle delicate objects with human-like dexterity.</p>
+                        <div class="news-date">May 8, 2025</div>
+                        <h3 class="news-title">Boston Dynamics Unveils Next Generation Atlas Robot</h3>
+                        <p class="news-excerpt">The new Atlas model features improved dexterity, battery life, and artificial intelligence capabilities.</p>
                         <a href="#" class="read-more">Read More</a>
                     </div>
                 </div>
                 
                 <div class="news-card">
                     <div class="news-image">
-                        <img src="images/news/news2.jpg" alt="AI Integration">
+                        <img src="images/robots/placeholder.jpg" alt="News Image">
                     </div>
                     <div class="news-content">
-                        <div class="news-date">April 28, 2025</div>
-                        <h3 class="news-title">AI Integration Accelerates Robotic Learning</h3>
-                        <p class="news-excerpt">New artificial intelligence algorithms allow robots to learn complex tasks in a fraction of the time previously required.</p>
+                        <div class="news-date">May 5, 2025</div>
+                        <h3 class="news-title">Collaborative Robots Set to Transform Manufacturing</h3>
+                        <p class="news-excerpt">New research shows that collaborative robots could increase manufacturing productivity by up to 25%.</p>
                         <a href="#" class="read-more">Read More</a>
                     </div>
                 </div>
                 
                 <div class="news-card">
                     <div class="news-image">
-                        <img src="images/news/news3.jpg" alt="Healthcare Robots">
+                        <img src="images/robots/placeholder.jpg" alt="News Image">
                     </div>
                     <div class="news-content">
-                        <div class="news-date">April 15, 2025</div>
-                        <h3 class="news-title">Healthcare Robots Transform Patient Care</h3>
-                        <p class="news-excerpt">Specialized medical robots are revolutionizing patient care in hospitals, providing assistance with surgeries, rehabilitation, and more.</p>
+                        <div class="news-date">May 1, 2025</div>
+                        <h3 class="news-title">Healthcare Robots: The Future of Patient Care</h3>
+                        <p class="news-excerpt">Hospitals around the world are implementing robotics to assist with patient care and medical procedures.</p>
                         <a href="#" class="read-more">Read More</a>
                     </div>
                 </div>
@@ -187,9 +184,10 @@
         <div class="container">
             <div class="newsletter-content">
                 <h2 class="newsletter-title">Stay Updated</h2>
-                <p class="newsletter-description">Subscribe to our newsletter to receive the latest updates on robotics technology and additions to our encyclopedia.</p>
+                <p class="newsletter-description">Subscribe to our newsletter to receive the latest updates, robotics news, and exclusive content.</p>
+                
                 <form class="newsletter-form">
-                    <input type="email" placeholder="Your email address" required>
+                    <input type="email" placeholder="Enter your email address" required>
                     <button type="submit" class="btn btn-primary">Subscribe</button>
                 </form>
             </div>
@@ -238,7 +236,7 @@
                     <h3>Resources</h3>
                     <ul class="footer-links">
                         <li><a href="encyclopedia.html">Robot Database</a></li>
-                        <li><a href="encyclopedia.html?category=popular">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
                         <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
                     </ul>
                 </div>
@@ -257,8 +255,8 @@
                     <h3>Connect</h3>
                     <ul class="footer-links">
                         <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
                     </ul>
                 </div>
             </div>
@@ -273,109 +271,5 @@
     <script src="js/main.js"></script>
     <script src="js/encyclopedia.js"></script>
     <script src="js/ai-assistant.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Populate featured robots
-            const featuredGrid = document.querySelector('.featured-grid');
-            
-            if (featuredGrid && window.robotsData) {
-                // Get featured robots
-                const featuredRobots = Object.values(window.robotsData).filter(robot => robot.featured);
-                
-                // Limit to 3 featured robots
-                const limitedFeatured = featuredRobots.slice(0, 3);
-                
-                // Create robot cards
-                limitedFeatured.forEach(robot => {
-                    const robotCard = document.createElement('div');
-                    robotCard.className = 'robot-card';
-                    
-                    // Create category pills HTML
-                    let categoryPills = '';
-                    robot.categories.forEach(category => {
-                        const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
-                        categoryPills += `<span class="category-pill">${categoryName}</span>`;
-                    });
-                    
-                    robotCard.innerHTML = `
-                        <a href="robot-detail.html?id=${robot.id}" class="robot-card-link">
-                            <div class="robot-card-image">
-                                <img src="${robot.image}" alt="${robot.name}">
-                            </div>
-                            <div class="robot-card-content">
-                                <div class="robot-card-header">
-                                    <h3 class="robot-card-title">${robot.name}</h3>
-                                    <div class="robot-card-categories">
-                                        ${categoryPills}
-                                    </div>
-                                </div>
-                                <p class="robot-card-manufacturer">${robot.manufacturer}</p>
-                                <p class="robot-card-description">${robot.description}</p>
-                            </div>
-                        </a>
-                    `;
-                    
-                    featuredGrid.appendChild(robotCard);
-                });
-                
-                // If no featured robots were found
-                if (limitedFeatured.length === 0) {
-                    featuredGrid.innerHTML = '<p class="no-results">No featured robots available at the moment. Check back soon!</p>';
-                }
-            }
-            
-            // Mobile menu toggle
-            const mobileMenuButton = document.querySelector('.mobile-menu-button');
-            const navLinks = document.querySelector('.nav-links');
-            
-            if (mobileMenuButton && navLinks) {
-                mobileMenuButton.addEventListener('click', function() {
-                    navLinks.classList.toggle('active');
-                });
-            }
-            
-            // Newsletter form submission
-            const newsletterForm = document.querySelector('.newsletter-form');
-            
-            if (newsletterForm) {
-                newsletterForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const emailInput = this.querySelector('input[type="email"]');
-                    const email = emailInput.value.trim();
-                    
-                    if (email) {
-                        // In a real implementation, this would send the email to a server
-                        // For this demo, we'll just show a success message
-                        
-                        // Clear input
-                        emailInput.value = '';
-                        
-                        // Show success message
-                        const successMessage = document.createElement('div');
-                        successMessage.className = 'newsletter-success';
-                        successMessage.textContent = 'Thank you for subscribing! You will receive our latest updates soon.';
-                        
-                        // Find or create success message container
-                        let successContainer = document.querySelector('.newsletter-success-container');
-                        if (!successContainer) {
-                            successContainer = document.createElement('div');
-                            successContainer.className = 'newsletter-success-container';
-                            newsletterForm.after(successContainer);
-                        }
-                        
-                        // Clear previous messages
-                        successContainer.innerHTML = '';
-                        successContainer.appendChild(successMessage);
-                        
-                        // Remove success message after 5 seconds
-                        setTimeout(function() {
-                            successMessage.remove();
-                        }, 5000);
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>
