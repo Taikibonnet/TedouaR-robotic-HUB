@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html">
+                    <!-- SVG Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="150" height="50" class="logo">
+                      <!-- Definition of gradient and glow -->
+                      <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#0cebeb"/>
+                          <stop offset="100%" stop-color="#20e3b2"/>
+                        </linearGradient>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feGaussianBlur stdDeviation="2" result="blur"/>
+                          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                        </filter>
+                      </defs>
+                      
+                      <!-- Path for the 'T' element -->
+                      <path d="M30.96965,130.265109c4.504842-2.783085,98.787866-5.009554,85.997348-5.009554-117.352536,2.860933-40.72106,19.243294-40.493897,14.6112" transform="translate(4.592093-3.339704)" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" filter="url(#glow)"/>
+                      
+                      <!-- Text elements -->
+                      <text dx="0" dy="0" font-family="Arial, sans-serif" font-size="15" font-weight="400" font-style="italic" transform="matrix(2.322194-.031029 0.010676 0.798958 74.435681 137.109235)" fill="url(#logoGradient)" filter="url(#glow)">
+                        <tspan y="0" font-weight="400">edouaR</tspan>
+                      </text>
+                      
+                      <text x="110" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">ROBOTICS</text>
+                    </svg>
+                </a>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html" class="active">
+                        <div class="sidebar-menu-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="sidebar-menu-text">Dashboard</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="robots.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-robot"></i></div>
+                        <div class="sidebar-menu-text">Robots</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-users"></i></div>
+                        <div class="sidebar-menu-text">Users</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="categories.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-tags"></i></div>
+                        <div class="sidebar-menu-text">Categories</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="news.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="sidebar-menu-text">News</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-cog"></i></div>
+                        <div class="sidebar-menu-text">Settings</div>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="../index.html" class="view-site">View Site</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title">Dashboard</h1>
+                
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                    <img src="../images/admin/admin-avatar.jpg" alt="Admin Avatar" class="user-avatar">
+                </div>
+            </div>
+            
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <!-- Stat Card: Total Robots -->
+                <div class="stat-card">
+                    <div class="stat-title">Total Robots</div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-change stat-up">
+                        <i class="fas fa-arrow-up"></i> 12 this month
+                    </div>
+                </div>
+                
+                <!-- Stat Card: Total Users -->
+                <div class="stat-card">
+                    <div class="stat-title">Registered Users</div>
+                    <div class="stat-value">1,254</div>
+                    <div class="stat-change stat-up">
+                        <i class="fas fa-arrow-up"></i> 83 this month
+                    </div>
+                </div>
+                
+                <!-- Stat Card: Page Views -->
+                <div class="stat-card">
+                    <div class="stat-title">Page Views</div>
+                    <div class="stat-value">25,621</div>
+                    <div class="stat-change stat-up">
+                        <i class="fas fa-arrow-up"></i> 15% from last month
+                    </div>
+                </div>
+                
+                <!-- Stat Card: Content Submissions -->
+                <div class="stat-card">
+                    <div class="stat-title">Content Submissions</div>
+                    <div class="stat-value">42</div>
+                    <div class="stat-change stat-down">
+                        <i class="fas fa-arrow-down"></i> 8% from last month
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Activity</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon bg-primary">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">New Robot Added</div>
+                            <div class="activity-description">Perseverance Mars Rover was added to the encyclopedia.</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-success">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">New User Registration</div>
+                            <div class="activity-description">John Davis (john.davis@example.com) created an account.</div>
+                            <div class="activity-time">5 hours ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-info">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">Robot Updated</div>
+                            <div class="activity-description">Atlas (Boston Dynamics) information was updated.</div>
+                            <div class="activity-time">Yesterday</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-warning">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">New Category Added</div>
+                            <div class="activity-description">Agricultural Robots category was added to the system.</div>
+                            <div class="activity-time">2 days ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-danger">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">Robot Removed</div>
+                            <div class="activity-description">Duplicated robot entry was removed from the database.</div>
+                            <div class="activity-time">3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Comments and Content Submissions -->
+            <div class="dashboard-grid">
+                <!-- Recent Comments -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Comments</h2>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    
+                    <div class="comment-list">
+                        <div class="comment-item">
+                            <img src="../images/users/user1.jpg" alt="User Avatar" class="comment-avatar">
+                            <div class="comment-details">
+                                <div class="comment-author">Sarah Chen</div>
+                                <div class="comment-text">The information about Boston Dynamics' Spot is extremely helpful. I'm considering using it for our facility inspections.</div>
+                                <div class="comment-meta">
+                                    <span class="comment-time">1 hour ago</span>
+                                    <span class="comment-page">on <a href="../robot-detail.html?id=spot">Spot</a></span>
+                                </div>
+                                <div class="comment-actions">
+                                    <a href="#" class="comment-approve">Approve</a>
+                                    <a href="#" class="comment-reply">Reply</a>
+                                    <a href="#" class="comment-delete">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item">
+                            <img src="../images/users/user2.jpg" alt="User Avatar" class="comment-avatar">
+                            <div class="comment-details">
+                                <div class="comment-author">Michael Rodriguez</div>
+                                <div class="comment-text">Great article about the latest developments in soft robotics. I'd love to see more content about biomimetic designs in the future.</div>
+                                <div class="comment-meta">
+                                    <span class="comment-time">3 hours ago</span>
+                                    <span class="comment-page">on <a href="../news-detail.html?id=1">New Breakthrough in Soft Robotics</a></span>
+                                </div>
+                                <div class="comment-actions">
+                                    <a href="#" class="comment-approve">Approve</a>
+                                    <a href="#" class="comment-reply">Reply</a>
+                                    <a href="#" class="comment-delete">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item">
+                            <img src="../images/users/user3.jpg" alt="User Avatar" class="comment-avatar">
+                            <div class="comment-details">
+                                <div class="comment-author">Alex Johnson</div>
+                                <div class="comment-text">The specifications for the ANYmal robot seem outdated. I believe they've released a newer version with improved battery life and sensor capabilities.</div>
+                                <div class="comment-meta">
+                                    <span class="comment-time">Yesterday</span>
+                                    <span class="comment-page">on <a href="../robot-detail.html?id=anymal">ANYmal</a></span>
+                                </div>
+                                <div class="comment-actions">
+                                    <a href="#" class="comment-approve">Approve</a>
+                                    <a href="#" class="comment-reply">Reply</a>
+                                    <a href="#" class="comment-delete">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Submissions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Content Submissions</h2>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    
+                    <div class="submission-list">
+                        <div class="submission-item">
+                            <div class="submission-type robot">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="submission-details">
+                                <div class="submission-title">Cyberdog (Xiaomi)</div>
+                                <div class="submission-meta">
+                                    <span class="submission-author">by Robert Zhang</span>
+                                    <span class="submission-time">4 hours ago</span>
+                                </div>
+                                <div class="submission-actions">
+                                    <a href="#" class="submission-review">Review</a>
+                                    <a href="#" class="submission-approve">Approve</a>
+                                    <a href="#" class="submission-reject">Reject</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="submission-item">
+                            <div class="submission-type update">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="submission-details">
+                                <div class="submission-title">Update to Roomba (iRobot)</div>
+                                <div class="submission-meta">
+                                    <span class="submission-author">by Lisa Torres</span>
+                                    <span class="submission-time">Yesterday</span>
+                                </div>
+                                <div class="submission-actions">
+                                    <a href="#" class="submission-review">Review</a>
+                                    <a href="#" class="submission-approve">Approve</a>
+                                    <a href="#" class="submission-reject">Reject</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="submission-item">
+                            <div class="submission-type category">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div class="submission-details">
+                                <div class="submission-title">Suggested Category: Exploration Robots</div>
+                                <div class="submission-meta">
+                                    <span class="submission-author">by James Wilson</span>
+                                    <span class="submission-time">2 days ago</span>
+                                </div>
+                                <div class="submission-actions">
+                                    <a href="#" class="submission-review">Review</a>
+                                    <a href="#" class="submission-approve">Approve</a>
+                                    <a href="#" class="submission-reject">Reject</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="submission-item">
+                            <div class="submission-type news">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="submission-details">
+                                <div class="submission-title">New Research on Collaborative Robots</div>
+                                <div class="submission-meta">
+                                    <span class="submission-author">by Dr. Emma Parker</span>
+                                    <span class="submission-time">3 days ago</span>
+                                </div>
+                                <div class="submission-actions">
+                                    <a href="#" class="submission-review">Review</a>
+                                    <a href="#" class="submission-approve">Approve</a>
+                                    <a href="#" class="submission-reject">Reject</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Quick Actions</h2>
+                </div>
+                
+                <div class="quick-actions">
+                    <a href="robots.html?action=add" class="quick-action-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Robot</span>
+                    </a>
+                    <a href="news.html?action=add" class="quick-action-btn">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Add News</span>
+                    </a>
+                    <a href="categories.html?action=add" class="quick-action-btn">
+                        <i class="fas fa-tag"></i>
+                        <span>Add Category</span>
+                    </a>
+                    <a href="users.html?action=add" class="quick-action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add User</span>
+                    </a>
+                    <a href="#" class="quick-action-btn" id="backup-database">
+                        <i class="fas fa-database"></i>
+                        <span>Backup Database</span>
+                    </a>
+                    <a href="settings.html" class="quick-action-btn">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
