@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Robot - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html">
+                    <!-- SVG Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="150" height="50" class="logo">
+                      <!-- Definition of gradient and glow -->
+                      <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#0cebeb"/>
+                          <stop offset="100%" stop-color="#20e3b2"/>
+                        </linearGradient>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feGaussianBlur stdDeviation="2" result="blur"/>
+                          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                        </filter>
+                      </defs>
+                      
+                      <!-- Path for the 'T' element -->
+                      <path d="M30.96965,130.265109c4.504842-2.783085,98.787866-5.009554,85.997348-5.009554-117.352536,2.860933-40.72106,19.243294-40.493897,14.6112" transform="translate(4.592093-3.339704)" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" filter="url(#glow)"/>
+                      
+                      <!-- Text elements -->
+                      <text dx="0" dy="0" font-family="Arial, sans-serif" font-size="15" font-weight="400" font-style="italic" transform="matrix(2.322194-.031029 0.010676 0.798958 74.435681 137.109235)" fill="url(#logoGradient)" filter="url(#glow)">
+                        <tspan y="0" font-weight="400">edouaR</tspan>
+                      </text>
+                      
+                      <text x="110" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">ROBOTICS</text>
+                    </svg>
+                </a>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="dashboard.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="sidebar-menu-text">Dashboard</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="robots.html" class="active">
+                        <div class="sidebar-menu-icon"><i class="fas fa-robot"></i></div>
+                        <div class="sidebar-menu-text">Robots</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-users"></i></div>
+                        <div class="sidebar-menu-text">Users</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="categories.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-tags"></i></div>
+                        <div class="sidebar-menu-text">Categories</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="news.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="sidebar-menu-text">News</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html">
+                        <div class="sidebar-menu-icon"><i class="fas fa-cog"></i></div>
+                        <div class="sidebar-menu-text">Settings</div>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="../index.html" class="view-site">View Site</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title" id="edit-title">Edit Robot</h1>
+                
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                    <img src="../images/admin/admin-avatar.jpg" alt="Admin Avatar" class="user-avatar">
+                </div>
+            </div>
+            
+            <!-- Back Button -->
+            <div class="back-link">
+                <a href="robots.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Robots</a>
+            </div>
+            
+            <!-- Robot Edit Form -->
+            <div class="editor-container">
+                <div class="editor-form">
+                    <form id="robot-edit-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="robot-name" class="form-label">Robot Name</label>
+                                <input type="text" id="robot-name" name="name" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="robot-manufacturer" class="form-label">Manufacturer</label>
+                                <input type="text" id="robot-manufacturer" name="manufacturer" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="robot-description" class="form-label">Short Description</label>
+                            <textarea id="robot-description" name="description" class="form-control" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="robot-details" class="form-label">Detailed Description</label>
+                            <textarea id="robot-details" name="details" class="form-control" rows="6"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="robot-categories" class="form-label">Categories</label>
+                                <select id="robot-categories" name="categories" class="form-control" multiple required>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="service">Service</option>
+                                    <option value="humanoid">Humanoid</option>
+                                    <option value="quadruped">Quadruped</option>
+                                    <option value="consumer">Consumer</option>
+                                    <option value="space">Space</option>
+                                    <option value="rover">Rover</option>
+                                    <option value="medical">Medical</option>
+                                    <option value="educational">Educational</option>
+                                    <option value="military">Military</option>
+                                    <option value="agricultural">Agricultural</option>
+                                    <option value="underwater">Underwater</option>
+                                    <option value="research">Research</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="robot-status" class="form-label">Status</label>
+                                <select id="robot-status" name="status" class="form-control" required>
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="pending">Pending Review</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Technical Specifications</label>
+                            <div id="specs-container">
+                                <!-- Specification rows will be added by JavaScript -->
+                            </div>
+                            <button type="button" id="add-spec-btn" class="btn btn-outline"><i class="fas fa-plus"></i> Add Specification</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Applications</label>
+                            <div id="applications-container">
+                                <!-- Application rows will be added by JavaScript -->
+                            </div>
+                            <button type="button" id="add-application-btn" class="btn btn-outline"><i class="fas fa-plus"></i> Add Application</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="robot-videos" class="form-label">Videos (YouTube URLs, one per line)</label>
+                            <textarea id="robot-videos" name="videos" class="form-control" rows="3" placeholder="https://www.youtube.com/watch?v=..."></textarea>
+                        </div>
+                        
+                        <div class="editor-actions">
+                            <a href="robots.html" class="btn btn-outline">Cancel</a>
+                            <button type="button" id="save-robot-btn" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="media-preview">
+                    <h3 class="preview-title">Media</h3>
+                    
+                    <div class="current-image">
+                        <h4>Current Image</h4>
+                        <div class="image-preview">
+                            <img id="robot-image-preview" src="../images/robots/placeholder.jpg" alt="Robot Image">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="robot-image" class="form-label">Replace Image</label>
+                        <div class="file-input-container">
+                            <input type="file" id="robot-image" name="image" class="file-input" accept="image/*">
+                            <div class="file-input-display">
+                                <div class="file-input-text">Choose a file or drag it here</div>
+                                <button type="button" class="btn btn-outline file-input-btn">Browse</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="additional-images">
+                        <h4>Additional Images</h4>
+                        <div class="uploaded-media" id="additional-images">
+                            <!-- Additional images will be displayed here -->
+                        </div>
+                        
+                        <div class="media-actions">
+                            <div class="file-input-container">
+                                <input type="file" id="additional-image" name="additional-image" class="file-input" accept="image/*" multiple>
+                                <button type="button" class="btn-ghost">
+                                    <i class="fas fa-upload"></i> Add More Images
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal (Hidden by default) -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirm Deletion</h2>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <span id="delete-robot-name">this robot</span>? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancel-delete-btn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get robot ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const robotId = urlParams.get('id');
+            
+            if (robotId) {
+                // Set page title
+                const pageTitle = document.getElementById('edit-title');
+                if (pageTitle) {
+                    pageTitle.textContent = `Edit Robot: ${robotId}`;
+                }
+                
+                // Add event listener to file input for preview
+                const imageInput = document.getElementById('robot-image');
+                const imagePreview = document.getElementById('robot-image-preview');
+                
+                if (imageInput && imagePreview) {
+                    imageInput.addEventListener('change', function() {
+                        if (this.files && this.files[0]) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                imagePreview.src = e.target.result;
+                            };
+                            
+                            reader.readAsDataURL(this.files[0]);
+                        }
+                    });
+                }
+                
+                // Handle save button click
+                const saveBtn = document.getElementById('save-robot-btn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function() {
+                        // Use the saveRobot function from admin.js
+                        window.saveRobot();
+                    });
+                }
+            } else {
+                // If no robot ID is provided, redirect to robots page
+                window.location.href = 'robots.html';
+            }
+        });
+    </script>
+</body>
+</html>
