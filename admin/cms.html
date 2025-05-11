@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TedouaR Robotic HUB CMS</title>
+  
+  <!-- Include the Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- Include custom CMS styles -->
+  <link rel="stylesheet" href="admin.css">
+  
+  <style>
+    body {
+      background-color: #121212;
+      color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      color: #20e3b2;
+      margin-bottom: 1rem;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(32, 227, 178, 0.2);
+      border-radius: 50%;
+      border-top: 5px solid #20e3b2;
+      animation: spin 1s linear infinite;
+      margin: 20px 0;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .message {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: #adb5bd;
+    }
+    
+    .error {
+      color: #ff6b6b;
+      margin-top: 20px;
+      background-color: rgba(255, 107, 107, 0.1);
+      padding: 15px;
+      border-radius: 5px;
+      max-width: 500px;
+      text-align: center;
+      display: none;
+    }
+    
+    .back-link {
+      margin-top: 30px;
+      color: #adb5bd;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .back-link:hover {
+      color: #20e3b2;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    <h1>TedouaR Robotic HUB</h1>
+    <div class="spinner"></div>
+    <p class="message">Loading the content management system...</p>
+    <p class="error" id="error">Authentication failed. Please <a href="/admin/" style="color: #ff6b6b; text-decoration: underline;">return to the login page</a>.</p>
+    <a href="/admin/" class="back-link" id="back-link" style="display: none;">Return to Admin Login</a>
+  </div>
+  
+  <script>
+    // Function to show error
+    function showError(message) {
+      const error = document.getElementById('error');
+      if (error) {
+        error.textContent = message || 'Authentication failed. Please return to the login page.';
+        error.style.display = 'block';
+      }
+      
+      const backLink = document.getElementById('back-link');
+      if (backLink) {
+        backLink.style.display = 'block';
+      }
+      
+      console.error('CMS Error:', message);
+    }
+    
+    // Check if user is logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('CMS page loaded, checking authentication');
+      
+      // Set timeout for loading
+      setTimeout(function() {
+        if (document.getElementById('loading').style.display !== 'none') {
+          showError('Loading timeout. CMS failed to initialize.');
+        }
+      }, 10000);
+      
+      // Check Netlify Identity
+      if (window.netlifyIdentity) {
+        netlifyIdentity.on('init', user => {
+          if (user) {
+            console.log('User authenticated, loading CMS');
+            // Continue loading CMS
+          } else {
+            console.log('User not authenticated');
+            showError('You must be logged in to access the CMS.');
+            // Redirect back to login page
+            setTimeout(() => {
+              window.location.href = '/admin/';
+            }, 2000);
+          }
+        });
+      }
+    });
+  </script>
+  
+  <!-- Load the CMS script last -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+</body>
+</html>
