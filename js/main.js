@@ -29,6 +29,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Admin User Dropdown
+    const adminDropdownToggle = document.getElementById('admin-dropdown-toggle');
+    const adminDropdownMenu = document.getElementById('admin-dropdown-menu');
+    
+    if (adminDropdownToggle && adminDropdownMenu) {
+        // Toggle dropdown
+        adminDropdownToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            adminDropdownMenu.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#admin-dropdown-toggle') && 
+                !event.target.closest('#admin-dropdown-menu')) {
+                if (adminDropdownMenu.classList.contains('active')) {
+                    adminDropdownMenu.classList.remove('active');
+                }
+            }
+        });
+        
+        // Admin link handler
+        const adminLink = document.querySelector('#admin-dropdown-menu .admin-link');
+        if (adminLink) {
+            adminLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'admin/';
+            });
+        }
+    }
+    
     // AI Assistant Chat Interface
     const aiButton = document.getElementById('ai-button');
     const aiChatContainer = document.getElementById('ai-chat-container');
@@ -179,6 +210,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 else if (lowerMessage.includes('thank')) {
                     return "You're welcome! Is there anything else I can help you with?";
+                }
+                else if (lowerMessage.includes('admin') || lowerMessage.includes('dashboard')) {
+                    return "If you have administrator access, you can access the admin dashboard by clicking your profile in the top-right corner and selecting 'Admin'.";
                 }
                 else {
                     // Default responses if no specific matches
