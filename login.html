@@ -270,6 +270,87 @@
             border-color: var(--primary-color);
             transform: translateY(-3px);
         }
+
+        /* Modal/Alert Styles */
+        .alert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .alert-modal.active {
+            display: flex;
+        }
+
+        .alert-modal.success .alert-content {
+            border-color: var(--primary-color);
+        }
+
+        .alert-modal.error .alert-content {
+            border-color: #ff5e5e;
+        }
+
+        .alert-modal.error .alert-icon {
+            color: #ff5e5e;
+        }
+
+        .alert-modal.error .alert-title {
+            color: #ff5e5e;
+        }
+
+        .alert-content {
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+        }
+
+        .alert-icon {
+            margin-bottom: 20px;
+            font-size: 48px;
+            color: var(--primary-color);
+        }
+
+        .alert-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .alert-message {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .alert-button {
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            color: var(--bg-color);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -385,6 +466,43 @@
         </div>
     </section>
 
+    <!-- Alert Modal -->
+    <div class="alert-modal" id="alertModal">
+        <div class="alert-content">
+            <div class="alert-icon" id="alertIcon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="alert-title" id="alertTitle">Success!</h3>
+            <p class="alert-message" id="alertMessage">You have successfully logged in.</p>
+            <button class="alert-button" id="alertButton">Continue</button>
+        </div>
+    </div>
+
+    <!-- AI Assistant Button -->
+    <div class="ai-assistant">
+        <div class="ai-button" id="ai-button">
+            <div class="ai-icon"><i class="fas fa-robot"></i></div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Chat Interface (Hidden by default) -->
+    <div class="ai-chat-container" id="ai-chat-container">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title">Robot Assistant</div>
+            <div class="ai-chat-close" id="ai-chat-close"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="ai-chat-messages" id="ai-chat-messages">
+            <div class="ai-message">
+                <div class="ai-avatar"><i class="fas fa-robot"></i></div>
+                <div class="ai-bubble">Hello! I'm your robotics guide. How can I help you explore the world of robots today?</div>
+            </div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="ai-input" placeholder="Ask me about robots...">
+            <button id="ai-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -437,44 +555,7 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Password toggle visibility
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('login-password');
-            
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.classList.toggle('fa-eye');
-                this.classList.toggle('fa-eye-slash');
-            });
-            
-            // Login form submission
-            const loginForm = document.getElementById('login-form');
-            
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                
-                // Basic validation
-                if (!email || !password) {
-                    alert('Please fill in all fields');
-                    return;
-                }
-                
-                // Here you would normally send the credentials to a server
-                // For now, just simulate a successful login
-                alert('Login successful! Redirecting to homepage...');
-                
-                // Redirect to home page
-                setTimeout(function() {
-                    window.location.href = 'index.html';
-                }, 1000);
-            });
-        });
-    </script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/login.js"></script>
 </body>
 </html>
