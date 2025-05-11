@@ -1,16 +1,19 @@
 backend:
   name: git-gateway
-  branch: main # Branch to update (defaults to master)
+  branch: main # Branch to update
+  repo: taikibonnet/TedouaR-robotic-HUB
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 publish_mode: editorial_workflow
+local_backend: false
 
-# Display for the CMS
+# Display settings
 site_url: https://tedouar.netlify.app
 display_url: https://tedouar.netlify.app
 logo_url: https://tedouar.netlify.app/images/logo.png
 
+# Collections
 collections:
   - name: "robots"
     label: "Robot Entries"
