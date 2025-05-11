@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authenticating... - TedouaR Robotics Hub</title>
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 600px;
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      color: #a0a0a0;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(32, 227, 178, 0.3);
+      border-radius: 50%;
+      border-top-color: #20e3b2;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Authenticating with GitHub</h1>
+    <p>Please wait while we complete your authentication with GitHub. You'll be redirected to the admin panel shortly.</p>
+    <div class="spinner"></div>
+  </div>
+  
+  <!-- Decap CMS OAuth Callback -->
+  <script src="https://unpkg.com/@staticcms/app@^3.0.0/dist/static-cms-app.js"></script>
+  <script>
+    // Complete the OAuth flow
+    window.StaticCmsApp.registerPreviewTemplate("robots", window.StaticCmsApp.createClass({
+      render: function() {
+        const entry = this.props.entry;
+        return window.StaticCmsApp.h('div', { className: 'preview' },
+          window.StaticCmsApp.h('h1', {}, entry.getIn(['data', 'name'])),
+          window.StaticCmsApp.h('div', { className: "robot-manufacturer" }, entry.getIn(['data', 'manufacturer'])),
+          window.StaticCmsApp.h('div', { className: "robot-description" }, entry.getIn(['data', 'description'])),
+          window.StaticCmsApp.h('div', {}, window.StaticCmsApp.h('img', { src: entry.getIn(['data', 'image']), alt: entry.getIn(['data', 'name']) }))
+        );
+      }
+    }));
+  </script>
+</body>
+</html>
