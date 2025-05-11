@@ -1,0 +1,278 @@
+/* TedouaR Admin Custom Styles */
+
+:root {
+  --primary: #20e3b2;
+  --secondary: #0cebeb;
+  --accent: #ff6b6b;
+  --dark: #121212;
+  --dark-2: #1a1a1a;
+  --dark-3: #222222;
+  --light: #f8f9fa;
+  --gray: #adb5bd;
+}
+
+/* Global Overrides */
+.nc-appHeader-content {
+  background: var(--dark-2) !important;
+}
+
+.nc-appHeader-navLink {
+  color: var(--gray) !important;
+}
+
+.nc-appHeader-navLink:hover {
+  color: var(--primary) !important;
+}
+
+.nc-appHeader-navLink.nc-appHeader-navLinkActive {
+  color: var(--primary) !important;
+}
+
+.nc-entryEditor-container {
+  background: var(--dark) !important;
+  color: var(--light) !important;
+}
+
+/* Sidebar styling */
+.nc-collectionPage-sidebar {
+  background: var(--dark-2) !important;
+}
+
+.nc-collectionPage-sidebarLink {
+  color: var(--gray) !important;
+}
+
+.nc-collectionPage-sidebarLink:hover {
+  color: var(--primary) !important;
+  background: rgba(32, 227, 178, 0.1) !important;
+}
+
+.nc-collectionPage-sidebarLink.nc-collectionPage-sidebarLinkActive {
+  color: var(--primary) !important;
+  background: rgba(32, 227, 178, 0.1) !important;
+}
+
+/* Headings */
+.nc-collectionPage-topHeading {
+  color: var(--light) !important;
+}
+
+/* Entry cards */
+.nc-entryListing-card {
+  background: var(--dark-2) !important;
+  color: var(--light) !important;
+  border: 1px solid var(--dark-3) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.nc-entryListing-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(32, 227, 178, 0.3) !important;
+}
+
+/* Buttons */
+.nc-button {
+  border-radius: 6px !important;
+}
+
+.nc-button-primary {
+  background: linear-gradient(90deg, var(--secondary), var(--primary)) !important;
+  color: var(--dark) !important;
+  font-weight: 500 !important;
+}
+
+.nc-button-primary:hover {
+  opacity: 0.9 !important;
+  box-shadow: 0 5px 15px rgba(32, 227, 178, 0.3) !important;
+}
+
+.nc-button-default {
+  background: var(--dark-2) !important;
+  color: var(--light) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.nc-button-default:hover {
+  background: var(--dark-3) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.nc-button-error {
+  background: linear-gradient(90deg, #ff6b6b, #ff8080) !important;
+  color: white !important;
+}
+
+.nc-button-error:hover {
+  opacity: 0.9 !important;
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3) !important;
+}
+
+/* Input fields */
+.nc-entryEditor-editor input, 
+.nc-entryEditor-editor textarea, 
+.nc-entryEditor-editor select {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: var(--light) !important;
+  border-radius: 5px !important;
+  padding: 12px 15px !important;
+}
+
+.nc-entryEditor-editor input:focus, 
+.nc-entryEditor-editor textarea:focus, 
+.nc-entryEditor-editor select:focus {
+  outline: none !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(32, 227, 178, 0.2) !important;
+}
+
+/* Labels */
+.nc-entryEditor-label {
+  color: var(--gray) !important;
+  font-weight: 500 !important;
+}
+
+/* Widget headers */
+.nc-widgetHeader {
+  background: var(--dark-3) !important;
+  color: var(--light) !important;
+}
+
+/* Toasts and notifications */
+.nc-toast {
+  background: var(--dark-2) !important;
+  color: var(--light) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.nc-toast-success {
+  border-left: 4px solid var(--primary) !important;
+}
+
+.nc-toast-error {
+  border-left: 4px solid var(--accent) !important;
+}
+
+/* Dialogs */
+.nc-dialog {
+  background: var(--dark-2) !important;
+  color: var(--light) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.nc-dialog-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.nc-dialog-title {
+  color: var(--light) !important;
+}
+
+/* Media library */
+.nc-mediaLibrary-cardImage {
+  border-radius: 5px !important;
+  overflow: hidden !important;
+}
+
+.nc-mediaLibrary-cardText {
+  color: var(--light) !important;
+}
+
+/* Tables */
+.nc-table-headCell {
+  background-color: var(--dark-3) !important;
+  color: var(--gray) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+}
+
+.nc-table-row {
+  background-color: var(--dark-2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.nc-table-row:hover {
+  background-color: rgba(32, 227, 178, 0.05) !important;
+}
+
+/* Markdown editor */
+.nc-markdownWidget {
+  background-color: var(--dark-3) !important;
+  border-radius: 5px !important;
+}
+
+.nc-markdownWidget-toolbar {
+  background-color: var(--dark-2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.nc-markdownWidget-toolbarButton {
+  color: var(--gray) !important;
+}
+
+.nc-markdownWidget-toolbarButton:hover {
+  color: var(--primary) !important;
+}
+
+.nc-markdownWidget-preview {
+  background-color: var(--dark-3) !important;
+  color: var(--light) !important;
+  padding: 15px !important;
+}
+
+/* Image widget */
+.nc-imageControl-imageWrapper {
+  border-radius: 5px !important;
+  overflow: hidden !important;
+  border: 1px dashed rgba(255, 255, 255, 0.2) !important;
+}
+
+.nc-imageControl-addButton {
+  background: rgba(32, 227, 178, 0.1) !important;
+  color: var(--primary) !important;
+  border: 1px dashed var(--primary) !important;
+}
+
+/* Date widgets */
+.nc-dateTimeControl-widget {
+  background-color: var(--dark-3) !important;
+  color: var(--light) !important;
+  border-radius: 5px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Toggle/checkbox widgets */
+.nc-toggle-switch {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.nc-toggle-switchChecked {
+  background-color: var(--primary) !important;
+}
+
+/* Loader/spinners */
+.nc-loader {
+  border-top-color: var(--primary) !important;
+}
+
+/* App footer */
+.nc-appFooter {
+  background-color: var(--dark-2) !important;
+  color: var(--gray) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 15px 20px !important;
+}
+
+/* Login/Logout button */
+.nc-appHeader-appleButton {
+  background: linear-gradient(90deg, var(--secondary), var(--primary)) !important;
+  color: var(--dark) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
