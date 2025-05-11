@@ -11,6 +11,9 @@
   <!-- Include Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Include the CMS script on page load -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" async></script>
+  
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -145,6 +148,17 @@
       max-width: 500px;
     }
     
+    .success-message {
+      display: none;
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      color: #2e7d32;
+      text-align: center;
+      max-width: 500px;
+    }
+    
     .button-container {
       display: flex;
       flex-direction: column;
@@ -180,6 +194,10 @@
     
     <div id="spinner" class="spinner"></div>
     
+    <div id="success-message" class="success-message">
+      Login successful! Loading CMS...
+    </div>
+    
     <div id="error-message" class="error-message">
       Authentication error. Please try again or contact the administrator.
     </div>
@@ -189,15 +207,20 @@
     </a>
   </div>
   
-  <!-- CMS container (will be populated by Decap CMS) -->
-  <div class="cms-container" id="nc-root"></div>
-  
   <script>
     // Simple function to show error message
     function showError(message) {
       const errorElement = document.getElementById('error-message');
       errorElement.textContent = message;
       errorElement.style.display = 'block';
+      document.getElementById('spinner').style.display = 'none';
+    }
+    
+    // Function to show success message
+    function showSuccess(message) {
+      const successElement = document.getElementById('success-message');
+      successElement.textContent = message || 'Login successful! Loading CMS...';
+      successElement.style.display = 'block';
       document.getElementById('spinner').style.display = 'none';
     }
     
@@ -248,16 +271,19 @@
       netlifyIdentity.open('login');
     }
     
-    // Load the CMS
-    function loadCMS() {
-      // Hide login container
-      document.getElementById('login-container').style.display = 'none';
+    // Force reload after successful login
+    function handleSuccessfulLogin() {
+      showSuccess();
       
-      // Load Decap CMS script
-      const script = document.createElement('script');
-      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
-      script.async = true;
-      document.body.appendChild(script);
+      // Hide login container to reveal CMS
+      setTimeout(() => {
+        document.getElementById('login-container').style.display = 'none';
+        
+        // Force reload if CMS doesn't appear
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }, 1000);
     }
     
     // Initialize everything when the page loads
@@ -269,13 +295,17 @@
       netlifyIdentity.on('init', user => {
         if (user) {
           // User is already logged in
-          loadCMS();
+          console.log('User is already logged in');
+          handleSuccessfulLogin();
+        } else {
+          console.log('User is not logged in');
         }
       });
       
       netlifyIdentity.on('login', () => {
         // User just logged in
-        loadCMS();
+        console.log('Login successful');
+        handleSuccessfulLogin();
       });
       
       netlifyIdentity.on('logout', () => {
@@ -284,6 +314,7 @@
       });
       
       netlifyIdentity.on('error', err => {
+        console.error('Login error:', err);
         showError(err.message || 'Authentication error');
       });
     });
