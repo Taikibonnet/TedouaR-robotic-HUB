@@ -11,6 +11,9 @@
   <!-- Include Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Load Decap CMS script -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" id="cms-script" defer></script>
+  
   <!-- Include custom CMS styles -->
   <link rel="stylesheet" href="admin.css">
   
@@ -257,8 +260,17 @@
       font-size: 12px;
       max-height: 200px;
       overflow: auto;
-      display: none;
       z-index: 1000;
+    }
+    
+    /* Force display of the CMS */
+    .cms-active body > [class^="nc-"] {
+      display: block !important;
+    }
+    
+    /* Hide CMS layout until we're ready */
+    body > [class^="nc-"] {
+      display: none !important;
     }
   </style>
 </head>
@@ -282,9 +294,9 @@
           <i class="fas fa-envelope"></i> Log in with Email
         </button>
         
-        <a href="/admin/#/" class="btn btn-primary" id="direct-cms" style="display: none;">
+        <button class="btn btn-primary" id="manual-cms" style="display: none;">
           <i class="fas fa-external-link-alt"></i> Launch Admin Panel
-        </a>
+        </button>
       </div>
       
       <div id="spinner" class="spinner"></div>
@@ -316,9 +328,14 @@
   <div id="debug-panel" class="debug-panel"></div>
   
   <script>
+    // Enable debugging
+    const debugEnabled = true;
+    
     // Debug logging function
     function debug(message) {
       console.log(message);
+      if (!debugEnabled) return;
+      
       const panel = document.getElementById('debug-panel');
       if (panel) {
         panel.style.display = 'block';
@@ -359,98 +376,94 @@
       document.getElementById('spinner').style.display = 'none';
     }
     
-    // Check for error parameters in URL
-    function checkForErrors() {
-      const hashParams = window.location.hash.substring(1);
-      if (hashParams) {
-        const params = new URLSearchParams(hashParams);
-        if (params.has('error')) {
-          const errorDescription = params.get('error_description') || 'Authentication failed';
-          showError(decodeURIComponent(errorDescription).replace(/\+/g, ' '));
-          // Clear hash from URL
-          history.replaceState(null, document.title, window.location.pathname);
-          return true;
-        }
-      }
-      return false;
-    }
-    
-    // Is direct access?
-    function isDirectAccess() {
-      return window.location.hash.includes('#/');
-    }
-    
-    // Redirect to CMS interface
-    function redirectToCMS() {
-      // Save login state
-      localStorage.setItem('tedouar_admin_logged_in', 'true');
+    // Manually launch the CMS
+    function launchCMS() {
+      // Show success message
+      showSuccess('Launching CMS - please wait...');
       
-      // Set a small timeout to ensure everything is ready
-      setTimeout(function() {
-        if (!isDirectAccess()) {
-          window.location.href = '/admin/#/';
-        }
-      }, 1500);
+      // Hide login container
+      setTimeout(() => {
+        document.getElementById('login-container').style.display = 'none';
+        document.body.classList.add('cms-active');
+        
+        // Force reload if CMS doesn't appear
+        setTimeout(() => {
+          // Check if CMS elements exist
+          if (!document.querySelector('[class^="nc-"]')) {
+            debug('CMS elements not found, reloading page');
+            window.location.href = '/admin/#/';
+          }
+        }, 3000);
+      }, 1000);
     }
     
     // Initialize everything
     document.addEventListener('DOMContentLoaded', function() {
       debug('DOM loaded, initializing admin panel');
       
-      // Handle direct CMS access
-      if (isDirectAccess()) {
-        debug('Direct CMS access detected');
+      // Check hash in URL
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#/')) {
+        debug('CMS route detected in URL: ' + hash);
+        // Hide login immediately
         document.getElementById('login-container').style.display = 'none';
-        
-        // Load CMS script dynamically
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
-        script.async = true;
-        
-        // Apply custom styling to CMS
-        script.onload = function() {
-          debug('CMS script loaded, applying custom styling');
-          
-          // Ensure the script has loaded
-          if (window.CMS) {
-            // Apply custom styling
-            window.CMS.registerPreviewStyle('admin.css');
-          }
-        };
-        
-        document.body.appendChild(script);
-        return;
+        document.body.classList.add('cms-active');
       }
-      
-      // Check for login errors
-      const hasErrors = checkForErrors();
       
       // Check if user is already logged in via localStorage
       const isLoggedIn = localStorage.getItem('tedouar_admin_logged_in') === 'true';
       if (isLoggedIn) {
         debug('User already logged in via localStorage');
-        document.getElementById('direct-cms').style.display = 'inline-block';
+        document.getElementById('manual-cms').style.display = 'inline-block';
       }
+      
+      // Setup manual CMS launch button
+      document.getElementById('manual-cms').addEventListener('click', function() {
+        debug('Manual CMS launch button clicked');
+        launchCMS();
+      });
       
       // Set up login buttons
       document.getElementById('github-login').addEventListener('click', function() {
         debug('GitHub login button clicked');
         showSpinner();
         
-        // Open Netlify Identity widget
         netlifyIdentity.open('login');
         
-        // Try to find and click the GitHub provider button
-        setTimeout(function() {
-          const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
-          if (githubButton) {
-            debug('GitHub provider button found, clicking it');
-            githubButton.click();
+        // Watch for GitHub provider button
+        setTimeout(() => {
+          debug('Searching for GitHub provider button...');
+          const iframeDocument = document.querySelector('iframe.netlify-identity-widget').contentDocument;
+          if (iframeDocument) {
+            debug('Netlify Identity iframe found');
+            const githubButton = iframeDocument.querySelector('[data-provider="github"]');
+            if (githubButton) {
+              debug('GitHub provider button found, clicking it');
+              githubButton.click();
+            } else {
+              debug('GitHub provider button not found in iframe');
+              
+              // Try another selector
+              const allButtons = iframeDocument.querySelectorAll('button');
+              let found = false;
+              allButtons.forEach(button => {
+                if (button.textContent.toLowerCase().includes('github')) {
+                  debug('Found GitHub button via text content');
+                  button.click();
+                  found = true;
+                }
+              });
+              
+              if (!found) {
+                hideSpinner();
+                debug('No GitHub button found by any method');
+              }
+            }
           } else {
-            debug('GitHub provider button not found');
+            debug('Could not access iframe document');
             hideSpinner();
           }
-        }, 300);
+        }, 500);
       });
       
       document.getElementById('email-login').addEventListener('click', function() {
@@ -458,38 +471,48 @@
         netlifyIdentity.open('login');
       });
       
-      document.getElementById('direct-cms').addEventListener('click', function(e) {
-        debug('Direct CMS access button clicked');
-        // Allow normal link behavior
-      });
-      
       // Set up Netlify Identity events
       netlifyIdentity.on('init', user => {
         debug('Netlify Identity initialized');
         if (user) {
           debug('User is already authenticated: ' + user.email);
-          document.getElementById('direct-cms').style.display = 'inline-block';
+          document.getElementById('manual-cms').style.display = 'inline-block';
+          localStorage.setItem('tedouar_admin_logged_in', 'true');
+          
           showSuccess('Already logged in as ' + user.email);
           
-          // Redirect to CMS if not on direct access already
-          if (!isDirectAccess()) {
-            redirectToCMS();
+          // Auto-launch CMS if hash is present
+          if (window.location.hash && window.location.hash.startsWith('#/')) {
+            launchCMS();
           }
         }
       });
       
       netlifyIdentity.on('login', user => {
         debug('Login event triggered for: ' + (user ? user.email : 'unknown user'));
-        document.getElementById('direct-cms').style.display = 'inline-block';
-        showSuccess('Login successful! Redirecting to admin panel...');
+        document.getElementById('manual-cms').style.display = 'inline-block';
+        localStorage.setItem('tedouar_admin_logged_in', 'true');
         
-        // Redirect to CMS
-        redirectToCMS();
+        showSuccess('Login successful!');
+        
+        // Wait a bit before launching CMS
+        setTimeout(() => {
+          launchCMS();
+        }, 1000);
       });
       
       netlifyIdentity.on('error', err => {
         debug('Login error: ' + (err.message || 'Unknown error'));
         showError(err.message || 'Authentication error');
+      });
+      
+      // Register CMS loaded event handler
+      window.addEventListener('message', event => {
+        if (event.data === 'CMS_LOADED') {
+          debug('CMS loaded message received');
+          document.getElementById('login-container').style.display = 'none';
+          document.body.classList.add('cms-active');
+        }
       });
     });
   </script>
