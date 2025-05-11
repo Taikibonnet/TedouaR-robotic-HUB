@@ -18,9 +18,10 @@
       padding: 0;
       color: #333;
       background-color: #f7f7f7;
+      line-height: 1.6;
     }
     
-    .admin-login {
+    #login-page {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -30,14 +31,18 @@
       padding: 20px;
     }
     
-    .admin-login h1 {
+    #cms-page {
+      display: none; /* Will be shown when CMS loads */
+    }
+    
+    #login-page h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: #20e3b2;
       font-weight: 600;
     }
     
-    .admin-login p {
+    #login-page p {
       font-size: 1.1rem;
       margin-bottom: 2rem;
       color: #555;
@@ -83,9 +88,11 @@
       margin-bottom: 40px;
     }
     
-    .logo {
-      width: 180px;
-      height: auto;
+    .logo-text {
+      color: #20e3b2;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
     
     .back-link {
@@ -105,26 +112,16 @@
       margin-right: 8px;
     }
     
-    .hidden {
-      display: none;
-    }
-    
     /* Loading animation */
-    .loading-container {
+    .loading-spinner {
       display: none;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    }
-    
-    .spinner {
       border: 4px solid rgba(32, 227, 178, 0.2);
       border-top: 4px solid #20e3b2;
       border-radius: 50%;
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
-      margin-bottom: 15px;
+      margin: 20px auto;
     }
     
     @keyframes spin {
@@ -132,17 +129,25 @@
       100% { transform: rotate(360deg); }
     }
     
-    .loading-text {
-      color: #555;
-      font-size: 14px;
+    .error-message {
+      display: none;
+      margin: 20px 0;
+      padding: 12px 20px;
+      background-color: #ffebee;
+      border-left: 4px solid #f44336;
+      color: #d32f2f;
+      border-radius: 4px;
+      text-align: left;
+      max-width: 500px;
     }
   </style>
 </head>
 <body>
-  <div class="admin-login" id="login-container">
+  <!-- Login Page -->
+  <div id="login-page">
     <div class="logo-container">
-      <h1>TedouaR Robotic HUB</h1>
-      <p>Admin Panel</p>
+      <div class="logo-text">TedouaR</div>
+      <h1>Robotic HUB Admin</h1>
     </div>
     
     <p>Please log in to access the content management system.</p>
@@ -155,9 +160,10 @@
       <i class="fas fa-envelope"></i> Log in with Email
     </button>
     
-    <div class="loading-container" id="loading-container">
-      <div class="spinner"></div>
-      <div class="loading-text">Authenticating, please wait...</div>
+    <div class="loading-spinner" id="loading-spinner"></div>
+    
+    <div class="error-message" id="error-message">
+      Authentication error. Please try again or contact the administrator.
     </div>
     
     <a href="/" class="back-link">
@@ -165,78 +171,117 @@
     </a>
   </div>
   
-  <!-- Decap CMS -->
-  <div class="hidden" id="nc-root"></div>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <!-- CMS Page (This will be handled by Decap CMS) -->
+  <div id="cms-page"></div>
   
+  <!-- Delayed loading of CMS script to prevent conflicts -->
   <script>
-    // Check if user is logged in
-    var isUserLoggedIn = false;
+    // Check for authentication errors in URL
+    function checkForAuthErrors() {
+      if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        
+        if (params.has('error')) {
+          const errorMsg = params.get('error_description') || 'Authentication failed';
+          const errorElem = document.getElementById('error-message');
+          
+          errorElem.textContent = decodeURIComponent(errorMsg).replace(/\+/g, ' ');
+          errorElem.style.display = 'block';
+          document.getElementById('loading-spinner').style.display = 'none';
+          
+          // Clear the error from URL
+          history.replaceState(null, document.title, window.location.pathname);
+          return true;
+        }
+      }
+      return false;
+    }
     
     // Show loading state
     function showLoading() {
       document.getElementById('github-login').style.display = 'none';
       document.getElementById('email-login').style.display = 'none';
-      document.getElementById('loading-container').style.display = 'flex';
+      document.getElementById('loading-spinner').style.display = 'block';
     }
     
-    // GitHub login button
+    // Hide loading state
+    function hideLoading() {
+      document.getElementById('github-login').style.display = 'flex';
+      document.getElementById('email-login').style.display = 'flex';
+      document.getElementById('loading-spinner').style.display = 'none';
+    }
+    
+    // Initialize UI based on login state
+    function initUI() {
+      // Check for authentication errors first
+      if (checkForAuthErrors()) {
+        return;
+      }
+      
+      // Check if user is logged in
+      if (netlifyIdentity.currentUser()) {
+        // User is already logged in, load CMS
+        document.getElementById('login-page').style.display = 'none';
+        loadCMS();
+      } else {
+        // User is not logged in, show login page
+        document.getElementById('login-page').style.display = 'flex';
+      }
+    }
+    
+    // Load the CMS script
+    function loadCMS() {
+      // Add the CMS script
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    
+    // Set up event handlers
     document.getElementById('github-login').addEventListener('click', function() {
       showLoading();
-      
-      // Open the Netlify Identity Widget
       netlifyIdentity.open('login');
       
-      // Find and click the GitHub button
+      // Find and click the GitHub provider button
       setTimeout(function() {
-        var githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
+        const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
         if (githubButton) {
           githubButton.click();
         } else {
-          // If GitHub button not found, just keep the widget open
-          document.getElementById('loading-container').style.display = 'none';
-          document.getElementById('github-login').style.display = 'flex';
-          document.getElementById('email-login').style.display = 'flex';
+          // If button not found, hide loading
+          hideLoading();
         }
-      }, 300);
+      }, 500);
     });
     
-    // Email login button
     document.getElementById('email-login').addEventListener('click', function() {
       netlifyIdentity.open('login');
     });
     
-    // Handle login event
-    netlifyIdentity.on('login', function(user) {
-      isUserLoggedIn = true;
-      
-      // Hide login container
-      document.getElementById('login-container').style.display = 'none';
-      
-      // If on admin page, reload to access CMS
-      location.reload();
+    // Handle login/logout events
+    netlifyIdentity.on('login', user => {
+      console.log('Login successful');
+      document.getElementById('login-page').style.display = 'none';
+      loadCMS();
     });
     
-    // On page load
-    window.addEventListener('DOMContentLoaded', function() {
-      netlifyIdentity.on('init', function(user) {
-        if (user) {
-          // User is logged in, hide login container
-          document.getElementById('login-container').style.display = 'none';
-        } else {
-          // User is not logged in, show login container
-          document.getElementById('login-container').style.display = 'flex';
-          
-          // If coming back with an error in the URL, show an alert
-          const urlParams = new URLSearchParams(window.location.hash.substring(1));
-          const error = urlParams.get('error');
-          const errorDescription = urlParams.get('error_description');
-          
-          if (error && errorDescription) {
-            alert('Login Error: ' + errorDescription);
-          }
-        }
-      });
+    netlifyIdentity.on('logout', () => {
+      console.log('Logged out');
+      document.getElementById('login-page').style.display = 'flex';
+      window.location.reload();
+    });
+    
+    // Initialize after the identity widget is loaded
+    netlifyIdentity.on('init', user => {
+      console.log('Netlify Identity initialized');
+      initUI();
+    });
+    
+    // Additional error handling
+    window.addEventListener('error', function(event) {
+      console.error('Page error:', event.error);
     });
   </script>
 </body>
