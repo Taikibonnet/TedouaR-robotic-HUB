@@ -32,7 +32,11 @@
     }
     
     #cms-page {
-      display: none; /* Will be shown when CMS loads */
+      height: 100vh;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
     }
     
     #login-page h1 {
@@ -174,7 +178,6 @@
   <!-- CMS Page (This will be handled by Decap CMS) -->
   <div id="cms-page"></div>
   
-  <!-- Delayed loading of CMS script to prevent conflicts -->
   <script>
     // Check for authentication errors in URL
     function checkForAuthErrors() {
@@ -211,35 +214,36 @@
       document.getElementById('email-login').style.display = 'flex';
       document.getElementById('loading-spinner').style.display = 'none';
     }
-    
-    // Initialize UI based on login state
-    function initUI() {
-      // Check for authentication errors first
-      if (checkForAuthErrors()) {
-        return;
+
+    // Load the CMS
+    function loadCMS() {
+      document.getElementById('login-page').style.display = 'none';
+      
+      // Create CMS div if it doesn't exist
+      if (!document.getElementById('nc-root')) {
+        const cmsRoot = document.createElement('div');
+        cmsRoot.id = 'nc-root';
+        document.getElementById('cms-page').appendChild(cmsRoot);
       }
       
-      // Check if user is logged in
-      if (netlifyIdentity.currentUser()) {
-        // User is already logged in, load CMS
-        document.getElementById('login-page').style.display = 'none';
-        loadCMS();
-      } else {
-        // User is not logged in, show login page
-        document.getElementById('login-page').style.display = 'flex';
+      // Load CMS script if not already loaded
+      if (!window.CMS) {
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+        script.onload = function() {
+          console.log('CMS script loaded');
+        };
+        script.onerror = function() {
+          console.error('Failed to load CMS script');
+          document.getElementById('error-message').textContent = 'Failed to load CMS. Please try again.';
+          document.getElementById('error-message').style.display = 'block';
+          document.getElementById('login-page').style.display = 'flex';
+        };
+        document.body.appendChild(script);
       }
     }
     
-    // Load the CMS script
-    function loadCMS() {
-      // Add the CMS script
-      const script = document.createElement('script');
-      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-    
-    // Set up event handlers
+    // Set up event listeners for login buttons
     document.getElementById('github-login').addEventListener('click', function() {
       showLoading();
       netlifyIdentity.open('login');
@@ -260,28 +264,30 @@
       netlifyIdentity.open('login');
     });
     
-    // Handle login/logout events
-    netlifyIdentity.on('login', user => {
-      console.log('Login successful');
-      document.getElementById('login-page').style.display = 'none';
-      loadCMS();
-    });
-    
-    netlifyIdentity.on('logout', () => {
-      console.log('Logged out');
-      document.getElementById('login-page').style.display = 'flex';
-      window.location.reload();
-    });
-    
-    // Initialize after the identity widget is loaded
-    netlifyIdentity.on('init', user => {
-      console.log('Netlify Identity initialized');
-      initUI();
-    });
-    
-    // Additional error handling
-    window.addEventListener('error', function(event) {
-      console.error('Page error:', event.error);
+    // Initialize everything
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded');
+      
+      // Check for authentication errors
+      checkForAuthErrors();
+      
+      // Handle login event
+      netlifyIdentity.on('login', function(user) {
+        console.log('Login successful');
+        loadCMS();
+      });
+      
+      // Check if user is already logged in
+      netlifyIdentity.on('init', function(user) {
+        console.log('Identity initialized');
+        if (user) {
+          console.log('User already logged in');
+          loadCMS();
+        } else {
+          console.log('User not logged in');
+          document.getElementById('login-page').style.display = 'flex';
+        }
+      });
     });
   </script>
 </body>
