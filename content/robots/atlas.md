@@ -1,0 +1,85 @@
+---
+id: atlas
+name: Atlas
+manufacturer: Boston Dynamics
+description: A bipedal humanoid robot designed for a variety of search and rescue
+  tasks. Atlas can navigate rough terrain and manipulate objects in its
+  environment.
+details: >-
+  # Atlas: The Next Generation Humanoid Robot
+
+
+  Atlas is one of the most advanced humanoid robots in the world, created by
+  Boston Dynamics. Standing approximately 1.5 meters tall and weighing about 80
+  kg, Atlas represents a major leap forward in robotics technology.
+
+
+  ## Advanced Mobility
+
+
+  What sets Atlas apart is its remarkable mobility and agility. The robot can
+  navigate through complex terrains that would challenge traditional wheeled or
+  tracked robots. It can walk, run, jump, perform backflips, and even parkour -
+  activities that demonstrate human-like athletic abilities.
+
+
+  ## Sophisticated Control Systems
+
+
+  Atlas uses a sophisticated control system that combines computer vision, depth
+  sensing, and machine learning algorithms. This enables it to:
+
+
+  * Process visual information in real-time
+  
+  * Plan movements through complex environments
+  
+  * Maintain balance even when pushed or when walking on uneven terrain
+  
+  * Adapt to unexpected changes in its surroundings
+
+
+  ## Research Platform
+
+
+  While Atlas is not yet commercially available, it serves as a research platform
+  for testing advanced robotics concepts. The technologies developed through
+  Atlas have applications in areas ranging from disaster response to industrial
+  automation.
+featured: true
+categories:
+  - humanoid
+  - research
+status: published
+image: /images/robots/atlas.jpg
+specs:
+  - label: height
+    value: 1.5 meters
+  - label: weight
+    value: 80 kg
+  - label: powerSource
+    value: Electric (battery)
+  - label: battery
+    value: 3 hours operation
+  - label: sensors
+    value: LIDAR, Stereo Vision, IMU
+  - label: dof
+    value: 28
+  - label: payload
+    value: 11 kg
+applications:
+  - name: Search and rescue
+    description: Locate and assist people in disaster scenarios
+  - name: Research and development
+    description: Test new algorithms and technologies
+  - name: Military applications
+    description: Support for various military tasks
+  - name: Disaster response
+    description: Navigate hazardous environments
+videos:
+  - title: Atlas Parkour
+    url: https://www.youtube.com/embed/tF4DML7FIWk
+  - title: Atlas Dancing
+    url: https://www.youtube.com/embed/fn3KWM1kuAw
+date: 2025-05-11T12:00:00.000Z
+---
