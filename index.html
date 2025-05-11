@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/admin-dropdown.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Include Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -335,6 +337,11 @@
                         // Remove admin login status
                         sessionStorage.removeItem('adminLoggedIn');
                         
+                        // Logout from Netlify Identity if logged in
+                        if (window.netlifyIdentity) {
+                            window.netlifyIdentity.logout();
+                        }
+                        
                         // Reload page
                         window.location.reload();
                     });
@@ -345,6 +352,43 @@
                 if (adminDropdown) adminDropdown.style.display = 'none';
             }
         });
+        
+        // Netlify Identity handling
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (user) {
+                    // If logged in with Netlify Identity, update the admin status
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('adminName', user.user_metadata.full_name || 'Admin');
+                    sessionStorage.setItem('adminEmail', user.email);
+                    
+                    // If on admin page, don't redirect
+                    if (!window.location.pathname.includes('/admin/')) {
+                        // Update UI
+                        const authButtons = document.getElementById('auth-buttons');
+                        const adminDropdown = document.getElementById('admin-dropdown');
+                        
+                        if (authButtons) authButtons.style.display = 'none';
+                        if (adminDropdown) adminDropdown.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Handle redirect after logging in
+            window.netlifyIdentity.on("login", () => {
+                if (window.location.pathname.includes('/admin/')) {
+                    // Already on admin page, just reload
+                    window.location.reload();
+                } else {
+                    // Redirect to admin if coming from login
+                    const redirectFromLogin = sessionStorage.getItem('redirectToAdmin');
+                    if (redirectFromLogin) {
+                        sessionStorage.removeItem('redirectToAdmin');
+                        window.location.href = '/admin/';
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
