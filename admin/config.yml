@@ -1,17 +1,20 @@
 backend:
   name: git-gateway
-  branch: main # Branch to update
-  repo: taikibonnet/TedouaR-robotic-HUB
+  branch: main
+  commit_messages:
+    create: 'Create {{collection}} "{{slug}}"'
+    update: 'Update {{collection}} "{{slug}}"'
+    delete: 'Delete {{collection}} "{{slug}}"'
+    uploadMedia: '[skip ci] Upload "{{path}}"'
+    deleteMedia: '[skip ci] Delete "{{path}}"'
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 publish_mode: editorial_workflow
-local_backend: false
 
 # Display settings
 site_url: https://tedouar.netlify.app
 display_url: https://tedouar.netlify.app
-logo_url: https://tedouar.netlify.app/images/logo.png
 
 # Collections
 collections:
@@ -20,8 +23,6 @@ collections:
     folder: "_robots"
     create: true
     slug: "{{slug}}"
-    editor:
-      preview: true
     fields:
       - {label: "Layout", name: "layout", widget: "hidden", default: "robot"}
       - {label: "Title", name: "title", widget: "string", required: true}
