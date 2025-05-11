@@ -78,6 +78,23 @@
     .back-link:hover {
       color: #20e3b2;
     }
+    
+    /* Debug panel styles */
+    .debug-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.9);
+      color: #53ea9f;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow: auto;
+      z-index: 1000;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -89,7 +106,28 @@
     <a href="/admin/" class="back-link" id="back-link" style="display: none;">Return to Admin Login</a>
   </div>
   
+  <!-- Debug panel -->
+  <div id="debug-panel" class="debug-panel"></div>
+  
   <script>
+    // Enable debugging
+    const debugEnabled = true;
+    
+    // Debug logging function
+    function debug(message) {
+      console.log(message);
+      if (!debugEnabled) return;
+      
+      const panel = document.getElementById('debug-panel');
+      if (panel) {
+        panel.style.display = 'block';
+        const log = document.createElement('div');
+        log.textContent = `[${new Date().toISOString().slice(11, 19)}] ${message}`;
+        panel.appendChild(log);
+        panel.scrollTop = panel.scrollHeight;
+      }
+    }
+    
     // Function to show error
     function showError(message) {
       const error = document.getElementById('error');
@@ -103,28 +141,57 @@
         backLink.style.display = 'block';
       }
       
-      console.error('CMS Error:', message);
+      debug('CMS Error: ' + message);
     }
     
     // Check if user is logged in
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('CMS page loaded, checking authentication');
+      debug('CMS page loaded, checking authentication');
       
       // Set timeout for loading
       setTimeout(function() {
         if (document.getElementById('loading').style.display !== 'none') {
-          showError('Loading timeout. CMS failed to initialize.');
+          debug('Loading timeout reached');
+          
+          // Check if CMS elements exist
+          if (!document.querySelector('[class^="nc-"]')) {
+            showError('Loading timeout. CMS failed to initialize.');
+          }
         }
       }, 10000);
       
+      // Configure CMS
+      if (window.CMS) {
+        debug('CMS object found, initializing');
+        window.CMS.init();
+      } else {
+        debug('CMS object not found yet, waiting for script to load');
+        window.addEventListener('load', function() {
+          if (window.CMS) {
+            debug('CMS object found after window load, initializing');
+            window.CMS.init();
+          } else {
+            debug('CMS object still not found after window load');
+          }
+        });
+      }
+      
       // Check Netlify Identity
       if (window.netlifyIdentity) {
+        debug('Netlify Identity object found');
+        
         netlifyIdentity.on('init', user => {
           if (user) {
-            console.log('User authenticated, loading CMS');
-            // Continue loading CMS
+            debug('User authenticated: ' + user.email);
+            // Continue loading CMS - hide loading screen after 2 seconds
+            setTimeout(() => {
+              const loadingElement = document.getElementById('loading');
+              if (loadingElement) {
+                loadingElement.style.display = 'none';
+              }
+            }, 2000);
           } else {
-            console.log('User not authenticated');
+            debug('User not authenticated');
             showError('You must be logged in to access the CMS.');
             // Redirect back to login page
             setTimeout(() => {
@@ -132,8 +199,68 @@
             }, 2000);
           }
         });
+        
+        netlifyIdentity.on('logout', () => {
+          debug('User logged out');
+          window.location.href = '/admin/';
+        });
+        
+        netlifyIdentity.on('error', err => {
+          debug('Netlify Identity error: ' + err.message);
+          showError('Authentication error: ' + err.message);
+        });
+      } else {
+        debug('Netlify Identity object not found');
+        showError('Netlify Identity not loaded correctly');
       }
     });
+  </script>
+  
+  <!-- Load the CMS config first -->
+  <script>
+    // Manually configure the CMS
+    window.CMS_MANUAL_INIT = true;
+    window.CMS_LOAD_CONFIG = function() {
+      return {
+        backend: {
+          name: 'git-gateway',
+          branch: 'main'
+        },
+        media_folder: 'images/uploads',
+        public_folder: '/images/uploads',
+        site_url: 'https://tedouar.netlify.app',
+        display_url: 'https://tedouar.netlify.app',
+        logo_url: 'https://tedouar.netlify.app/images/logo.png',
+        locale: 'en',
+        collections: [
+          {
+            name: 'robots',
+            label: 'Robot Entries',
+            folder: '_robots',
+            create: true,
+            slug: '{{slug}}',
+            fields: [
+              {label: 'Layout', name: 'layout', widget: 'hidden', default: 'robot'},
+              {label: 'Title', name: 'title', widget: 'string', required: true},
+              {label: 'Featured Image', name: 'image', widget: 'image', required: false, allow_multiple: false},
+              {
+                label: 'Category', 
+                name: 'category', 
+                widget: 'select', 
+                options: ['Humanoid', 'Industrial', 'Service', 'Medical', 'Educational', 'Military', 'Research'],
+                required: true
+              },
+              {label: 'Tags', name: 'tags', widget: 'list', required: false},
+              {label: 'Description', name: 'description', widget: 'text', required: true},
+              {label: 'Content', name: 'body', widget: 'markdown', required: true},
+              {label: 'Video URL', name: 'video_url', widget: 'string', required: false, hint: 'YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)'},
+              {label: 'Featured', name: 'featured', widget: 'boolean', default: false, required: false},
+              {label: 'Publication Date', name: 'date', widget: 'datetime', required: false, default: new Date()}
+            ]
+          }
+        ]
+      };
+    };
   </script>
   
   <!-- Load the CMS script last -->
