@@ -80,7 +80,55 @@
     .back-link:hover {
       background-color: rgba(32, 227, 178, 0.1);
     }
+    
+    .login-options {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
+    }
+    
+    .login-button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    .login-button:hover {
+      background-color: #444;
+    }
+    
+    .login-button i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    .github-login {
+      background-color: #24292e;
+    }
+    
+    .github-login:hover {
+      background-color: #2f363d;
+    }
+    
+    .email-login {
+      background-color: #555;
+    }
+    
+    .email-login:hover {
+      background-color: #666;
+    }
   </style>
+  
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <!-- Display a loading message while CMS initializes -->
@@ -88,6 +136,17 @@
     <h1>TedouaR Robotic HUB Admin</h1>
     <p>Loading admin panel, please wait...</p>
     <div class="spinner"></div>
+    
+    <div class="login-options" id="login-options">
+      <p>Please log in to access the admin panel:</p>
+      <button class="login-button github-login" id="github-login">
+        <i class="fab fa-github"></i> Log in with GitHub
+      </button>
+      <button class="login-button email-login" id="email-login">
+        <i class="fas fa-envelope"></i> Log in with Email
+      </button>
+    </div>
+    
     <div class="error-message" id="error-message">
       Could not load the admin panel. Make sure you are logged in with Netlify Identity.
     </div>
@@ -99,35 +158,69 @@
   
   <script>
     // Check if user is logged in
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          // If no user, open login modal
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-          window.netlifyIdentity.open();
-        }
-      });
-    }
+    setTimeout(function() {
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          // If no user, show login options
+          if (!user) {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('login-options').style.display = 'block';
+            
+            // Set up login buttons
+            document.getElementById('github-login').addEventListener('click', function() {
+              window.netlifyIdentity.setExternalJWT();
+              window.netlifyIdentity.open('login');
+              // Force GitHub provider
+              const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
+              if (githubButton) {
+                setTimeout(() => {
+                  githubButton.click();
+                }, 50);
+              }
+            });
+            
+            document.getElementById('email-login').addEventListener('click', function() {
+              window.netlifyIdentity.open('login');
+            });
+          }
+        });
+        
+        // Handle successful login
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      } else {
+        // If Netlify Identity isn't available, show error
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('back-link').style.display = 'inline-block';
+      }
+    }, 1500);
     
     // Show error message and back link after timeout
     setTimeout(function() {
       var loading = document.getElementById('loading');
+      var spinner = document.querySelector('.spinner');
       var errorMessage = document.getElementById('error-message');
       var backLink = document.getElementById('back-link');
+      var loginOptions = document.getElementById('login-options');
       
-      if (loading && loading.style.display !== 'none') {
-        errorMessage.style.display = 'block';
-        backLink.style.display = 'inline-block';
+      if (loading && loading.style.display !== 'none' && !window.netlifyIdentity.currentUser()) {
+        if (spinner) spinner.style.display = 'none';
+        if (loginOptions.style.display !== 'block') {
+          errorMessage.style.display = 'block';
+          backLink.style.display = 'inline-block';
+        }
       }
     }, 20000); // 20 seconds timeout
     
     // Handle errors
     window.addEventListener('error', function(event) {
+      var spinner = document.querySelector('.spinner');
       var errorMessage = document.getElementById('error-message');
       var backLink = document.getElementById('back-link');
       
+      if (spinner) spinner.style.display = 'none';
       errorMessage.style.display = 'block';
       backLink.style.display = 'inline-block';
       
