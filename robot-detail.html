@@ -7,6 +7,83 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/robot-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Additional styles for saving functionality */
+        .robot-actions {
+            display: flex;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        
+        #save-robot {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(32, 227, 178, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(32, 227, 178, 0.3);
+        }
+        
+        #save-robot:hover {
+            background-color: rgba(32, 227, 178, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        #save-robot.saved {
+            background-color: rgba(32, 227, 178, 0.2);
+            color: var(--primary-color);
+        }
+        
+        .notification {
+            background-color: rgba(32, 227, 178, 0.1);
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .notification.success {
+            background-color: rgba(32, 227, 178, 0.1);
+            border-color: rgba(32, 227, 178, 0.3);
+            color: var(--primary-color);
+        }
+        
+        .notification.info {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+        
+        .notification.error {
+            background-color: rgba(255, 59, 48, 0.1);
+            border-color: rgba(255, 59, 48, 0.3);
+            color: #ff3b30;
+        }
+        
+        .notification.show {
+            display: block;
+            animation: fadeOut 3s forwards;
+        }
+        
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -72,6 +149,10 @@
                 
                 <div class="robot-detail-info">
                     <p class="robot-description">Robot description will be displayed here.</p>
+                    
+                    <div class="robot-actions">
+                        <button id="save-robot"><i class="far fa-bookmark"></i> Save</button>
+                    </div>
                     
                     <div class="share-buttons">
                         <span>Share:</span>
@@ -216,6 +297,7 @@
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/encyclopedia.js"></script>
+    <script src="js/robot-detail.js"></script>
     <script src="js/ai-assistant.js"></script>
     <script src="js/auth.js"></script>
 </body>
