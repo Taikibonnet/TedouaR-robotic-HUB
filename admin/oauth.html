@@ -13,22 +13,28 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #f5f5f5;
+      background-color: #111;
+      color: #fff;
     }
     .auth-container {
       text-align: center;
       padding: 2rem;
-      background: white;
+      background: #1e1e1e;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       max-width: 500px;
     }
     h1 {
-      color: #333;
+      color: #20e3b2;
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #ccc;
+      margin-bottom: 1.5rem;
     }
     .spinner {
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #3498db;
+      border: 5px solid rgba(32, 227, 178, 0.2);
+      border-top: 5px solid #20e3b2;
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -39,34 +45,108 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    .error-message {
+      background-color: rgba(255, 87, 87, 0.1);
+      border-left: 4px solid #ff5757;
+      padding: 12px 15px;
+      margin: 20px 0;
+      color: #ff5757;
+      border-radius: 4px;
+      display: none;
+      text-align: left;
+    }
+    .back-link {
+      display: none;
+      margin-top: 20px;
+      color: #20e3b2;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 20px;
+      border: 1px solid #20e3b2;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    .back-link:hover {
+      background-color: rgba(32, 227, 178, 0.1);
+    }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <h1>Authenticating with GitHub</h1>
-    <p>Please wait while we complete the authentication process...</p>
+    <h1>GitHub Authentication</h1>
+    <p>Processing authentication with GitHub. Please wait...</p>
     <div class="spinner"></div>
+    <div id="error-message" class="error-message">
+      Authentication failed. Please try again or contact the administrator.
+    </div>
+    <a href="/admin/" class="back-link" id="back-link">Return to Admin</a>
   </div>
   
   <script>
-    // Extract auth hash
+    // Extract hash fragment
     const hash = window.location.hash.substring(1);
     const params = {};
-    hash.split('&').map(hk => {
-      const temp = hk.split('=');
-      params[temp[0]] = temp[1];
-    });
     
-    // Send to parent window
-    window.opener.postMessage(
-      'authorization:github:success:' + JSON.stringify(params),
-      window.location.origin
-    );
+    // Parse hash params
+    if (hash) {
+      hash.split('&').forEach(hk => {
+        const temp = hk.split('=');
+        if (temp.length === 2) {
+          params[temp[0]] = decodeURIComponent(temp[1]);
+        }
+      });
+    }
     
-    // Close this window
-    setTimeout(function() {
-      window.close();
-    }, 1000);
+    // Function to handle errors
+    function showError(message) {
+      const errorEl = document.getElementById('error-message');
+      const backLink = document.getElementById('back-link');
+      
+      if (errorEl) {
+        errorEl.textContent = message || 'Authentication failed. Please try again.';
+        errorEl.style.display = 'block';
+      }
+      
+      if (backLink) {
+        backLink.style.display = 'inline-block';
+      }
+      
+      document.querySelector('.spinner').style.display = 'none';
+    }
+    
+    // Process authentication
+    try {
+      // If we have an access_token in the URL hash
+      if (params.access_token) {
+        // Send to parent window (CMS)
+        window.opener.postMessage(
+          'authorization:github:success:' + JSON.stringify(params),
+          window.location.origin
+        );
+        
+        // Close this window after a short delay
+        setTimeout(() => {
+          window.close();
+        }, 1000);
+      } else if (params.error) {
+        // If there's an error parameter
+        showError('Authentication error: ' + params.error_description || params.error);
+      } else {
+        // No token or error found
+        showError('No authentication token received. Please try again.');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+      showError(error.message);
+    }
+    
+    // Add timeout in case the process takes too long
+    setTimeout(() => {
+      const spinner = document.querySelector('.spinner');
+      if (spinner && spinner.style.display !== 'none') {
+        showError('Authentication is taking longer than expected. You may close this window and try again.');
+      }
+    }, 15000);
   </script>
 </body>
 </html>
