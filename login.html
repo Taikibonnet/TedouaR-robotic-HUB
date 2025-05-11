@@ -5,294 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/admin-dropdown.css">
+    <link rel="stylesheet" href="styles/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Login Page Styles */
-        .auth-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 40px 20px;
-        }
-        
-        .auth-card {
-            background-color: var(--dark-2);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(32, 227, 178, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(32, 227, 178, 0.05), transparent);
-            z-index: -1;
-        }
-        
-        .auth-title {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .auth-title::after {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #0cebeb, #20e3b2);
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .form-label {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-        
-        .form-input {
-            padding: 12px 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(32, 227, 178, 0.3);
-            border-radius: 5px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(32, 227, 178, 0.2);
-        }
-        
-        .form-submit {
-            padding: 12px;
-            background: linear-gradient(90deg, #0cebeb, #20e3b2);
-            color: #121212;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        
-        .form-submit:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(32, 227, 178, 0.3);
-        }
-        
-        .auth-footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #a0a0a0;
-        }
-        
-        .auth-footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .auth-footer a:hover {
-            color: #0cebeb;
-            text-decoration: underline;
-        }
-        
-        .auth-note {
-            margin-top: 30px;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: rgba(32, 227, 178, 0.1);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        .auth-note strong {
-            color: var(--primary-color);
-        }
-
-        .password-toggle {
-            position: relative;
-        }
-
-        .password-toggle .toggle-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.5);
-            transition: color 0.3s ease;
-        }
-
-        .password-toggle .toggle-icon:hover {
-            color: var(--primary-color);
-        }
-
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .remember-me input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 1px solid rgba(32, 227, 178, 0.3);
-            border-radius: 3px;
-            background-color: rgba(255, 255, 255, 0.1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .remember-me input[type="checkbox"]:checked {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .remember-me input[type="checkbox"]:checked::before {
-            content: "✓";
-            color: #121212;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .remember-me label {
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .forgot-password {
-            text-align: right;
-            font-size: 0.9rem;
-        }
-
-        .forgot-password a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
-        .social-login {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .social-login-title {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .social-login-title::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .social-login-title::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .social-login-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .social-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .social-btn:hover {
-            background-color: var(--primary-color);
-            color: #121212;
-            border-color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        /* Error message */
-        .error-message {
-            background-color: rgba(255, 107, 107, 0.1);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            color: #ff6b6b;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
@@ -333,104 +47,60 @@
             <button class="mobile-menu-button">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="auth-buttons">
-                <a href="login.html" class="btn btn-outline active">Log In</a>
-                <a href="signup.html" class="btn btn-primary">Sign Up</a>
-            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <section class="section main-content">
-        <div class="auth-container">
-            <div class="auth-card">
-                <h1 class="auth-title">Login</h1>
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="container">
+            <div class="login-container">
+                <h1 class="login-title">Admin Login</h1>
+                <p class="login-subtitle">Sign in to access the admin panel</p>
                 
-                <form id="login-form" class="auth-form">
+                <div id="login-error" class="error-message" style="display: none;"></div>
+                
+                <form id="login-form" class="login-form">
                     <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                        <label for="email">Email</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <div class="password-toggle">
-                            <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-                            <i class="fas fa-eye toggle-icon" id="togglePassword"></i>
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
                         </div>
                     </div>
                     
                     <div class="form-options">
                         <div class="remember-me">
-                            <input type="checkbox" id="remember-me">
-                            <label for="remember-me">Remember me</label>
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Remember me</label>
                         </div>
-                        
-                        <div class="forgot-password">
-                            <a href="#">Forgot password?</a>
-                        </div>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
                     </div>
                     
-                    <button type="submit" class="form-submit">Log In</button>
-                    
-                    <div class="error-message" id="error-message"></div>
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
                 </form>
                 
-                <div class="auth-footer">
-                    Don't have an account? <a href="signup.html">Sign Up</a>
+                <div class="login-separator">
+                    <span>Or</span>
                 </div>
                 
-                <div class="social-login">
-                    <div class="social-login-title">Or login with</div>
-                    <div class="social-login-buttons">
-                        <div class="social-btn">
-                            <i class="fab fa-google"></i>
-                        </div>
-                        <div class="social-btn">
-                            <i class="fab fa-facebook-f"></i>
-                        </div>
-                        <div class="social-btn">
-                            <i class="fab fa-twitter"></i>
-                        </div>
-                        <div class="social-btn">
-                            <i class="fab fa-github"></i>
-                        </div>
-                    </div>
-                </div>
+                <a href="admin/auth.html" class="btn btn-outline btn-block">
+                    <i class="fab fa-github"></i> Login with GitHub
+                </a>
                 
-                <div class="auth-note">
-                    <strong>Admin Demo Account:</strong>
-                    <br>
-                    Email: admin@tedouar.com / Password: admin123
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- AI Assistant Button -->
-    <div class="ai-assistant">
-        <div class="ai-button" id="ai-button">
-            <div class="ai-icon"><i class="fas fa-robot"></i></div>
-        </div>
-    </div>
-
-    <!-- AI Assistant Chat Interface (Hidden by default) -->
-    <div class="ai-chat-container" id="ai-chat-container">
-        <div class="ai-chat-header">
-            <div class="ai-chat-title">Robot Assistant</div>
-            <div class="ai-chat-close" id="ai-chat-close"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="ai-chat-messages" id="ai-chat-messages">
-            <div class="ai-message">
-                <div class="ai-avatar"><i class="fas fa-robot"></i></div>
-                <div class="ai-bubble">Hello! I'm your robotics guide. How can I help you explore the world of robots today?</div>
-            </div>
-        </div>
-        <div class="ai-chat-input">
-            <input type="text" id="ai-input" placeholder="Ask me about robots...">
-            <button id="ai-send"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer>
@@ -439,10 +109,9 @@
                 <div class="footer-section">
                     <h3>About</h3>
                     <ul class="footer-links">
-                        <li><a href="about.html#mission">Our Mission</a></li>
-                        <li><a href="about.html#vision">Our Vision</a></li>
-                        <li><a href="about.html#why">Why We Exist</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="about.html">Our Mission</a></li>
+                        <li><a href="about.html#team">The Team</a></li>
+                        <li><a href="about.html#partners">Partners</a></li>
                     </ul>
                 </div>
                 
@@ -456,20 +125,9 @@
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Categories</h3>
-                    <ul class="footer-links">
-                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
-                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
-                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
-                        <li><a href="encyclopedia.html?category=drone">Drones & UAVs</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
                     <h3>Connect</h3>
                     <ul class="footer-links">
                         <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="contact.html#newsletter">Newsletter</a></li>
                         <li><a href="#" target="_blank">Twitter</a></li>
                         <li><a href="#" target="_blank">LinkedIn</a></li>
                     </ul>
@@ -484,25 +142,6 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script src="js/ai-assistant.js"></script>
     <script src="js/auth.js"></script>
-    <script>
-        // Password toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            
-            if (togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    
-                    // Toggle icon
-                    togglePassword.classList.toggle('fa-eye');
-                    togglePassword.classList.toggle('fa-eye-slash');
-                });
-            }
-        });
-    </script>
 </body>
 </html>
