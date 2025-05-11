@@ -4,11 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TedouaR Robotic HUB Admin</title>
-  <!-- Include the Decap CMS styles and scripts -->
-  <link href="https://unpkg.com/@staticcms/app@^4.0.0/dist/main.css" rel="stylesheet">
-  <!-- Include the script that builds the page and powers Decap CMS -->
-  <script src="https://unpkg.com/@staticcms/app@^4.0.0/dist/static-cms-app.js"></script>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <!-- Preload critical assets -->
+  <link rel="preconnect" href="https://unpkg.com">
+  
+  <!-- Include the styles -->
+  <link href="https://unpkg.com/netlify-cms-app@^2.15.72/dist/netlify-cms-app.css" rel="stylesheet">
+  
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,12 +59,55 @@
     <div class="spinner"></div>
   </div>
 
+  <!-- Include Netlify Identity Widget for authentication -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- Include the script that builds the page and powers Netlify CMS -->
+  <script src="https://unpkg.com/netlify-cms-app@^2.15.72/dist/netlify-cms-app.js"></script>
+  
   <script>
     // Initialize the CMS
     window.addEventListener('load', function() {
-      CMS.init();
-
-      // Customize the CMS
+      // Configure Netlify CMS
+      CMS.init({
+        config: {
+          backend: {
+            name: 'github',
+            repo: 'taikibonnet/TedouaR-robotic-HUB',
+            branch: 'main',
+            auth_scope: 'repo'
+          },
+          media_folder: 'images/uploads',
+          public_folder: '/images/uploads',
+          collections: [
+            {
+              name: 'robots',
+              label: 'Robot Encyclopedia Entries',
+              folder: '_robots',
+              create: true,
+              slug: '{{slug}}',
+              fields: [
+                { label: 'Layout', name: 'layout', widget: 'hidden', default: 'robot' },
+                { label: 'Title', name: 'title', widget: 'string' },
+                { label: 'Featured Image', name: 'image', widget: 'image', required: false },
+                { 
+                  label: 'Category', 
+                  name: 'category', 
+                  widget: 'select', 
+                  options: ['Humanoid', 'Industrial', 'Service', 'Medical', 'Educational', 'Military', 'Research'],
+                  required: false 
+                },
+                { label: 'Tags', name: 'tags', widget: 'list', required: false },
+                { label: 'Description', name: 'description', widget: 'text' },
+                { label: 'Body', name: 'body', widget: 'markdown' },
+                { label: 'Video URL', name: 'video_url', widget: 'string', required: false }
+              ]
+            }
+          ]
+        }
+      });
+      
+      // Hide the loading screen once CMS is initialized
       document.querySelector('#loading').style.display = 'none';
     });
   </script>
