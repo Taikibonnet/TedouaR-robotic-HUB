@@ -1,0 +1,10 @@
+# Netlify redirects file
+
+# Redirect admin login
+/admin/* /admin/index.html 200
+
+# Handle robot detail pages
+/robot/:slug /robot.html 200
+
+# Redirect 404 errors to the custom 404 page
+/* /index.html 200
