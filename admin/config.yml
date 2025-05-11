@@ -1,63 +1,25 @@
 backend:
   name: github
-  repo: Taikibonnet/TedouaR-robotic-HUB
+  repo: taikibonnet/TedouaR-robotic-HUB
   branch: main
   base_url: https://taikibonnet.github.io/TedouaR-robotic-HUB
-  auth_endpoint: /oauth/auth
+  auth_endpoint: auth
 
-# When testing locally, uncomment this line
-# local_backend: true
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
 
-# Media and public folders
-media_folder: "images/robots"
-public_folder: "/images/robots"
-
-# Preview template
-# This allows you to see your changes as you're editing
-site_url: https://taikibonnet.github.io/TedouaR-robotic-HUB
-display_url: https://taikibonnet.github.io/TedouaR-robotic-HUB
-logo_url: https://taikibonnet.github.io/TedouaR-robotic-HUB/images/logo.png
-
-# Collections
 collections:
   - name: "robots"
-    label: "Robots"
-    folder: "content/robots"
+    label: "Robot Encyclopedia Entries"
+    folder: "_robots"
     create: true
     slug: "{{slug}}"
-    media_folder: ''
-    public_folder: ''
-    editor:
-      preview: true
     fields:
-      - {label: "ID", name: "id", widget: "string", hint: "Unique identifier for this robot (lowercase, no spaces)"}
-      - {label: "Name", name: "name", widget: "string"}
-      - {label: "Manufacturer", name: "manufacturer", widget: "string"}
-      - {label: "Description", name: "description", widget: "text", hint: "Short description for robot cards"}
-      - {label: "Detailed Description", name: "details", widget: "markdown", hint: "Full detailed description for the robot page"}
-      - {label: "Featured", name: "featured", widget: "boolean", default: false, hint: "Show on the homepage?"}
-      - {label: "Categories", name: "categories", widget: "select", multiple: true, options: ["industrial", "humanoid", "service", "consumer", "space", "quadruped", "educational", "collaborative", "research", "military", "agricultural", "underwater", "rover", "medical"], hint: "Select all that apply"}
-      - {label: "Status", name: "status", widget: "select", options: ["published", "draft", "pending"]}
-      - {label: "Main Image", name: "image", widget: "image", hint: "Main hero image for this robot"}
-      - label: "Specifications"
-        name: "specs"
-        widget: "list"
-        summary: "{{fields.label}}: {{fields.value}}"
-        fields:
-          - {label: "Label", name: "label", widget: "string"}
-          - {label: "Value", name: "value", widget: "string"}
-      - label: "Applications"
-        name: "applications"
-        widget: "list"
-        summary: "{{fields.name}}"
-        fields:
-          - {label: "Name", name: "name", widget: "string"}
-          - {label: "Description", name: "description", widget: "text"}
-      - label: "Videos"
-        name: "videos"
-        widget: "list"
-        summary: "{{fields.title}}"
-        fields:
-          - {label: "Title", name: "title", widget: "string"}
-          - {label: "URL", name: "url", widget: "string", hint: "YouTube embed URL (https://www.youtube.com/embed/...)"}
-      - {label: "Last Updated", name: "date", widget: "datetime"}
+      - {label: "Layout", name: "layout", widget: "hidden", default: "robot"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Featured Image", name: "image", widget: "image", required: false}
+      - {label: "Category", name: "category", widget: "select", options: ["Humanoid", "Industrial", "Service", "Medical", "Educational", "Military", "Research"], required: false}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Body", name: "body", widget: "markdown"}
+      - {label: "Video URL", name: "video_url", widget: "string", required: false}
