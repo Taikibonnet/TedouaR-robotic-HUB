@@ -11,9 +11,6 @@
   <!-- Include Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Include the CMS script on page load -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" async></script>
-  
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -32,10 +29,6 @@
       min-height: 100vh;
       text-align: center;
       padding: 20px;
-    }
-    
-    .cms-container {
-      display: none;
     }
     
     h1 {
@@ -170,6 +163,28 @@
         flex-direction: row;
       }
     }
+    
+    /* Debug panel */
+    .debug-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow: auto;
+      display: none;
+    }
+    
+    /* Make sure the CMS container is visible */
+    #nc-root {
+      height: 100%;
+      min-height: 100vh;
+    }
   </style>
 </head>
 <body>
@@ -183,13 +198,17 @@
     <p>Please log in to access the content management system</p>
     
     <div class="button-container">
-      <button class="btn btn-github" onclick="loginWithGitHub()">
+      <button class="btn btn-github" id="github-login">
         <i class="fab fa-github"></i> Log in with GitHub
       </button>
       
-      <button class="btn btn-email" onclick="loginWithEmail()">
+      <button class="btn btn-email" id="email-login">
         <i class="fas fa-envelope"></i> Log in with Email
       </button>
+      
+      <a href="/admin/#/" class="btn" id="direct-cms" style="display: none;">
+        <i class="fas fa-external-link-alt"></i> Direct CMS Access
+      </a>
     </div>
     
     <div id="spinner" class="spinner"></div>
@@ -207,13 +226,31 @@
     </a>
   </div>
   
+  <!-- Debug panel -->
+  <div id="debug-panel" class="debug-panel"></div>
+  
+  <!-- CMS Script -->
   <script>
+    // Debug logging function
+    function debug(message) {
+      const panel = document.getElementById('debug-panel');
+      if (panel) {
+        panel.style.display = 'block';
+        const log = document.createElement('div');
+        log.textContent = `[${new Date().toISOString().slice(11, 19)}] ${message}`;
+        panel.appendChild(log);
+        panel.scrollTop = panel.scrollHeight;
+        console.log(message);
+      }
+    }
+    
     // Simple function to show error message
     function showError(message) {
       const errorElement = document.getElementById('error-message');
       errorElement.textContent = message;
       errorElement.style.display = 'block';
       document.getElementById('spinner').style.display = 'none';
+      debug(`Error: ${message}`);
     }
     
     // Function to show success message
@@ -222,6 +259,7 @@
       successElement.textContent = message || 'Login successful! Loading CMS...';
       successElement.style.display = 'block';
       document.getElementById('spinner').style.display = 'none';
+      debug(`Success: ${message || 'Login successful'}`);
     }
     
     // Function to show loading spinner
@@ -250,71 +288,109 @@
       return false;
     }
     
-    // Login with GitHub function
-    function loginWithGitHub() {
-      showSpinner();
-      netlifyIdentity.open('login');
-      
-      // Try to click the GitHub button
-      setTimeout(() => {
-        const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
-        if (githubButton) {
-          githubButton.click();
-        } else {
-          hideSpinner();
-        }
-      }, 300);
+    // Check if current URL is direct CMS access
+    function isDirectCMSAccess() {
+      return window.location.hash.includes('#/');
     }
     
-    // Login with Email function
-    function loginWithEmail() {
-      netlifyIdentity.open('login');
-    }
-    
-    // Force reload after successful login
-    function handleSuccessfulLogin() {
-      showSuccess();
+    // Redirect to CMS interface
+    function redirectToCMS() {
+      // Save the fact that we're logged in
+      sessionStorage.setItem('tedouar_logged_in', 'true');
       
-      // Hide login container to reveal CMS
-      setTimeout(() => {
-        document.getElementById('login-container').style.display = 'none';
-        
-        // Force reload if CMS doesn't appear
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }, 1000);
+      // Redirect to the CMS interface
+      if (!isDirectCMSAccess()) {
+        window.location.href = '/admin/#/';
+      }
     }
     
     // Initialize everything when the page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Check for errors first
-      const hasErrors = checkForErrors();
+      debug('DOM loaded. Initializing...');
       
-      // Set up Netlify Identity event handlers
+      // Handle direct CMS access
+      if (isDirectCMSAccess()) {
+        debug('Direct CMS access detected');
+        document.getElementById('login-container').style.display = 'none';
+        
+        // Load the CMS script
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+        script.async = true;
+        script.onload = function() {
+          debug('CMS script loaded');
+        };
+        script.onerror = function(e) {
+          debug('CMS script failed to load: ' + e);
+          document.getElementById('login-container').style.display = 'flex';
+          showError('Failed to load CMS. Please try again.');
+        };
+        document.body.appendChild(script);
+        return;
+      }
+      
+      // Check for errors in URL
+      checkForErrors();
+      
+      // Set up login buttons
+      document.getElementById('github-login').addEventListener('click', function() {
+        debug('GitHub login button clicked');
+        showSpinner();
+        
+        // Open the login dialog
+        netlifyIdentity.open('login');
+        
+        // Try to find and click the GitHub button
+        setTimeout(function() {
+          const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
+          if (githubButton) {
+            debug('GitHub provider button found, clicking it');
+            githubButton.click();
+          } else {
+            debug('GitHub provider button not found');
+            hideSpinner();
+          }
+        }, 300);
+      });
+      
+      document.getElementById('email-login').addEventListener('click', function() {
+        debug('Email login button clicked');
+        netlifyIdentity.open('login');
+      });
+      
+      // Check if user is already logged in via session
+      const isLoggedIn = sessionStorage.getItem('tedouar_logged_in') === 'true';
+      if (isLoggedIn) {
+        debug('User is logged in via session storage');
+        document.getElementById('direct-cms').style.display = 'inline-block';
+      }
+      
+      // Set up Netlify Identity events
       netlifyIdentity.on('init', user => {
+        debug('Netlify Identity initialized');
         if (user) {
-          // User is already logged in
-          console.log('User is already logged in');
-          handleSuccessfulLogin();
+          debug('User is authenticated: ' + user.email);
+          showSuccess('Already logged in as ' + user.email);
+          document.getElementById('direct-cms').style.display = 'inline-block';
+          
+          // Redirect to CMS after a delay
+          setTimeout(redirectToCMS, 1000);
         } else {
-          console.log('User is not logged in');
+          debug('No user authenticated');
         }
       });
       
-      netlifyIdentity.on('login', () => {
-        // User just logged in
-        console.log('Login successful');
-        handleSuccessfulLogin();
-      });
-      
-      netlifyIdentity.on('logout', () => {
-        // Refresh the page on logout
-        window.location.reload();
+      netlifyIdentity.on('login', user => {
+        debug('Login event triggered');
+        showSuccess('Login successful! Redirecting to CMS...');
+        document.getElementById('direct-cms').style.display = 'inline-block';
+        
+        // Redirect to CMS after a delay
+        setTimeout(redirectToCMS, 1000);
       });
       
       netlifyIdentity.on('error', err => {
-        console.error('Login error:', err);
+        debug('Login error: ' + (err.message || 'Unknown error'));
         showError(err.message || 'Authentication error');
       });
     });
