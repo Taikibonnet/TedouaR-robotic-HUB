@@ -1,0 +1,41 @@
+[build]
+  # Base directory for your site (optional)
+  # base = "/"
+  
+  # Directory that contains the deploy-ready HTML files and assets
+  publish = "/"
+  
+  # Command to build your site (optional)
+  # command = "your-build-command"
+
+# Set up the CMS
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect and rewrite rules
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/robot/*"
+  to = "/robot.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  query = {page = ":page"}
+
+# Define headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Content-Security-Policy = "default-src 'self' https://identity.netlify.com https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval' data:; img-src 'self' data: https:; media-src 'self' https:;"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
