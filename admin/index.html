@@ -135,7 +135,7 @@
   <div class="loading" id="loading">
     <h1>TedouaR Robotic HUB Admin</h1>
     <p>Loading admin panel, please wait...</p>
-    <div class="spinner"></div>
+    <div class="spinner" id="spinner"></div>
     
     <div class="login-options" id="login-options">
       <p>Please log in to access the admin panel:</p>
@@ -168,15 +168,14 @@
             
             // Set up login buttons
             document.getElementById('github-login').addEventListener('click', function() {
-              window.netlifyIdentity.setExternalJWT();
               window.netlifyIdentity.open('login');
               // Force GitHub provider
-              const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
-              if (githubButton) {
-                setTimeout(() => {
+              setTimeout(() => {
+                const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
+                if (githubButton) {
                   githubButton.click();
-                }, 50);
-              }
+                }
+              }, 100);
             });
             
             document.getElementById('email-login').addEventListener('click', function() {
@@ -200,12 +199,12 @@
     // Show error message and back link after timeout
     setTimeout(function() {
       var loading = document.getElementById('loading');
-      var spinner = document.querySelector('.spinner');
+      var spinner = document.getElementById('spinner');
       var errorMessage = document.getElementById('error-message');
       var backLink = document.getElementById('back-link');
       var loginOptions = document.getElementById('login-options');
       
-      if (loading && loading.style.display !== 'none' && !window.netlifyIdentity.currentUser()) {
+      if (loading && loading.style.display !== 'none' && window.netlifyIdentity && !window.netlifyIdentity.currentUser()) {
         if (spinner) spinner.style.display = 'none';
         if (loginOptions.style.display !== 'block') {
           errorMessage.style.display = 'block';
@@ -216,7 +215,7 @@
     
     // Handle errors
     window.addEventListener('error', function(event) {
-      var spinner = document.querySelector('.spinner');
+      var spinner = document.getElementById('spinner');
       var errorMessage = document.getElementById('error-message');
       var backLink = document.getElementById('back-link');
       
