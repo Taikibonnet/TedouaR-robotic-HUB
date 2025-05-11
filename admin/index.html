@@ -21,7 +21,7 @@
       line-height: 1.6;
     }
     
-    #login-page {
+    #login-container {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -31,80 +31,82 @@
       padding: 20px;
     }
     
-    #cms-page {
-      height: 100vh;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
+    .cms-container {
+      display: none;
     }
     
-    #login-page h1 {
+    h1 {
       font-size: 2.5rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       color: #20e3b2;
       font-weight: 600;
     }
     
-    #login-page p {
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    
+    p {
       font-size: 1.1rem;
       margin-bottom: 2rem;
       color: #555;
       max-width: 600px;
     }
     
-    .login-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 30px;
-      background-color: #24292e;
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #333;
       color: white;
       border: none;
       border-radius: 4px;
       font-size: 16px;
       font-weight: 500;
       cursor: pointer;
-      margin: 10px;
-      transition: background-color 0.2s ease;
+      margin: 8px;
       text-decoration: none;
-      width: 220px;
+      transition: background-color 0.2s ease;
     }
     
-    .login-button:hover {
+    .btn:hover {
+      background-color: #555;
+    }
+    
+    .btn-github {
+      background-color: #24292e;
+      display: flex;
+      align-items: center;
+      padding-left: 16px;
+      padding-right: 20px;
+    }
+    
+    .btn-github:hover {
       background-color: #2f363d;
     }
     
-    .login-button i {
+    .btn-email {
+      background-color: #555;
+    }
+    
+    .btn-email:hover {
+      background-color: #666;
+    }
+    
+    .btn i {
       margin-right: 10px;
       font-size: 18px;
     }
     
-    .email-login {
-      background-color: #555;
-    }
-    
-    .email-login:hover {
-      background-color: #666;
-    }
-    
     .logo-container {
-      margin-bottom: 40px;
-    }
-    
-    .logo-text {
-      color: #20e3b2;
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
     }
     
     .back-link {
       margin-top: 40px;
       color: #555;
       text-decoration: none;
-      display: flex;
-      align-items: center;
       font-size: 14px;
     }
     
@@ -116,16 +118,15 @@
       margin-right: 8px;
     }
     
-    /* Loading animation */
-    .loading-spinner {
+    .spinner {
       display: none;
-      border: 4px solid rgba(32, 227, 178, 0.2);
-      border-top: 4px solid #20e3b2;
-      border-radius: 50%;
       width: 40px;
       height: 40px;
-      animation: spin 1s linear infinite;
       margin: 20px auto;
+      border: 4px solid rgba(32, 227, 178, 0.2);
+      border-radius: 50%;
+      border-top: 4px solid #20e3b2;
+      animation: spin 1s linear infinite;
     }
     
     @keyframes spin {
@@ -136,37 +137,50 @@
     .error-message {
       display: none;
       margin: 20px 0;
-      padding: 12px 20px;
+      padding: 15px;
       background-color: #ffebee;
       border-left: 4px solid #f44336;
       color: #d32f2f;
-      border-radius: 4px;
       text-align: left;
       max-width: 500px;
+    }
+    
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      margin: 20px 0;
+    }
+    
+    @media (min-width: 500px) {
+      .button-container {
+        flex-direction: row;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Login Page -->
-  <div id="login-page">
+  <!-- Login container -->
+  <div id="login-container">
     <div class="logo-container">
-      <div class="logo-text">TedouaR</div>
-      <h1>Robotic HUB Admin</h1>
+      <h1>TedouaR Robotic HUB</h1>
+      <h2>Admin Panel</h2>
     </div>
     
-    <p>Please log in to access the content management system.</p>
+    <p>Please log in to access the content management system</p>
     
-    <button class="login-button" id="github-login">
-      <i class="fab fa-github"></i> Log in with GitHub
-    </button>
+    <div class="button-container">
+      <button class="btn btn-github" onclick="loginWithGitHub()">
+        <i class="fab fa-github"></i> Log in with GitHub
+      </button>
+      
+      <button class="btn btn-email" onclick="loginWithEmail()">
+        <i class="fas fa-envelope"></i> Log in with Email
+      </button>
+    </div>
     
-    <button class="login-button email-login" id="email-login">
-      <i class="fas fa-envelope"></i> Log in with Email
-    </button>
+    <div id="spinner" class="spinner"></div>
     
-    <div class="loading-spinner" id="loading-spinner"></div>
-    
-    <div class="error-message" id="error-message">
+    <div id="error-message" class="error-message">
       Authentication error. Please try again or contact the administrator.
     </div>
     
@@ -175,25 +189,37 @@
     </a>
   </div>
   
-  <!-- CMS Page (This will be handled by Decap CMS) -->
-  <div id="cms-page"></div>
+  <!-- CMS container (will be populated by Decap CMS) -->
+  <div class="cms-container" id="nc-root"></div>
   
   <script>
-    // Check for authentication errors in URL
-    function checkForAuthErrors() {
-      if (window.location.hash) {
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        
+    // Simple function to show error message
+    function showError(message) {
+      const errorElement = document.getElementById('error-message');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      document.getElementById('spinner').style.display = 'none';
+    }
+    
+    // Function to show loading spinner
+    function showSpinner() {
+      document.getElementById('spinner').style.display = 'block';
+    }
+    
+    // Function to hide loading spinner
+    function hideSpinner() {
+      document.getElementById('spinner').style.display = 'none';
+    }
+    
+    // Check for error parameters in URL
+    function checkForErrors() {
+      const hashParams = window.location.hash.substring(1);
+      if (hashParams) {
+        const params = new URLSearchParams(hashParams);
         if (params.has('error')) {
-          const errorMsg = params.get('error_description') || 'Authentication failed';
-          const errorElem = document.getElementById('error-message');
-          
-          errorElem.textContent = decodeURIComponent(errorMsg).replace(/\+/g, ' ');
-          errorElem.style.display = 'block';
-          document.getElementById('loading-spinner').style.display = 'none';
-          
-          // Clear the error from URL
+          const errorDescription = params.get('error_description') || 'Authentication failed';
+          showError(decodeURIComponent(errorDescription).replace(/\+/g, ' '));
+          // Clear hash from URL
           history.replaceState(null, document.title, window.location.pathname);
           return true;
         }
@@ -201,92 +227,64 @@
       return false;
     }
     
-    // Show loading state
-    function showLoading() {
-      document.getElementById('github-login').style.display = 'none';
-      document.getElementById('email-login').style.display = 'none';
-      document.getElementById('loading-spinner').style.display = 'block';
-    }
-    
-    // Hide loading state
-    function hideLoading() {
-      document.getElementById('github-login').style.display = 'flex';
-      document.getElementById('email-login').style.display = 'flex';
-      document.getElementById('loading-spinner').style.display = 'none';
-    }
-
-    // Load the CMS
-    function loadCMS() {
-      document.getElementById('login-page').style.display = 'none';
-      
-      // Create CMS div if it doesn't exist
-      if (!document.getElementById('nc-root')) {
-        const cmsRoot = document.createElement('div');
-        cmsRoot.id = 'nc-root';
-        document.getElementById('cms-page').appendChild(cmsRoot);
-      }
-      
-      // Load CMS script if not already loaded
-      if (!window.CMS) {
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
-        script.onload = function() {
-          console.log('CMS script loaded');
-        };
-        script.onerror = function() {
-          console.error('Failed to load CMS script');
-          document.getElementById('error-message').textContent = 'Failed to load CMS. Please try again.';
-          document.getElementById('error-message').style.display = 'block';
-          document.getElementById('login-page').style.display = 'flex';
-        };
-        document.body.appendChild(script);
-      }
-    }
-    
-    // Set up event listeners for login buttons
-    document.getElementById('github-login').addEventListener('click', function() {
-      showLoading();
+    // Login with GitHub function
+    function loginWithGitHub() {
+      showSpinner();
       netlifyIdentity.open('login');
       
-      // Find and click the GitHub provider button
-      setTimeout(function() {
+      // Try to click the GitHub button
+      setTimeout(() => {
         const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
         if (githubButton) {
           githubButton.click();
         } else {
-          // If button not found, hide loading
-          hideLoading();
+          hideSpinner();
         }
-      }, 500);
-    });
+      }, 300);
+    }
     
-    document.getElementById('email-login').addEventListener('click', function() {
+    // Login with Email function
+    function loginWithEmail() {
       netlifyIdentity.open('login');
-    });
+    }
     
-    // Initialize everything
+    // Load the CMS
+    function loadCMS() {
+      // Hide login container
+      document.getElementById('login-container').style.display = 'none';
+      
+      // Load Decap CMS script
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    
+    // Initialize everything when the page loads
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM loaded');
+      // Check for errors first
+      const hasErrors = checkForErrors();
       
-      // Check for authentication errors
-      checkForAuthErrors();
+      // Set up Netlify Identity event handlers
+      netlifyIdentity.on('init', user => {
+        if (user) {
+          // User is already logged in
+          loadCMS();
+        }
+      });
       
-      // Handle login event
-      netlifyIdentity.on('login', function(user) {
-        console.log('Login successful');
+      netlifyIdentity.on('login', () => {
+        // User just logged in
         loadCMS();
       });
       
-      // Check if user is already logged in
-      netlifyIdentity.on('init', function(user) {
-        console.log('Identity initialized');
-        if (user) {
-          console.log('User already logged in');
-          loadCMS();
-        } else {
-          console.log('User not logged in');
-          document.getElementById('login-page').style.display = 'flex';
-        }
+      netlifyIdentity.on('logout', () => {
+        // Refresh the page on logout
+        window.location.reload();
+      });
+      
+      netlifyIdentity.on('error', err => {
+        showError(err.message || 'Authentication error');
       });
     });
   </script>
