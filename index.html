@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/admin-dropdown.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -46,9 +47,49 @@
             <button class="mobile-menu-button">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="auth-buttons">
+            
+            <!-- Auth Buttons (shown only if not logged in) -->
+            <div class="auth-buttons" id="auth-buttons">
                 <a href="login.html" class="btn btn-outline">Log In</a>
                 <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            
+            <!-- Admin User Dropdown (shown only if logged in as admin) -->
+            <div class="admin-dropdown" id="admin-dropdown" style="display: none;">
+                <div id="admin-dropdown-toggle">
+                    <div class="avatar">A</div>
+                    <div class="username">Admin User</div>
+                    <div class="caret"><i class="fas fa-caret-down"></i></div>
+                </div>
+                
+                <div id="admin-dropdown-menu">
+                    <ul>
+                        <li>
+                            <a href="profile.html">
+                                <i class="fas fa-user"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="settings.html">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="admin/" class="admin-link">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Admin</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="logout-link" id="logout-button">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </header>
@@ -269,8 +310,41 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
+    <script src="js/cms-content.js"></script>
     <script src="js/encyclopedia.js"></script>
     <script src="js/ai-assistant.js"></script>
     <script src="js/auth.js"></script>
+    <script>
+        // Check login status and show appropriate elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAdminLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+            const authButtons = document.getElementById('auth-buttons');
+            const adminDropdown = document.getElementById('admin-dropdown');
+            
+            if (isAdminLoggedIn) {
+                // Show admin dropdown
+                if (authButtons) authButtons.style.display = 'none';
+                if (adminDropdown) adminDropdown.style.display = 'block';
+                
+                // Handle logout
+                const logoutButton = document.getElementById('logout-button');
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Remove admin login status
+                        sessionStorage.removeItem('adminLoggedIn');
+                        
+                        // Reload page
+                        window.location.reload();
+                    });
+                }
+            } else {
+                // Show auth buttons
+                if (authButtons) authButtons.style.display = 'flex';
+                if (adminDropdown) adminDropdown.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
