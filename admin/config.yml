@@ -1,22 +1,14 @@
 backend:
-  name: github
-  repo: taikibonnet/TedouaR-robotic-HUB
+  name: git-gateway
   branch: main
-  base_url: https://taikibonnet.github.io/TedouaR-robotic-HUB
-  auth_endpoint: admin/oauth.html
-  open_authoring: true
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 publish_mode: editorial_workflow
 
-# Display for the CMS
-site_url: https://taikibonnet.github.io/TedouaR-robotic-HUB
-display_url: https://taikibonnet.github.io/TedouaR-robotic-HUB
-logo_url: https://taikibonnet.github.io/TedouaR-robotic-HUB/images/tedouar-logo.png
-
-# CMS Local Backend - for development only
-# local_backend: true
+site_url: https://your-site-name.netlify.app
+display_url: https://your-site-name.netlify.app
+logo_url: /images/tedouar-logo.png
 
 collections:
   - name: "robots"
@@ -29,7 +21,7 @@ collections:
     fields:
       - {label: "Layout", name: "layout", widget: "hidden", default: "robot"}
       - {label: "Title", name: "title", widget: "string", required: true}
-      - {label: "Featured Image", name: "image", widget: "image", required: false, allow_multiple: false}
+      - {label: "Featured Image", name: "image", widget: "image"}
       - {
           label: "Category", 
           name: "category", 
@@ -37,9 +29,9 @@ collections:
           options: ["Humanoid", "Industrial", "Service", "Medical", "Educational", "Military", "Research"],
           required: true
         }
-      - {label: "Tags", name: "tags", widget: "list", required: false}
-      - {label: "Description", name: "description", widget: "text", required: true}
-      - {label: "Content", name: "body", widget: "markdown", required: true}
-      - {label: "Video URL", name: "video_url", widget: "string", required: false, hint: "YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)"}
-      - {label: "Featured", name: "featured", widget: "boolean", default: false, required: false}
-      - {label: "Publication Date", name: "date", widget: "datetime", required: false}
+      - {label: "Tags", name: "tags", widget: "list"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Content", name: "body", widget: "markdown"}
+      - {label: "Video URL", name: "video_url", widget: "string", hint: "YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)"}
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Publication Date", name: "date", widget: "datetime"}
