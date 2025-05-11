@@ -1,0 +1,73 @@
+{
+  "id": "spot",
+  "name": "Spot",
+  "manufacturer": "Boston Dynamics",
+  "description": "A four-legged robot that can navigate terrain that wheeled robots cannot. Spot can carry payloads, climb stairs and operate in environments that are challenging for other robots.",
+  "details": "# Spot: The Agile Mobile Robot\n\nSpot is a quadruped robot developed by Boston Dynamics that represents a new generation of mobile robotics. With its four-legged design, Spot can move through environments that have traditionally been difficult for wheeled or tracked robots.\n\n## Unmatched Mobility\n\nSpot's mobility system allows it to:\n\n* Navigate uneven terrain with ease\n* Climb stairs and traverse obstacles\n* Maintain stability on slippery or unstable surfaces\n* Recover from unexpected falls or collisions\n\n## Real-World Applications\n\nUnlike some of its predecessors which were primarily research platforms, Spot has been designed and commercialized for real-world applications. It has been deployed in industries ranging from construction and utilities to oil and gas.\n\n## Customizable Payload System\n\nOne of Spot's key features is its payload system. With a capacity of 14 kg, the robot can be equipped with various sensors, cameras, and specialized equipment tailored to specific tasks. This flexibility has made it valuable for:\n\n* Remote inspection of industrial facilities\n* Site documentation and data collection\n* Security patrols in complex environments\n* Research and development\n\n## Autonomous Capabilities\n\nWhile Spot can be controlled remotely, it also possesses robust autonomous navigation capabilities. It can follow pre-programmed routes, avoid obstacles, and adapt to changing conditions—all without direct human intervention.",
+  "featured": true,
+  "categories": [
+    "quadruped",
+    "industrial"
+  ],
+  "status": "published",
+  "image": "/images/robots/spot.jpg",
+  "specs": [
+    {
+      "label": "height",
+      "value": "0.84 meters"
+    },
+    {
+      "label": "weight",
+      "value": "32.5 kg"
+    },
+    {
+      "label": "powerSource",
+      "value": "Electric (battery)"
+    },
+    {
+      "label": "battery",
+      "value": "90 minutes operation"
+    },
+    {
+      "label": "sensors",
+      "value": "Stereo Cameras, LIDAR, IMU"
+    },
+    {
+      "label": "dof",
+      "value": "12"
+    },
+    {
+      "label": "payload",
+      "value": "14 kg"
+    }
+  ],
+  "applications": [
+    {
+      "name": "Industrial inspection",
+      "description": "Inspect facilities and equipment in hard-to-reach areas"
+    },
+    {
+      "name": "Construction monitoring",
+      "description": "Document progress and identify issues on construction sites"
+    },
+    {
+      "name": "Public safety",
+      "description": "Assist in emergency response and reconnaissance"
+    },
+    {
+      "name": "Entertainment",
+      "description": "Perform choreographed routines for events and demonstrations"
+    }
+  ],
+  "videos": [
+    {
+      "title": "Spot Robot - Navigating Challenging Terrain",
+      "url": "https://www.youtube.com/embed/wlkCQXHEgjA"
+    },
+    {
+      "title": "Spot in Action - The Agile Mobile Robot",
+      "url": "https://www.youtube.com/embed/XnZH4izf6rw"
+    }
+  ],
+  "date": "2025-05-11T12:05:00.000Z"
+}
