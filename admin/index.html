@@ -4,11 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TedouaR Robotic HUB Admin</title>
+  
   <!-- Preload critical assets -->
   <link rel="preconnect" href="https://unpkg.com">
   
   <!-- Include the styles -->
-  <link href="https://unpkg.com/netlify-cms-app@^2.15.72/dist/netlify-cms-app.css" rel="stylesheet">
+  <link href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" rel="stylesheet">
   
   <style>
     body {
@@ -16,6 +17,7 @@
       margin: 0;
       padding: 0;
       color: #333;
+      background-color: #111;
     }
     
     .loading {
@@ -24,21 +26,24 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      color: #fff;
     }
     
     .loading h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
+      color: #20e3b2;
     }
     
     .loading p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
+      color: #ccc;
     }
     
     .spinner {
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #3498db;
+      border: 5px solid rgba(32, 227, 178, 0.2);
+      border-top: 5px solid #20e3b2;
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -49,6 +54,32 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
+    .error-message {
+      display: none;
+      padding: 20px;
+      margin-top: 20px;
+      background-color: rgba(255, 87, 87, 0.1);
+      border-left: 4px solid #ff5757;
+      color: #ff5757;
+      border-radius: 4px;
+    }
+    
+    .back-link {
+      display: none;
+      margin-top: 20px;
+      color: #20e3b2;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 20px;
+      border: 1px solid #20e3b2;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .back-link:hover {
+      background-color: rgba(32, 227, 178, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -57,58 +88,55 @@
     <h1>TedouaR Robotic HUB Admin</h1>
     <p>Loading admin panel, please wait...</p>
     <div class="spinner"></div>
+    <div class="error-message" id="error-message">
+      Could not load the admin panel. Make sure you are using a GitHub account with access to this repository.
+    </div>
+    <a href="/" class="back-link" id="back-link">Return to Website</a>
   </div>
 
-  <!-- Include Netlify Identity Widget for authentication -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  
-  <!-- Include the script that builds the page and powers Netlify CMS -->
-  <script src="https://unpkg.com/netlify-cms-app@^2.15.72/dist/netlify-cms-app.js"></script>
+  <!-- Include the script that builds the page and powers Decap CMS -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <script>
+    // Show error message and back link after timeout
+    setTimeout(function() {
+      var loading = document.getElementById('loading');
+      var errorMessage = document.getElementById('error-message');
+      var backLink = document.getElementById('back-link');
+      
+      if (loading && loading.style.display !== 'none') {
+        errorMessage.style.display = 'block';
+        backLink.style.display = 'inline-block';
+      }
+    }, 20000); // 20 seconds timeout
+    
+    // Handle errors
+    window.addEventListener('error', function(event) {
+      var errorMessage = document.getElementById('error-message');
+      var backLink = document.getElementById('back-link');
+      
+      errorMessage.style.display = 'block';
+      backLink.style.display = 'inline-block';
+      
+      console.error('CMS Error:', event.error);
+    });
+    
     // Initialize the CMS
     window.addEventListener('load', function() {
-      // Configure Netlify CMS
-      CMS.init({
-        config: {
-          backend: {
-            name: 'github',
-            repo: 'taikibonnet/TedouaR-robotic-HUB',
-            branch: 'main',
-            auth_scope: 'repo'
-          },
-          media_folder: 'images/uploads',
-          public_folder: '/images/uploads',
-          collections: [
-            {
-              name: 'robots',
-              label: 'Robot Encyclopedia Entries',
-              folder: '_robots',
-              create: true,
-              slug: '{{slug}}',
-              fields: [
-                { label: 'Layout', name: 'layout', widget: 'hidden', default: 'robot' },
-                { label: 'Title', name: 'title', widget: 'string' },
-                { label: 'Featured Image', name: 'image', widget: 'image', required: false },
-                { 
-                  label: 'Category', 
-                  name: 'category', 
-                  widget: 'select', 
-                  options: ['Humanoid', 'Industrial', 'Service', 'Medical', 'Educational', 'Military', 'Research'],
-                  required: false 
-                },
-                { label: 'Tags', name: 'tags', widget: 'list', required: false },
-                { label: 'Description', name: 'description', widget: 'text' },
-                { label: 'Body', name: 'body', widget: 'markdown' },
-                { label: 'Video URL', name: 'video_url', widget: 'string', required: false }
-              ]
-            }
-          ]
-        }
-      });
-      
-      // Hide the loading screen once CMS is initialized
-      document.querySelector('#loading').style.display = 'none';
+      // Initialize after everything loads
+      try {
+        // Hide loading once CMS is initialized
+        const observer = new MutationObserver(function(mutations) {
+          if (document.querySelector('.nc-app-container') || document.querySelector('.nc-root')) {
+            document.getElementById('loading').style.display = 'none';
+            observer.disconnect();
+          }
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });
+      } catch (error) {
+        console.error('Failed to initialize observer:', error);
+      }
     });
   </script>
 </body>
