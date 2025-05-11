@@ -5,12 +5,15 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
-# If you want to use editorial workflow, enable it
-# publish_mode: editorial_workflow
-
 # Display settings
 site_url: https://tedouar.netlify.app
 display_url: https://tedouar.netlify.app
+logo_url: https://tedouar.netlify.app/images/logo.png
+
+# Custom CSS for styling the CMS
+local_backend: false
+locale: 'en'
+load_config_file: false
 
 # Collections
 collections:
