@@ -6,6 +6,484 @@
     <title>Sign Up - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Hero Section */
+        .hero {
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            padding-top: 130px; /* Increased padding to prevent overlap with header */
+            background: radial-gradient(circle at center, #1a1a1a 0%, #121212 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(135deg, rgba(12, 235, 235, 0.1), rgba(32, 227, 178, 0.1));
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        /* Signup Form Styles */
+        .signup-section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .signup-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .signup-form {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border: 1px solid rgba(32, 227, 178, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(32, 227, 178, 0.05), transparent);
+            z-index: -1;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            bottom: 0;
+            left: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(32, 227, 178, 0.3);
+        }
+
+        .requirements {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .error-message {
+            color: #ff5e5e;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .show-error {
+            display: block;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle .toggle-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle .toggle-icon:hover {
+            color: var(--primary-color);
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            color: var(--bg-color);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(32, 227, 178, 0.3);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(32, 227, 178, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .benefits-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .benefits-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(32, 227, 178, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 20px;
+            flex-shrink: 0;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+        }
+
+        .benefit-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .benefit-content p {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        .strength-meter {
+            height: 5px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-top: 8px;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .strength-meter::before {
+            content: '';
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .strength-meter.weak::before {
+            width: 25%;
+            background-color: #ff4d4d;
+        }
+
+        .strength-meter.medium::before {
+            width: 50%;
+            background-color: #ffaa00;
+        }
+
+        .strength-meter.strong::before {
+            width: 75%;
+            background-color: #9cff00;
+        }
+
+        .strength-meter.very-strong::before {
+            width: 100%;
+            background-color: #00ff00;
+        }
+
+        .strength-text {
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .interests-container {
+            margin-top: 15px;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .interest-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .interest-option input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            border-radius: 3px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interest-option input[type="checkbox"]:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .interest-option input[type="checkbox"]:checked::before {
+            content: "✓";
+            color: var(--bg-color);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .interest-option label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+            border-radius: 3px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .terms-checkbox input[type="checkbox"]:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .terms-checkbox input[type="checkbox"]:checked::before {
+            content: "✓";
+            color: var(--bg-color);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .terms-checkbox label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .terms-checkbox label a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .terms-checkbox label a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal/Alert Styles */
+        .alert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .alert-modal.active {
+            display: flex;
+        }
+
+        .alert-content {
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(32, 227, 178, 0.3);
+        }
+
+        .alert-icon {
+            margin-bottom: 20px;
+            font-size: 48px;
+            color: var(--primary-color);
+        }
+
+        .alert-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .alert-message {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .alert-button {
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            color: var(--bg-color);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 992px) {
+            .signup-container {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-section {
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .interests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -38,6 +516,7 @@
                 </svg>
             </a>
             <nav class="nav-links">
+                <a href="index.html">Home</a>
                 <a href="encyclopedia.html">Encyclopedia</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
@@ -52,84 +531,246 @@
         </div>
     </header>
 
-    <!-- Sign Up Section -->
-    <section class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <h2 class="auth-title">Create an Account</h2>
-                <p class="auth-subtitle">Join the TedouaR Robotics Hub community</p>
-            </div>
-            
-            <form class="auth-form" id="signup-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="first-name" class="form-label">First Name</label>
-                        <input type="text" id="first-name" name="first-name" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="last-name" class="form-label">Last Name</label>
-                        <input type="text" id="last-name" name="last-name" class="form-control" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="password-input">
-                        <input type="password" id="password" name="password" class="form-control" required>
-                        <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
-                    </div>
-                    <div class="password-strength">
-                        <div class="strength-meter">
-                            <div class="strength-segment"></div>
-                            <div class="strength-segment"></div>
-                            <div class="strength-segment"></div>
-                            <div class="strength-segment"></div>
-                        </div>
-                        <span class="strength-text">Password strength</span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password" class="form-label">Confirm Password</label>
-                    <div class="password-input">
-                        <input type="password" id="confirm-password" name="confirm-password" class="form-control" required>
-                        <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
-                    </div>
-                </div>
-                
-                <div class="form-group form-checkbox">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-            </form>
-            
-            <div class="form-divider">or</div>
-            
-            <div class="social-auth">
-                <button type="button" class="social-btn">
-                    <i class="fab fa-google social-icon"></i> Google
-                </button>
-                <button type="button" class="social-btn">
-                    <i class="fab fa-github social-icon"></i> GitHub
-                </button>
-            </div>
-            
-            <div class="auth-footer">
-                Already have an account? <a href="login.html" class="auth-link">Log In</a>
-            </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Join Our Community</h1>
+            <p>Create an account to access exclusive content, contribute to discussions, and connect with fellow robotics enthusiasts</p>
         </div>
     </section>
 
+    <!-- Main Content -->
+    <main>
+        <!-- Signup Section -->
+        <section class="signup-section">
+            <div class="container signup-container">
+                <div class="benefits-section">
+                    <h2 class="benefits-title">Why Join TedouaR Robotics HUB?</h2>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Exclusive Content</h3>
+                            <p>Access our exclusive robotics resources, research papers, and detailed tutorials not available to non-members.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Community Discussions</h3>
+                            <p>Engage with a global community of robotics enthusiasts, researchers, and industry professionals.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Event Notifications</h3>
+                            <p>Receive updates about the latest robotics events, conferences, and webinars around the world.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Project Showcase</h3>
+                            <p>Share your robotics projects and get feedback from experts and fellow enthusiasts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="signup-form">
+                    <h2 class="form-title">Create Your Account</h2>
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" class="form-control" required>
+                            <div class="error-message" id="fullNameError">Please enter your full name</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                            <div class="error-message" id="emailError">Please enter a valid email address</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-toggle">
+                                <input type="password" id="password" name="password" class="form-control" required>
+                                <i class="fas fa-eye toggle-icon" id="togglePassword"></i>
+                            </div>
+                            <div class="requirements">
+                                At least 8 characters with uppercase, lowercase, number and special character
+                            </div>
+                            <div class="strength-meter" id="passwordStrength"></div>
+                            <div class="strength-text" id="strengthText"></div>
+                            <div class="error-message" id="passwordError">Your password doesn't meet the requirements</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <div class="password-toggle">
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                                <i class="fas fa-eye toggle-icon" id="toggleConfirmPassword"></i>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Areas of Interest</label>
+                            <div class="interests-grid">
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-industrial" value="industrial">
+                                    <label for="interest-industrial">Industrial Robotics</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-medical" value="medical">
+                                    <label for="interest-medical">Medical Robotics</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-ai" value="ai">
+                                    <label for="interest-ai">AI & Machine Learning</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-programming" value="programming">
+                                    <label for="interest-programming">Robotics Programming</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-hardware" value="hardware">
+                                    <label for="interest-hardware">Hardware & Electronics</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-drones" value="drones">
+                                    <label for="interest-drones">Drones & UAVs</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-education" value="education">
+                                    <label for="interest-education">Educational Robotics</label>
+                                </div>
+                                <div class="interest-option">
+                                    <input type="checkbox" id="interest-research" value="research">
+                                    <label for="interest-research">Research & Development</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="termsAgreement" name="termsAgreement" required>
+                            <label for="termsAgreement">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                            <div class="error-message" id="termsError">You must agree to the terms to continue</div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Create Account</button>
+                        
+                        <div class="login-link">
+                            Already have an account? <a href="login.html">Log In</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Alert Modal -->
+    <div class="alert-modal" id="alertModal">
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="alert-title">Success!</h3>
+            <p class="alert-message">Your account has been created successfully. You will be redirected to the login page shortly.</p>
+            <button class="alert-button" id="alertButton">Continue</button>
+        </div>
+    </div>
+
+    <!-- AI Assistant Button -->
+    <div class="ai-assistant">
+        <div class="ai-button" id="ai-button">
+            <div class="ai-icon"><i class="fas fa-robot"></i></div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Chat Interface (Hidden by default) -->
+    <div class="ai-chat-container" id="ai-chat-container">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title">Robot Assistant</div>
+            <div class="ai-chat-close" id="ai-chat-close"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="ai-chat-messages" id="ai-chat-messages">
+            <div class="ai-message">
+                <div class="ai-avatar"><i class="fas fa-robot"></i></div>
+                <div class="ai-bubble">Hello! I'm your robotics guide. How can I help you explore the world of robots today?</div>
+            </div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="ai-input" placeholder="Ask me about robots...">
+            <button id="ai-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html#mission">Our Mission</a></li>
+                        <li><a href="about.html#vision">Our Vision</a></li>
+                        <li><a href="about.html#why">Why We Exist</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html">Robot Database</a></li>
+                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="encyclopedia.html?category=drone">Drones & UAVs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="contact.html#newsletter">Newsletter</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/signup.js"></script>
 </body>
 </html>
