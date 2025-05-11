@@ -1,193 +1,101 @@
 // Common Authentication JavaScript
 document.addEventListener('DOMContentLoaded', function() {
+    // For demonstration/testing purposes - simulate admin login
+    // In production, this would be handled via proper authentication
+    if (window.location.pathname.includes('login.html')) {
+        const loginForm = document.querySelector('form');
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
+                
+                if (emailInput && passwordInput) {
+                    const email = emailInput.value.trim();
+                    const password = passwordInput.value;
+                    
+                    // Check if admin credentials (for demo only)
+                    // In a real app, this would be verified on the server
+                    if (email === 'admin@tedouar.com' && password === 'admin123') {
+                        // Set admin session
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        
+                        // Redirect to admin dashboard or homepage
+                        const redirect = new URLSearchParams(window.location.search).get('redirect');
+                        if (redirect === 'admin') {
+                            window.location.href = 'admin/';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                    } else {
+                        // Show error message for wrong credentials
+                        const errorMessage = document.querySelector('.error-message');
+                        if (errorMessage) {
+                            errorMessage.textContent = 'Invalid email or password.';
+                            errorMessage.style.display = 'block';
+                        } else {
+                            // Create error message if it doesn't exist
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'error-message';
+                            messageDiv.textContent = 'Invalid email or password.';
+                            messageDiv.style.color = '#ff6b6b';
+                            messageDiv.style.marginTop = '10px';
+                            loginForm.appendChild(messageDiv);
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
     // Update the auth buttons based on login status
     const updateAuthUI = function() {
-        const authButtonsContainer = document.querySelector('.auth-buttons');
-        if (!authButtonsContainer) return;
+        const authButtonsContainer = document.getElementById('auth-buttons');
+        const adminDropdown = document.getElementById('admin-dropdown');
         
-        const userData = localStorage.getItem('tedouarUser');
+        if (!authButtonsContainer && !adminDropdown) return;
         
-        if (userData) {
-            const user = JSON.parse(userData);
-            
-            if (user.isLoggedIn) {
-                // User is logged in, show user dropdown instead of login/signup buttons
-                authButtonsContainer.innerHTML = `
-                    <div class="user-dropdown">
-                        <div class="user-info" id="userDropdownToggle">
-                            <span>${user.fullName || 'User'}</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="dropdown-menu" id="userDropdownMenu">
-                            <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
-                            <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                            ${user.isAdmin ? '<a href="admin.html"><i class="fas fa-shield-alt"></i> Admin</a>' : ''}
-                            <a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                        </div>
-                    </div>
-                `;
-                
-                // Add dropdown toggle functionality
-                const userDropdownToggle = document.getElementById('userDropdownToggle');
-                const userDropdownMenu = document.getElementById('userDropdownMenu');
-                
-                if (userDropdownToggle && userDropdownMenu) {
-                    userDropdownToggle.addEventListener('click', function() {
-                        userDropdownMenu.classList.toggle('active');
-                    });
-                    
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', function(event) {
-                        if (!event.target.closest('.user-dropdown')) {
-                            userDropdownMenu.classList.remove('active');
-                        }
-                    });
-                }
-                
-                // Add logout functionality
-                const logoutButton = document.getElementById('logoutButton');
-                
-                if (logoutButton) {
-                    logoutButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        
-                        // Update user data
-                        user.isLoggedIn = false;
-                        localStorage.setItem('tedouarUser', JSON.stringify(user));
-                        
-                        // Redirect to home page
-                        window.location.href = 'index.html';
-                    });
-                }
-            } else {
-                // User is logged out, show default buttons
-                showDefaultAuthButtons(authButtonsContainer);
-            }
+        const isAdminLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+        
+        if (isAdminLoggedIn) {
+            // Admin is logged in
+            if (authButtonsContainer) authButtonsContainer.style.display = 'none';
+            if (adminDropdown) adminDropdown.style.display = 'block';
         } else {
-            // No user data, show default buttons
-            showDefaultAuthButtons(authButtonsContainer);
+            // Admin is not logged in
+            if (authButtonsContainer) authButtonsContainer.style.display = 'flex';
+            if (adminDropdown) adminDropdown.style.display = 'none';
         }
     };
     
-    // Helper function to show default auth buttons
-    const showDefaultAuthButtons = function(container) {
-        // Get the current page
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        
-        container.innerHTML = `
-            <a href="login.html" class="btn btn-outline${currentPage === 'login.html' ? ' active' : ''}">Log In</a>
-            <a href="signup.html" class="btn btn-primary${currentPage === 'signup.html' ? ' active' : ''}">Sign Up</a>
-        `;
-    };
-    
-    // Add user dropdown styles if not already in CSS
-    const addUserDropdownStyles = function() {
-        // Check if styles already exist
-        if (document.querySelector('#user-dropdown-styles')) return;
-        
-        const styleEl = document.createElement('style');
-        styleEl.id = 'user-dropdown-styles';
-        styleEl.textContent = `
-            /* User dropdown styles */
-            .user-dropdown {
-                position: relative;
-            }
+    // Handle logout
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            .user-info {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                cursor: pointer;
-                padding: 8px 16px;
-                background-color: rgba(32, 227, 178, 0.1);
-                border-radius: 5px;
-                transition: all 0.3s;
-                border: 1px solid rgba(32, 227, 178, 0.2);
-            }
+            // Clear admin session
+            sessionStorage.removeItem('adminLoggedIn');
             
-            .user-info:hover {
-                background-color: rgba(32, 227, 178, 0.2);
-            }
-            
-            .user-info span {
-                font-weight: 500;
-            }
-            
-            .user-info i {
-                transition: transform 0.3s;
-                font-size: 0.8rem;
-            }
-            
-            .dropdown-menu {
-                position: absolute;
-                top: calc(100% + 5px);
-                right: 0;
-                width: 200px;
-                background-color: rgba(25, 25, 25, 0.95);
-                border-radius: 5px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-                overflow: hidden;
-                display: none;
-                z-index: 100;
-                border: 1px solid rgba(32, 227, 178, 0.1);
-            }
-            
-            .dropdown-menu.active {
-                display: block;
-            }
-            
-            .dropdown-menu a {
-                display: block;
-                padding: 12px 16px;
-                color: var(--text-color);
-                text-decoration: none;
-                transition: all 0.2s;
-            }
-            
-            .dropdown-menu a:hover {
-                background-color: rgba(32, 227, 178, 0.1);
-            }
-            
-            .dropdown-menu a i {
-                margin-right: 8px;
-                width: 18px;
-                text-align: center;
-            }
-        `;
-        
-        document.head.appendChild(styleEl);
-    };
+            // Redirect to homepage
+            window.location.href = 'index.html';
+        });
+    }
     
     // Initialize
-    addUserDropdownStyles();
     updateAuthUI();
     
     // Expose functions for other scripts to use
     window.tedouarAuth = {
         updateUI: updateAuthUI,
-        getCurrentUser: function() {
-            const userData = localStorage.getItem('tedouarUser');
-            if (userData) {
-                return JSON.parse(userData);
-            }
-            return null;
+        isAdminLoggedIn: function() {
+            return sessionStorage.getItem('adminLoggedIn') === 'true';
         },
-        isLoggedIn: function() {
-            const user = this.getCurrentUser();
-            return user && user.isLoggedIn;
-        },
-        isAdmin: function() {
-            const user = this.getCurrentUser();
-            return user && user.isLoggedIn && user.isAdmin;
-        },
-        logout: function() {
-            const userData = localStorage.getItem('tedouarUser');
-            if (userData) {
-                const user = JSON.parse(userData);
-                user.isLoggedIn = false;
-                localStorage.setItem('tedouarUser', JSON.stringify(user));
-                updateAuthUI();
-            }
+        adminLogout: function() {
+            sessionStorage.removeItem('adminLoggedIn');
+            updateAuthUI();
         }
     };
 });
