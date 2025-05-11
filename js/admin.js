@@ -6,9 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const isAdminPage = window.location.pathname.includes('/admin/');
     
     if (isAdminPage && !isAdminLoggedIn) {
-        // Redirect to login page if not authenticated
-        window.location.href = '../login.html?redirect=admin';
-        return;
+        // We're on an admin page but not logged in
+        // Check if we're on the Decap CMS admin index page
+        if (window.location.pathname.endsWith('/admin/') || window.location.pathname.endsWith('/admin/index.html')) {
+            // This is the Decap CMS page, allow access
+            console.log('Loading Decap CMS admin interface');
+        } else {
+            // Redirect to login page if not authenticated
+            window.location.href = '../login.html?redirect=admin';
+            return;
+        }
     }
     
     // Robot Management
@@ -28,58 +35,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const specsContainer = document.getElementById('specs-container');
     const applicationsContainer = document.getElementById('applications-container');
     
-    // Robot data storage (simulating a database)
-    let robotsData = {
-        'spot': {
-            id: 'spot',
-            name: 'Spot',
-            manufacturer: 'Boston Dynamics',
-            description: 'An agile mobile robot that navigates terrain with unprecedented mobility, allowing you to automate routine inspection tasks and data capture safely.',
-            details: 'Spot is designed to go where wheeled robots cannot, while carrying payloads with endurance far beyond aerial drones. With 360° vision and obstacle avoidance, Spot can be driven remotely or taught routes to follow autonomously.',
-            categories: ['industrial', 'quadruped'],
-            status: 'published',
-            image: '../images/robots/spot.jpg',
-            specs: [
-                { label: 'Height', value: '0.84 m' },
-                { label: 'Width', value: '0.43 m' },
-                { label: 'Length', value: '1.1 m' },
-                { label: 'Weight', value: '32.5 kg' },
-                { label: 'Runtime', value: '90 minutes' },
-                { label: 'Max Speed', value: '1.6 m/s' },
-                { label: 'DoF', value: '12' },
-                { label: 'Max Incline', value: '30 degrees' }
-            ],
-            applications: [
-                { name: 'Industrial Inspection', description: 'Automate routine inspections in industrial facilities.' },
-                { name: 'Construction Monitoring', description: 'Capture site data consistently and frequently to track progress.' },
-                { name: 'Public Safety', description: 'Assess hazardous situations and provide situational awareness.' }
-            ],
-            videos: ['https://www.youtube.com/watch?v=wlkCQXHEgjA']
-        },
-        'atlas': {
-            id: 'atlas',
-            name: 'Atlas',
-            manufacturer: 'Boston Dynamics',
-            description: 'Atlas is the most dynamic humanoid robot in the world, designed to navigate rough terrain and perform complex physical tasks.',
-            details: 'Atlas uses its whole body, including legs, arms, and torso, to perform tasks, just like a human would. It can manipulate the world by using its hands to lift, carry, and toss heavy objects.',
-            categories: ['humanoid', 'research'],
-            status: 'published',
-            image: '../images/robots/atlas.jpg',
-            specs: [
-                { label: 'Height', value: '1.5 m' },
-                { label: 'Width', value: '0.61 m' },
-                { label: 'Weight', value: '89 kg' },
-                { label: 'DoF', value: '28' },
-                { label: 'Power', value: 'Electric and hydraulic' },
-                { label: 'Sensors', value: 'Depth cameras, IMU, proprioception' }
-            ],
-            applications: [
-                { name: 'Research', description: 'Advance the state of robotics through experimental testing.' },
-                { name: 'Disaster Response', description: 'Navigate complex environments after natural disasters.' }
-            ],
-            videos: ['https://www.youtube.com/watch?v=_sBBaNYex3E']
+    // Check if we're on the traditional admin panel
+    if (window.location.pathname.includes('/admin/') && 
+        !window.location.pathname.endsWith('/admin/') && 
+        !window.location.pathname.endsWith('/admin/index.html')) {
+        
+        // Add a button to redirect to the new Decap CMS admin
+        const topBar = document.querySelector('.top-bar');
+        if (topBar) {
+            const cmsButton = document.createElement('a');
+            cmsButton.href = '../admin/';
+            cmsButton.className = 'btn btn-primary';
+            cmsButton.innerHTML = '<i class="fas fa-pencil-alt"></i> Open New CMS Editor';
+            cmsButton.style.marginLeft = 'auto';
+            cmsButton.style.marginRight = '20px';
+            
+            // Insert before the user info
+            const userInfo = topBar.querySelector('.user-info');
+            if (userInfo) {
+                topBar.insertBefore(cmsButton, userInfo);
+            } else {
+                topBar.appendChild(cmsButton);
+            }
+            
+            // Add a notification about the new CMS
+            showNotification('We\'ve added a new content management system! Click "Open New CMS Editor" to try it.', 'info', 10000);
         }
-    };
+    }
     
     // Open robot modal when Add Robot button is clicked
     if (addRobotBtn) {
@@ -171,8 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (fileInputs.length > 0) {
         fileInputs.forEach(input => {
             const display = input.nextElementSibling;
-            const browseBtn = display.querySelector('.file-input-btn');
+            if (!display) return;
+            
             const textDisplay = display.querySelector('.file-input-text');
+            if (!textDisplay) return;
             
             // Open file browser when clicking anywhere on the display area
             display.addEventListener('click', function() {
@@ -258,7 +242,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to open robot modal
     function openRobotModal(robotData = null) {
         // Reset form
-        document.getElementById('robot-form').reset();
+        const form = document.getElementById('robot-form');
+        if (!form) return;
+        
+        form.reset();
         
         // Clear existing specs and applications
         if (specsContainer) {
@@ -282,12 +269,18 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('robot-name').value = robotData.name;
             document.getElementById('robot-manufacturer').value = robotData.manufacturer;
             document.getElementById('robot-description').value = robotData.description;
-            document.getElementById('robot-details').value = robotData.details || '';
-            document.getElementById('robot-status').value = robotData.status;
+            
+            if (document.getElementById('robot-details')) {
+                document.getElementById('robot-details').value = robotData.details || '';
+            }
+            
+            if (document.getElementById('robot-status')) {
+                document.getElementById('robot-status').value = robotData.status || 'published';
+            }
             
             // Select categories
             const categorySelect = document.getElementById('robot-categories');
-            if (categorySelect) {
+            if (categorySelect && robotData.categories) {
                 for (let i = 0; i < categorySelect.options.length; i++) {
                     categorySelect.options[i].selected = robotData.categories.includes(categorySelect.options[i].value);
                 }
@@ -310,8 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Add videos
-            if (robotData.videos && robotData.videos.length > 0) {
-                document.getElementById('robot-videos').value = robotData.videos.join('\n');
+            if (robotData.videos && robotData.videos.length > 0 && document.getElementById('robot-videos')) {
+                document.getElementById('robot-videos').value = robotData.videos.map(v => v.url).join('\n');
             }
         }
         
@@ -331,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to open delete confirmation modal
     function openDeleteModal(robotId) {
         if (deleteModal) {
+            const robotsData = window.robotsData || {};
             const robot = robotsData[robotId] || { name: 'this robot' };
             document.getElementById('delete-robot-name').textContent = robot.name;
             deleteModal.setAttribute('data-robot-id', robotId);
@@ -377,147 +371,112 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to save robot data
     function saveRobot() {
-        // Get form data
-        const form = document.getElementById('robot-form');
-        if (!form) return;
+        // Show notification that we're redirecting to the new CMS
+        showNotification(`We're now using a new content management system. Redirecting you to the new editor...`, 'info');
         
-        const name = document.getElementById('robot-name').value.trim();
-        const manufacturer = document.getElementById('robot-manufacturer').value.trim();
-        const description = document.getElementById('robot-description').value.trim();
-        const details = document.getElementById('robot-details').value.trim();
-        const status = document.getElementById('robot-status').value;
-        
-        // Validate required fields
-        if (!name || !manufacturer || !description) {
-            showNotification('Please fill out all required fields.', 'error');
-            return;
-        }
-        
-        // Generate an ID from the name
-        const id = name.toLowerCase().replace(/\s+/g, '-');
-        
-        // Get selected categories
-        const categorySelect = document.getElementById('robot-categories');
-        const categories = [];
-        if (categorySelect) {
-            for (let i = 0; i < categorySelect.options.length; i++) {
-                if (categorySelect.options[i].selected) {
-                    categories.push(categorySelect.options[i].value);
-                }
-            }
-        }
-        
-        // Get specifications
-        const specs = [];
-        const specLabels = form.querySelectorAll('input[name="spec-label[]"]');
-        const specValues = form.querySelectorAll('input[name="spec-value[]"]');
-        
-        for (let i = 0; i < specLabels.length; i++) {
-            const label = specLabels[i].value.trim();
-            const value = specValues[i].value.trim();
-            
-            if (label && value) {
-                specs.push({ label, value });
-            }
-        }
-        
-        // Get applications
-        const applications = [];
-        const applicationNames = form.querySelectorAll('input[name="application[]"]');
-        const applicationDescs = form.querySelectorAll('textarea[name="application-desc[]"]');
-        
-        for (let i = 0; i < applicationNames.length; i++) {
-            const name = applicationNames[i].value.trim();
-            const description = applicationDescs[i].value.trim();
-            
-            if (name) {
-                applications.push({ name, description });
-            }
-        }
-        
-        // Get videos
-        const videosText = document.getElementById('robot-videos').value;
-        const videos = videosText ? videosText.split('\n').filter(url => url.trim()) : [];
-        
-        // Create robot object
-        const robot = {
-            id,
-            name,
-            manufacturer,
-            description,
-            details,
-            categories,
-            status,
-            specs,
-            applications,
-            videos,
-            image: '../images/robots/placeholder.jpg' // Placeholder image
-        };
-        
-        // Handle image upload (in a real implementation, this would upload to a server)
-        const imageInput = document.getElementById('robot-image');
-        if (imageInput && imageInput.files.length > 0) {
-            // In a real implementation, this would be an AJAX call to upload the file
-            // For this demo, we'll just simulate a successful upload
-            const file = imageInput.files[0];
-            // Here we'd normally upload the file and get back a URL
-            robot.image = `../images/robots/${id}.jpg`;
-        }
-        
-        // Save robot data (in a real implementation, this would be an API call)
-        robotsData[id] = robot;
-        
-        // Close modal
-        closeRobotModal();
-        
-        // Show success notification
-        showNotification(`Robot "${name}" has been saved successfully.`, 'success');
-        
-        // Reload page after a short delay
+        // Redirect to the new CMS after a short delay
         setTimeout(() => {
-            window.location.reload();
-        }, 1500);
+            window.location.href = '../admin/';
+        }, 2000);
+        
+        return;
     }
     
     // Function to delete a robot
     function deleteRobot() {
-        if (!deleteModal) return;
+        // Show notification that we're redirecting to the new CMS
+        showNotification(`We're now using a new content management system. Redirecting you to the new editor...`, 'info');
         
-        const robotId = deleteModal.getAttribute('data-robot-id');
-        if (!robotId) return;
-        
-        // Delete robot (in a real implementation, this would be an API call)
-        const robotName = robotsData[robotId] ? robotsData[robotId].name : 'Robot';
-        delete robotsData[robotId];
-        
-        // Close modal
-        closeDeleteModal();
-        
-        // Show success notification
-        showNotification(`Robot "${robotName}" has been deleted successfully.`, 'success');
-        
-        // Reload page after a short delay
+        // Redirect to the new CMS after a short delay
         setTimeout(() => {
-            window.location.reload();
-        }, 1500);
+            window.location.href = '../admin/';
+        }, 2000);
+        
+        return;
     }
     
     // Function to load robot data for editing
     function loadRobotForEditing(robotId) {
         // In a real implementation, this would be an API call to get the robot data
+        const robotsData = window.robotsData || {};
         const robot = robotsData[robotId];
         
         if (robot) {
             // Populate form with robot data
-            openRobotModal(robot);
+            document.getElementById('robot-name').value = robot.name || '';
+            document.getElementById('robot-manufacturer').value = robot.manufacturer || '';
+            document.getElementById('robot-description').value = robot.description || '';
+            
+            if (document.getElementById('robot-details')) {
+                document.getElementById('robot-details').value = robot.details || '';
+            }
+            
+            // Update page title
+            const editTitle = document.getElementById('edit-title');
+            if (editTitle) {
+                editTitle.textContent = `Edit Robot: ${robot.name}`;
+            }
+            
+            // Set preview image if available
+            const imagePreview = document.getElementById('robot-image-preview');
+            if (imagePreview && robot.image) {
+                imagePreview.src = robot.image.startsWith('../') ? robot.image : `../${robot.image}`;
+            }
+            
+            // Add specs
+            if (specsContainer && robot.specs && robot.specs.length > 0) {
+                specsContainer.innerHTML = '';
+                robot.specs.forEach(spec => {
+                    addSpecRow(spec.label, spec.value);
+                });
+            } else if (specsContainer) {
+                // Add a default empty row
+                addSpecRow();
+            }
+            
+            // Add applications
+            if (applicationsContainer && robot.applications && robot.applications.length > 0) {
+                applicationsContainer.innerHTML = '';
+                robot.applications.forEach(app => {
+                    addApplicationRow(app.name, app.description);
+                });
+            } else if (applicationsContainer) {
+                // Add a default empty row
+                addApplicationRow();
+            }
+            
+            // Add videos
+            const robotVideos = document.getElementById('robot-videos');
+            if (robotVideos && robot.videos && robot.videos.length > 0) {
+                robotVideos.value = robot.videos.map(v => v.url || v).join('\n');
+            }
+            
+            // Select categories
+            const categorySelect = document.getElementById('robot-categories');
+            if (categorySelect && robot.categories) {
+                for (let i = 0; i < categorySelect.options.length; i++) {
+                    categorySelect.options[i].selected = robot.categories.includes(categorySelect.options[i].value);
+                }
+            }
+            
+            // Set status
+            const statusSelect = document.getElementById('robot-status');
+            if (statusSelect && robot.status) {
+                statusSelect.value = robot.status;
+            }
         } else {
-            // Robot not found
-            showNotification('Robot not found.', 'error');
+            // Robot not found, show error
+            showNotification('Robot not found. Redirecting to robots page...', 'error');
+            
+            // Redirect to robots page after a short delay
+            setTimeout(() => {
+                window.location.href = 'robots.html';
+            }, 1500);
         }
     }
     
     // Function to display notification
-    function showNotification(message, type) {
+    function showNotification(message, type, duration = 5000) {
         // Check if notification container exists, create if not
         let notificationContainer = document.querySelector('.notification-container');
         if (!notificationContainer) {
@@ -543,17 +502,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add to container
         notificationContainer.appendChild(notification);
         
-        // Auto-remove after 5 seconds
+        // Auto-remove after specified duration
         setTimeout(function() {
             notification.remove();
-        }, 5000);
+        }, duration);
     }
     
     // Dashboard chart (if we're on the dashboard page)
     if (window.location.pathname.includes('dashboard.html')) {
-        // This would normally use a charting library like Chart.js
-        // For this demo, we'll just create a placeholder
-        console.log('Dashboard loaded');
+        // Add a notification about using the new CMS
+        showNotification('We\'ve added a new content management system! Click "Open New CMS Editor" to try it.', 'info', 10000);
     }
 });
 
@@ -770,6 +728,74 @@ document.addEventListener('DOMContentLoaded', function() {
         
         .btn-danger:hover {
             background-color: #d32f2f;
+        }
+        
+        /* Notification styling */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .notification {
+            background-color: #242424;
+            border-left: 4px solid var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease-out;
+            position: relative;
+            width: 100%;
+        }
+        
+        .notification.success {
+            border-left-color: #4caf50;
+        }
+        
+        .notification.error {
+            border-left-color: #f44336;
+        }
+        
+        .notification.info {
+            border-left-color: #2196f3;
+        }
+        
+        .notification.warning {
+            border-left-color: #ff9800;
+        }
+        
+        .notification-close {
+            font-size: 1.2rem;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            margin-left: 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .notification-close:hover {
+            color: white;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     `;
     
