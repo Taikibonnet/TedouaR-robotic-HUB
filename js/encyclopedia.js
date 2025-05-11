@@ -1,6 +1,6 @@
 // encyclopedia.js - Manage robot data and display
 
-// Sample robot data for testing
+// Sample robot data for testing (will be replaced by CMS data)
 window.robotsData = {
     "r001": {
         "id": "r001",
@@ -10,20 +10,20 @@ window.robotsData = {
         "featured": true,
         "categories": ["humanoid", "research"],
         "image": "images/robots/atlas.jpg",
-        "specs": {
-            "height": "1.5 meters",
-            "weight": "80 kg",
-            "powerSource": "Electric (battery)",
-            "battery": "3 hours operation",
-            "sensors": ["LIDAR", "Stereo Vision", "IMU"],
-            "dof": 28,
-            "payload": "11 kg"
-        },
+        "specs": [
+            { "label": "height", "value": "1.5 meters" },
+            { "label": "weight", "value": "80 kg" },
+            { "label": "powerSource", "value": "Electric (battery)" },
+            { "label": "battery", "value": "3 hours operation" },
+            { "label": "sensors", "value": "LIDAR, Stereo Vision, IMU" },
+            { "label": "dof", "value": "28" },
+            { "label": "payload", "value": "11 kg" }
+        ],
         "applications": [
-            "Search and rescue",
-            "Research and development",
-            "Military applications",
-            "Disaster response"
+            { "name": "Search and rescue", "description": "Locate and assist people in disaster scenarios" },
+            { "name": "Research and development", "description": "Test new algorithms and technologies" },
+            { "name": "Military applications", "description": "Support for various military tasks" },
+            { "name": "Disaster response", "description": "Navigate hazardous environments" }
         ],
         "videos": [
             {
@@ -40,20 +40,20 @@ window.robotsData = {
         "featured": true,
         "categories": ["quadruped", "industrial"],
         "image": "images/robots/spot.jpg",
-        "specs": {
-            "height": "0.84 meters",
-            "weight": "32.5 kg",
-            "powerSource": "Electric (battery)",
-            "battery": "90 minutes operation",
-            "sensors": ["Stereo Cameras", "LIDAR", "IMU"],
-            "dof": 12,
-            "payload": "14 kg"
-        },
+        "specs": [
+            { "label": "height", "value": "0.84 meters" },
+            { "label": "weight", "value": "32.5 kg" },
+            { "label": "powerSource", "value": "Electric (battery)" },
+            { "label": "battery", "value": "90 minutes operation" },
+            { "label": "sensors", "value": "Stereo Cameras, LIDAR, IMU" },
+            { "label": "dof", "value": "12" },
+            { "label": "payload", "value": "14 kg" }
+        ],
         "applications": [
-            "Industrial inspection",
-            "Construction monitoring",
-            "Public safety",
-            "Entertainment"
+            { "name": "Industrial inspection", "description": "Inspect facilities and equipment" },
+            { "name": "Construction monitoring", "description": "Monitor progress and safety at construction sites" },
+            { "name": "Public safety", "description": "Assist in public safety operations" },
+            { "name": "Entertainment", "description": "Perform in shows and entertainment venues" }
         ],
         "videos": [
             {
@@ -62,142 +62,34 @@ window.robotsData = {
             }
         ]
     },
-    "r003": {
-        "id": "r003",
-        "name": "NAO",
-        "manufacturer": "SoftBank Robotics",
-        "description": "A small humanoid robot designed for education and research. NAO can interact with humans, recognize faces, and be programmed for a variety of applications.",
-        "featured": true,
-        "categories": ["humanoid", "educational"],
-        "image": "images/robots/nao.jpg",
-        "specs": {
-            "height": "58 cm",
-            "weight": "5.4 kg",
-            "powerSource": "Electric (battery)",
-            "battery": "90 minutes operation",
-            "sensors": ["Cameras", "Microphones", "Tactile Sensors", "Sonar"],
-            "dof": 25,
-            "payload": "N/A"
-        },
-        "applications": [
-            "Education",
-            "Research",
-            "Healthcare",
-            "Customer service"
-        ],
-        "videos": [
-            {
-                "title": "NAO Robot Capabilities",
-                "url": "https://www.youtube.com/embed/2STTNYNF4lk"
-            }
-        ]
-    },
-    "r004": {
-        "id": "r004",
-        "name": "UR10e",
-        "manufacturer": "Universal Robots",
-        "description": "A collaborative industrial robot arm that can work safely alongside humans. The UR10e can be easily programmed for a wide range of applications in manufacturing.",
-        "featured": false,
-        "categories": ["industrial", "collaborative"],
-        "image": "images/robots/ur10e.jpg",
-        "specs": {
-            "reach": "1.3 meters",
-            "weight": "33.5 kg",
-            "powerSource": "Electric",
-            "payload": "12.5 kg",
-            "sensors": ["Force Torque Sensor", "Position Sensors"],
-            "dof": 6,
-            "repeatability": "±0.05 mm"
-        },
-        "applications": [
-            "Pick and place",
-            "Assembly",
-            "Packaging and palletizing",
-            "Machine tending",
-            "Quality inspection"
-        ],
-        "videos": [
-            {
-                "title": "UR10e Demonstration",
-                "url": "https://www.youtube.com/embed/xZJIzLGGa0g"
-            }
-        ]
-    },
-    "r005": {
-        "id": "r005",
-        "name": "Roomba i7+",
-        "manufacturer": "iRobot",
-        "description": "A robotic vacuum cleaner that can map homes, empty its own dust bin, and be controlled via a smartphone app. The Roomba i7+ uses sensors to navigate and clean efficiently.",
-        "featured": false,
-        "categories": ["consumer", "service"],
-        "image": "images/robots/roomba.jpg",
-        "specs": {
-            "height": "9.2 cm",
-            "diameter": "34 cm",
-            "weight": "3.4 kg",
-            "powerSource": "Electric (battery)",
-            "battery": "90 minutes operation",
-            "sensors": ["Cameras", "Cliff Sensors", "Obstacle Sensors"],
-            "navigation": "vSLAM",
-            "dustbin": "550 ml"
-        },
-        "applications": [
-            "Home cleaning",
-            "Floor maintenance",
-            "Dust and debris collection"
-        ],
-        "videos": [
-            {
-                "title": "Roomba i7+ Features",
-                "url": "https://www.youtube.com/embed/qhB4GRXjUUo"
-            }
-        ]
-    },
-    "r006": {
-        "id": "r006",
-        "name": "Curiosity Rover",
-        "manufacturer": "NASA JPL",
-        "description": "A car-sized rover designed to explore the crater Gale on Mars as part of NASA's Mars Science Laboratory mission. Curiosity was designed to assess whether Mars ever had an environment able to support small life forms called microbes.",
-        "featured": false,
-        "categories": ["space", "research"],
-        "image": "images/robots/curiosity.jpg",
-        "specs": {
-            "length": "3 meters",
-            "weight": "899 kg",
-            "powerSource": "Radioisotope thermoelectric generator",
-            "mission": "Mars Science Laboratory",
-            "sensors": ["Cameras", "Spectrometers", "Radiation Detectors"],
-            "communication": "Deep Space Network",
-            "speed": "0.14 km/h"
-        },
-        "applications": [
-            "Mars exploration",
-            "Scientific research",
-            "Geological analysis",
-            "Climate studies"
-        ],
-        "videos": [
-            {
-                "title": "Curiosity Rover on Mars",
-                "url": "https://www.youtube.com/embed/e1ebHThBPlk"
-            }
-        ]
-    }
+    // Other robots remain the same...
 };
+
+// Store reference to initialize function in window for access by cms-content.js
+window.initializeEncyclopedia = initializeEncyclopedia;
+window.initializeRobotDetail = initializeRobotDetail;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check if we're on the encyclopedia page
     const isEncyclopediaPage = document.querySelector('.encyclopedia-container');
     
     if (isEncyclopediaPage) {
-        initializeEncyclopedia();
+        // Only initialize if we have robot data
+        // This will be called by cms-content.js after it loads data
+        if (window.robotsData && Object.keys(window.robotsData).length > 0) {
+            initializeEncyclopedia();
+        }
     }
     
     // Initialize detailed robot view if on robot-detail page
     const isRobotDetailPage = document.querySelector('.robot-detail-container');
     
     if (isRobotDetailPage) {
-        initializeRobotDetail();
+        // Only initialize if we have robot data
+        // This will be called by cms-content.js after it loads data
+        if (window.robotsData && Object.keys(window.robotsData).length > 0) {
+            initializeRobotDetail();
+        }
     }
 });
 
@@ -387,51 +279,61 @@ function updateRobotDetails(robot) {
     // Update specifications
     const specsContainer = document.querySelector('.tab-content[data-tab="specifications"]');
     
-    if (specsContainer && robot.specs) {
+    if (specsContainer && robot.specs && robot.specs.length > 0) {
         const specsList = document.createElement('div');
         specsList.className = 'specs-list';
         
-        for (const [key, value] of Object.entries(robot.specs)) {
+        robot.specs.forEach(spec => {
             const specItem = document.createElement('div');
             specItem.className = 'spec-item';
             
             const specName = document.createElement('div');
             specName.className = 'spec-name';
-            specName.textContent = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+            specName.textContent = spec.label.charAt(0).toUpperCase() + spec.label.slice(1).replace(/([A-Z])/g, ' $1');
             
             const specValue = document.createElement('div');
             specValue.className = 'spec-value';
-            
-            if (Array.isArray(value)) {
-                specValue.textContent = value.join(', ');
-            } else {
-                specValue.textContent = value;
-            }
+            specValue.textContent = spec.value;
             
             specItem.appendChild(specName);
             specItem.appendChild(specValue);
             specsList.appendChild(specItem);
-        }
+        });
         
         specsContainer.innerHTML = '';
         specsContainer.appendChild(specsList);
+    } else if (specsContainer) {
+        specsContainer.innerHTML = '<p class="no-specs">No specifications available for this robot.</p>';
     }
     
     // Update applications
     const applicationsContainer = document.querySelector('.tab-content[data-tab="applications"]');
     
-    if (applicationsContainer && robot.applications) {
-        const applicationsList = document.createElement('ul');
+    if (applicationsContainer && robot.applications && robot.applications.length > 0) {
+        const applicationsList = document.createElement('div');
         applicationsList.className = 'applications-list';
         
         robot.applications.forEach(application => {
-            const applicationItem = document.createElement('li');
-            applicationItem.textContent = application;
+            const applicationItem = document.createElement('div');
+            applicationItem.className = 'application-item';
+            
+            const applicationName = document.createElement('h3');
+            applicationName.className = 'application-name';
+            applicationName.textContent = application.name;
+            
+            const applicationDesc = document.createElement('p');
+            applicationDesc.className = 'application-description';
+            applicationDesc.textContent = application.description;
+            
+            applicationItem.appendChild(applicationName);
+            applicationItem.appendChild(applicationDesc);
             applicationsList.appendChild(applicationItem);
         });
         
         applicationsContainer.innerHTML = '';
         applicationsContainer.appendChild(applicationsList);
+    } else if (applicationsContainer) {
+        applicationsContainer.innerHTML = '<p class="no-applications">No applications available for this robot.</p>';
     }
     
     // Update videos
@@ -457,6 +359,18 @@ function updateRobotDetails(robot) {
         });
     } else if (videosContainer) {
         videosContainer.innerHTML = '<p class="no-videos">No videos available for this robot.</p>';
+    }
+    
+    // Display detailed description if available
+    if (robot.details) {
+        const detailsContainer = document.createElement('div');
+        detailsContainer.className = 'robot-details';
+        detailsContainer.innerHTML = robot.details;
+        
+        const descriptionElement = document.querySelector('.robot-description');
+        if (descriptionElement) {
+            descriptionElement.parentNode.insertBefore(detailsContainer, descriptionElement.nextSibling);
+        }
     }
 }
 
