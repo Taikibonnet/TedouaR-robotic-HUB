@@ -1,68 +1,67 @@
-/* Admin Dropdown Menu Styles */
+/* Admin Dropdown Styles */
 
 .admin-dropdown {
     position: relative;
-    display: inline-block;
+    margin-left: 20px;
 }
 
 #admin-dropdown-toggle {
-    background-color: var(--dark-2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    padding: 10px 15px;
     display: flex;
     align-items: center;
-    gap: 10px;
     cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 30px;
+    background-color: rgba(32, 227, 178, 0.1);
+    border: 1px solid rgba(32, 227, 178, 0.3);
     transition: all 0.3s ease;
 }
 
 #admin-dropdown-toggle:hover {
-    background-color: var(--dark-3);
+    background-color: rgba(32, 227, 178, 0.2);
 }
 
-#admin-dropdown-toggle .avatar {
-    width: 24px;
-    height: 24px;
+.avatar {
+    width: 30px;
+    height: 30px;
+    background-color: #20e3b2;
     border-radius: 50%;
-    background-color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    color: var(--dark-1);
+    font-weight: bold;
+    color: #111;
+    margin-right: 10px;
 }
 
-#admin-dropdown-toggle .username {
-    font-weight: 500;
+.username {
+    font-size: 0.9rem;
+    color: #eee;
+    margin-right: 10px;
 }
 
-#admin-dropdown-toggle .caret {
+.caret {
+    color: #888;
     transition: transform 0.3s ease;
 }
 
-#admin-dropdown-toggle.active .caret {
-    transform: rotate(180deg);
-}
-
+/* Dropdown Menu */
 #admin-dropdown-menu {
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
-    background-color: var(--dark-2);
-    border-radius: 4px;
     width: 200px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    transition: all 0.3s ease;
+    background-color: #222;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+    z-index: 1000;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    z-index: 1000;
+    transition: all 0.3s ease;
 }
 
-#admin-dropdown-menu.active {
+#admin-dropdown-menu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -75,67 +74,62 @@
 }
 
 #admin-dropdown-menu li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-#admin-dropdown-menu li:last-child {
-    border-bottom: none;
+    margin: 0;
+    padding: 0;
 }
 
 #admin-dropdown-menu a {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 15px;
-    color: white;
+    padding: 10px 15px;
+    color: #ddd;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 #admin-dropdown-menu a:hover {
-    background-color: var(--dark-3);
+    background-color: rgba(32, 227, 178, 0.1);
+    color: #20e3b2;
 }
 
-#admin-dropdown-menu a i {
+#admin-dropdown-menu i {
+    margin-right: 10px;
     width: 20px;
     text-align: center;
-    color: var(--text-secondary);
+    font-size: 1rem;
 }
 
 #admin-dropdown-menu .admin-link {
-    color: var(--primary-color);
-    font-weight: 500;
-}
-
-#admin-dropdown-menu .admin-link i {
-    color: var(--primary-color);
+    color: #20e3b2;
 }
 
 #admin-dropdown-menu .logout-link {
-    color: #ff6b6b;
+    border-top: 1px solid #333;
+    margin-top: 5px;
+    padding-top: 10px;
+    color: #ff5757;
 }
 
-#admin-dropdown-menu .logout-link i {
-    color: #ff6b6b;
+#admin-dropdown-menu .logout-link:hover {
+    background-color: rgba(255, 87, 87, 0.1);
+    color: #ff5757;
 }
 
-/* Make dropdown responsive */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .admin-dropdown {
-        display: block;
-        width: 100%;
+        margin-left: 10px;
+    }
+    
+    .username {
+        display: none;
     }
     
     #admin-dropdown-toggle {
-        width: 100%;
-        justify-content: space-between;
+        padding: 5px;
     }
     
-    #admin-dropdown-menu {
-        position: static;
-        width: 100%;
-        margin-top: 10px;
-        box-shadow: none;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    .avatar {
+        margin-right: 5px;
     }
 }
