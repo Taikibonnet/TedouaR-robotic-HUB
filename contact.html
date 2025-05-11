@@ -16,6 +16,7 @@
             background: radial-gradient(circle at center, #1a1a1a 0%, #121212 100%);
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
         
         .hero::before {
@@ -34,22 +35,27 @@
             position: relative;
             z-index: 1;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .hero h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
         }
         
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             margin-bottom: 40px;
-            max-width: 700px;
+            max-width: 800px;
+            text-align: center;
         }
 
         /* Contact Page Specific Styles */
@@ -405,13 +411,21 @@
             }
 
             .hero h1 {
-                font-size: 3rem;
+                font-size: 3.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
             }
         }
 
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
             }
 
             .contact-title, .newsletter-title {
@@ -436,7 +450,11 @@
 
         @media (max-width: 576px) {
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
             }
         }
     </style>
@@ -490,7 +508,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container hero-content">
-            <h1>Get In Touch</h1>
+            <h1>Contact</h1>
             <p>Connect with us to explore collaboration opportunities, contribute to our mission, or learn more about robotics</p>
         </div>
     </section>
