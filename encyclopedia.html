@@ -175,10 +175,29 @@
         </div>
     </footer>
 
+    <!-- Admin Link (Only visible to admins) -->
+    <div class="admin-link" id="admin-link" style="position: fixed; bottom: 20px; right: 20px; z-index: 100; display: none;">
+        <a href="admin/" class="btn btn-primary">
+            <i class="fas fa-pencil-alt"></i> Edit Content
+        </a>
+    </div>
+
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/encyclopedia.js"></script>
+    <script src="js/cms-content.js"></script>
     <script src="js/ai-assistant.js"></script>
     <script src="js/auth.js"></script>
+    <script>
+        // Show admin link if logged in as admin
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAdminLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+            const adminLink = document.getElementById('admin-link');
+            
+            if (isAdminLoggedIn && adminLink) {
+                adminLink.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
