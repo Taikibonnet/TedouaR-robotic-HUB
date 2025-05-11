@@ -4,10 +4,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
     const navLinks = document.querySelector('.nav-links');
+    const authButtons = document.querySelector('.auth-buttons');
     
     if (mobileMenuButton && navLinks) {
         mobileMenuButton.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
+            navLinks.classList.toggle('mobile-active');
+            if (authButtons) {
+                authButtons.classList.toggle('mobile-active');
+            }
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.nav-links') && 
+                !event.target.closest('.mobile-menu-button') && 
+                !event.target.closest('.auth-buttons')) {
+                if (navLinks.classList.contains('mobile-active')) {
+                    navLinks.classList.remove('mobile-active');
+                    if (authButtons) {
+                        authButtons.classList.remove('mobile-active');
+                    }
+                }
+            }
         });
     }
     
@@ -125,19 +143,55 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Remove typing indicator
                         removeTypingIndicator();
                         
-                        // Simulate AI response
-                        const responses = [
-                            "I can help you explore our robot encyclopedia. What kind of robots are you interested in?",
-                            "The TedouaR Robotics Hub features industrial, humanoid, and service robots. Would you like to learn more about a specific category?",
-                            "You can find detailed specifications, applications, and videos for each robot in our encyclopedia.",
-                            "I'm here to assist with any robotics-related questions you might have.",
-                            "You can browse robots by category or search for specific models in our encyclopedia."
-                        ];
-                        
-                        // Select random response
-                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                        addMessage(randomResponse);
+                        // Process the message to generate appropriate response
+                        let response = getAIResponse(message);
+                        addMessage(response);
                     }, 1500); // Simulate thinking time
+                }
+            }
+            
+            // Function to generate contextual responses
+            function getAIResponse(message) {
+                // Convert message to lowercase for easier matching
+                const lowerMessage = message.toLowerCase();
+                
+                // Check for specific keywords to provide contextual responses
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    return "Hello there! How can I help you with robotics today?";
+                } 
+                else if (lowerMessage.includes('who are you') || lowerMessage.includes('what are you')) {
+                    return "I'm the TedouaR Robotics HUB assistant, designed to help you navigate our platform and learn about robotics.";
+                }
+                else if (lowerMessage.includes('login') || lowerMessage.includes('sign in') || lowerMessage.includes('account')) {
+                    return "You can create an account or log in using the buttons in the top-right corner of the page. This will give you access to exclusive content and community features.";
+                }
+                else if (lowerMessage.includes('robot') && (lowerMessage.includes('type') || lowerMessage.includes('kind') || lowerMessage.includes('category'))) {
+                    return "We cover many types of robots including industrial robots, humanoid robots, service robots, consumer robots, and more. You can browse them all in our encyclopedia.";
+                }
+                else if (lowerMessage.includes('industrial') && lowerMessage.includes('robot')) {
+                    return "Industrial robots are automated, programmable machines used in manufacturing. They perform tasks like welding, assembly, and packaging. Check our encyclopedia for specific industrial robot models.";
+                }
+                else if (lowerMessage.includes('humanoid')) {
+                    return "Humanoid robots are designed to resemble and mimic human movement and interaction. Examples include Boston Dynamics' Atlas and SoftBank's Pepper. You can explore them in our encyclopedia section.";
+                }
+                else if (lowerMessage.includes('contact') || lowerMessage.includes('reach') || lowerMessage.includes('email')) {
+                    return "You can contact the TedouaR Robotics team through our Contact page. We're always happy to hear from robotics enthusiasts!";
+                }
+                else if (lowerMessage.includes('thank')) {
+                    return "You're welcome! Is there anything else I can help you with?";
+                }
+                else {
+                    // Default responses if no specific matches
+                    const responses = [
+                        "I can help you explore our robot encyclopedia. What kind of robots are you interested in?",
+                        "The TedouaR Robotics Hub features industrial, humanoid, and service robots. Would you like to learn more about a specific category?",
+                        "You can find detailed specifications, applications, and videos for each robot in our encyclopedia.",
+                        "I'm here to assist with any robotics-related questions you might have.",
+                        "You can browse robots by category or search for specific models in our encyclopedia."
+                    ];
+                    
+                    // Select random response
+                    return responses[Math.floor(Math.random() * responses.length)];
                 }
             }
             
@@ -171,8 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 // Close mobile menu if open
-                if (navLinks && navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
+                if (navLinks && navLinks.classList.contains('mobile-active')) {
+                    navLinks.classList.remove('mobile-active');
+                    if (authButtons) {
+                        authButtons.classList.remove('mobile-active');
+                    }
                 }
             }
         });
