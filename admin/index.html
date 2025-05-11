@@ -255,6 +255,7 @@
       max-height: 200px;
       overflow: auto;
       z-index: 1000;
+      display: none;
     }
   </style>
 </head>
@@ -383,33 +384,80 @@
       
       // Check if user is already logged in via localStorage
       const isLoggedIn = localStorage.getItem('tedouar_admin_logged_in') === 'true';
-      if (isLoggedIn) {
-        debug('User already logged in via localStorage');
-        document.getElementById('cms-button').style.display = 'inline-block';
+      
+      // Check if user is already authenticated
+      if (window.netlifyIdentity) {
+        netlifyIdentity.on('init', user => {
+          debug('Netlify Identity initialized');
+          if (user) {
+            debug('User is already authenticated: ' + user.email);
+            document.getElementById('cms-button').style.display = 'inline-block';
+            showSuccess('Already logged in as ' + user.email);
+          } else if (isLoggedIn) {
+            debug('User appears logged in via localStorage but not via Netlify Identity');
+            document.getElementById('cms-button').style.display = 'inline-block';
+            showSuccess('You appear to be logged in already');
+          }
+        });
       }
       
       // Set up login buttons
       document.getElementById('github-login').addEventListener('click', function() {
         debug('GitHub login button clicked');
         showSpinner();
+        
+        // Open login dialog for GitHub
         netlifyIdentity.open('login');
+        
+        // This helper tries to click the GitHub button in the Netlify Identity widget
+        setTimeout(() => {
+          try {
+            const iframe = document.querySelector('iframe.netlify-identity-widget');
+            if (iframe && iframe.contentDocument) {
+              debug('Identity iframe found, looking for GitHub button');
+              
+              // Try to find the GitHub button
+              const githubButton = iframe.contentDocument.querySelector('[data-provider="github"]');
+              if (githubButton) {
+                debug('GitHub button found, clicking it');
+                githubButton.click();
+              } else {
+                debug('GitHub button not found by data-provider');
+                
+                // Try to find by text content
+                const buttons = iframe.contentDocument.querySelectorAll('button');
+                let found = false;
+                buttons.forEach(button => {
+                  if (button.textContent.toLowerCase().includes('github')) {
+                    debug('GitHub button found by text content');
+                    button.click();
+                    found = true;
+                  }
+                });
+                
+                if (!found) {
+                  debug('No GitHub button found');
+                  hideSpinner();
+                }
+              }
+            } else {
+              debug('No iframe found or cannot access contentDocument');
+              hideSpinner();
+            }
+          } catch (e) {
+            debug('Error accessing iframe: ' + e.message);
+            hideSpinner();
+          }
+        }, 500);
       });
       
       document.getElementById('email-login').addEventListener('click', function() {
         debug('Email login button clicked');
+        showSpinner();
         netlifyIdentity.open('login');
       });
       
       // Set up Netlify Identity events
-      netlifyIdentity.on('init', user => {
-        debug('Netlify Identity initialized');
-        if (user) {
-          debug('User is already authenticated: ' + user.email);
-          document.getElementById('cms-button').style.display = 'inline-block';
-          showSuccess('Already logged in as ' + user.email);
-        }
-      });
-      
       netlifyIdentity.on('login', user => {
         debug('Login event triggered for: ' + (user ? user.email : 'unknown user'));
         redirectToCMS();
@@ -420,40 +468,9 @@
         showError(err.message || 'Authentication error');
       });
       
-      // Check for GitHub login button clicks
-      netlifyIdentity.on('open', () => {
-        debug('Netlify Identity widget opened');
-        
-        // Wait for the iframe to load
-        setTimeout(() => {
-          try {
-            const iframe = document.querySelector('iframe.netlify-identity-widget');
-            if (iframe) {
-              debug('Identity iframe found, setting up observer');
-              
-              // Set up observer to detect button clicks
-              const observer = new MutationObserver((mutations) => {
-                for (const mutation of mutations) {
-                  if (mutation.type === 'childList') {
-                    const buttons = iframe.contentDocument.querySelectorAll('button');
-                    buttons.forEach(button => {
-                      if (button.textContent.includes('GitHub')) {
-                        debug('Found GitHub button in iframe: ' + button.textContent);
-                      }
-                    });
-                  }
-                }
-              });
-              
-              observer.observe(iframe.contentDocument.body, { 
-                childList: true, 
-                subtree: true 
-              });
-            }
-          } catch (e) {
-            debug('Error accessing iframe: ' + e.message);
-          }
-        }, 500);
+      netlifyIdentity.on('close', () => {
+        debug('Login dialog closed');
+        hideSpinner();
       });
     });
   </script>
