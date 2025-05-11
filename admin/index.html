@@ -5,117 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TedouaR Robotic HUB Admin</title>
   
-  <!-- Preload critical assets -->
-  <link rel="preconnect" href="https://unpkg.com">
-  
-  <!-- Include the Netlify Identity Widget for authentication -->
+  <!-- Include the Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- Include Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 0;
       color: #333;
-      background-color: #111;
+      background-color: #f7f7f7;
     }
     
-    .loading {
+    .admin-login {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      color: #fff;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
     }
     
-    .loading h1 {
+    .admin-login h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: #20e3b2;
+      font-weight: 600;
     }
     
-    .loading p {
-      font-size: 1.2rem;
+    .admin-login p {
+      font-size: 1.1rem;
       margin-bottom: 2rem;
-      color: #ccc;
-    }
-    
-    .spinner {
-      border: 5px solid rgba(32, 227, 178, 0.2);
-      border-top: 5px solid #20e3b2;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 2s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .error-message {
-      display: none;
-      padding: 20px;
-      margin-top: 20px;
-      background-color: rgba(255, 87, 87, 0.1);
-      border-left: 4px solid #ff5757;
-      color: #ff5757;
-      border-radius: 4px;
-    }
-    
-    .back-link {
-      display: none;
-      margin-top: 20px;
-      color: #20e3b2;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 10px 20px;
-      border: 1px solid #20e3b2;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-    }
-    
-    .back-link:hover {
-      background-color: rgba(32, 227, 178, 0.1);
-    }
-    
-    .login-options {
-      display: none;
-      margin-top: 30px;
-      text-align: center;
+      color: #555;
+      max-width: 600px;
     }
     
     .login-button {
-      background-color: #333;
-      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 30px;
+      background-color: #24292e;
+      color: white;
       border: none;
-      padding: 12px 25px;
       border-radius: 4px;
       font-size: 16px;
+      font-weight: 500;
       cursor: pointer;
-      margin: 0 10px;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.3s ease;
+      margin: 10px;
+      transition: background-color 0.2s ease;
+      text-decoration: none;
+      width: 220px;
     }
     
     .login-button:hover {
-      background-color: #444;
+      background-color: #2f363d;
     }
     
     .login-button i {
       margin-right: 10px;
       font-size: 18px;
-    }
-    
-    .github-login {
-      background-color: #24292e;
-    }
-    
-    .github-login:hover {
-      background-color: #2f363d;
     }
     
     .email-login {
@@ -125,123 +78,165 @@
     .email-login:hover {
       background-color: #666;
     }
+    
+    .logo-container {
+      margin-bottom: 40px;
+    }
+    
+    .logo {
+      width: 180px;
+      height: auto;
+    }
+    
+    .back-link {
+      margin-top: 40px;
+      color: #555;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+    
+    .back-link:hover {
+      color: #20e3b2;
+    }
+    
+    .back-link i {
+      margin-right: 8px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    /* Loading animation */
+    .loading-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(32, 227, 178, 0.2);
+      border-top: 4px solid #20e3b2;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: #555;
+      font-size: 14px;
+    }
   </style>
-  
-  <!-- Include Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <!-- Display a loading message while CMS initializes -->
-  <div class="loading" id="loading">
-    <h1>TedouaR Robotic HUB Admin</h1>
-    <p>Loading admin panel, please wait...</p>
-    <div class="spinner" id="spinner"></div>
-    
-    <div class="login-options" id="login-options">
-      <p>Please log in to access the admin panel:</p>
-      <button class="login-button github-login" id="github-login">
-        <i class="fab fa-github"></i> Log in with GitHub
-      </button>
-      <button class="login-button email-login" id="email-login">
-        <i class="fas fa-envelope"></i> Log in with Email
-      </button>
+  <div class="admin-login" id="login-container">
+    <div class="logo-container">
+      <h1>TedouaR Robotic HUB</h1>
+      <p>Admin Panel</p>
     </div>
     
-    <div class="error-message" id="error-message">
-      Could not load the admin panel. Make sure you are logged in with Netlify Identity.
+    <p>Please log in to access the content management system.</p>
+    
+    <button class="login-button" id="github-login">
+      <i class="fab fa-github"></i> Log in with GitHub
+    </button>
+    
+    <button class="login-button email-login" id="email-login">
+      <i class="fas fa-envelope"></i> Log in with Email
+    </button>
+    
+    <div class="loading-container" id="loading-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Authenticating, please wait...</div>
     </div>
-    <a href="/" class="back-link" id="back-link">Return to Website</a>
+    
+    <a href="/" class="back-link">
+      <i class="fas fa-arrow-left"></i> Return to website
+    </a>
   </div>
-
-  <!-- Include the script that builds the page and powers Decap CMS -->
+  
+  <!-- Decap CMS -->
+  <div class="hidden" id="nc-root"></div>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <script>
     // Check if user is logged in
-    setTimeout(function() {
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-          // If no user, show login options
-          if (!user) {
-            document.getElementById('spinner').style.display = 'none';
-            document.getElementById('login-options').style.display = 'block';
-            
-            // Set up login buttons
-            document.getElementById('github-login').addEventListener('click', function() {
-              window.netlifyIdentity.open('login');
-              // Force GitHub provider
-              setTimeout(() => {
-                const githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
-                if (githubButton) {
-                  githubButton.click();
-                }
-              }, 100);
-            });
-            
-            document.getElementById('email-login').addEventListener('click', function() {
-              window.netlifyIdentity.open('login');
-            });
-          }
-        });
-        
-        // Handle successful login
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
-        });
-      } else {
-        // If Netlify Identity isn't available, show error
-        document.getElementById('spinner').style.display = 'none';
-        document.getElementById('error-message').style.display = 'block';
-        document.getElementById('back-link').style.display = 'inline-block';
-      }
-    }, 1500);
+    var isUserLoggedIn = false;
     
-    // Show error message and back link after timeout
-    setTimeout(function() {
-      var loading = document.getElementById('loading');
-      var spinner = document.getElementById('spinner');
-      var errorMessage = document.getElementById('error-message');
-      var backLink = document.getElementById('back-link');
-      var loginOptions = document.getElementById('login-options');
+    // Show loading state
+    function showLoading() {
+      document.getElementById('github-login').style.display = 'none';
+      document.getElementById('email-login').style.display = 'none';
+      document.getElementById('loading-container').style.display = 'flex';
+    }
+    
+    // GitHub login button
+    document.getElementById('github-login').addEventListener('click', function() {
+      showLoading();
       
-      if (loading && loading.style.display !== 'none' && window.netlifyIdentity && !window.netlifyIdentity.currentUser()) {
-        if (spinner) spinner.style.display = 'none';
-        if (loginOptions.style.display !== 'block') {
-          errorMessage.style.display = 'block';
-          backLink.style.display = 'inline-block';
+      // Open the Netlify Identity Widget
+      netlifyIdentity.open('login');
+      
+      // Find and click the GitHub button
+      setTimeout(function() {
+        var githubButton = document.querySelector('.netlify-identity-button[data-provider="github"]');
+        if (githubButton) {
+          githubButton.click();
+        } else {
+          // If GitHub button not found, just keep the widget open
+          document.getElementById('loading-container').style.display = 'none';
+          document.getElementById('github-login').style.display = 'flex';
+          document.getElementById('email-login').style.display = 'flex';
         }
-      }
-    }, 20000); // 20 seconds timeout
-    
-    // Handle errors
-    window.addEventListener('error', function(event) {
-      var spinner = document.getElementById('spinner');
-      var errorMessage = document.getElementById('error-message');
-      var backLink = document.getElementById('back-link');
-      
-      if (spinner) spinner.style.display = 'none';
-      errorMessage.style.display = 'block';
-      backLink.style.display = 'inline-block';
-      
-      console.error('CMS Error:', event.error);
+      }, 300);
     });
     
-    // Initialize the CMS
-    window.addEventListener('load', function() {
-      // Initialize after everything loads
-      try {
-        // Hide loading once CMS is initialized
-        const observer = new MutationObserver(function(mutations) {
-          if (document.querySelector('.nc-app-container') || document.querySelector('.nc-root')) {
-            document.getElementById('loading').style.display = 'none';
-            observer.disconnect();
+    // Email login button
+    document.getElementById('email-login').addEventListener('click', function() {
+      netlifyIdentity.open('login');
+    });
+    
+    // Handle login event
+    netlifyIdentity.on('login', function(user) {
+      isUserLoggedIn = true;
+      
+      // Hide login container
+      document.getElementById('login-container').style.display = 'none';
+      
+      // If on admin page, reload to access CMS
+      location.reload();
+    });
+    
+    // On page load
+    window.addEventListener('DOMContentLoaded', function() {
+      netlifyIdentity.on('init', function(user) {
+        if (user) {
+          // User is logged in, hide login container
+          document.getElementById('login-container').style.display = 'none';
+        } else {
+          // User is not logged in, show login container
+          document.getElementById('login-container').style.display = 'flex';
+          
+          // If coming back with an error in the URL, show an alert
+          const urlParams = new URLSearchParams(window.location.hash.substring(1));
+          const error = urlParams.get('error');
+          const errorDescription = urlParams.get('error_description');
+          
+          if (error && errorDescription) {
+            alert('Login Error: ' + errorDescription);
           }
-        });
-        
-        observer.observe(document.body, { childList: true, subtree: true });
-      } catch (error) {
-        console.error('Failed to initialize observer:', error);
-      }
+        }
+      });
     });
   </script>
 </body>
