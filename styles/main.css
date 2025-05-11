@@ -153,7 +153,7 @@ header {
   transition: width var(--transition-speed);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after, .nav-links a.active::after {
   width: 100%;
 }
 
@@ -169,6 +169,92 @@ header {
   font-size: 1.5rem;
   color: var(--text-color);
   cursor: pointer;
+  transition: color var(--transition-speed);
+}
+
+.mobile-menu-button:hover {
+  color: var(--primary-color);
+}
+
+/* Active state for buttons */
+.btn.active {
+  position: relative;
+}
+
+.btn-outline.active {
+  background-color: rgba(32, 227, 178, 0.2);
+  color: var(--primary-color);
+}
+
+.btn-primary.active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+/* User dropdown styles */
+.user-dropdown {
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 16px;
+  background-color: rgba(32, 227, 178, 0.1);
+  border-radius: 5px;
+  transition: all 0.3s;
+  border: 1px solid rgba(32, 227, 178, 0.2);
+}
+
+.user-info:hover {
+  background-color: rgba(32, 227, 178, 0.2);
+}
+
+.user-info span {
+  font-weight: 500;
+}
+
+.user-info i {
+  transition: transform 0.3s;
+  font-size: 0.8rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 200px;
+  background-color: rgba(25, 25, 25, 0.95);
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+  border: 1px solid rgba(32, 227, 178, 0.1);
+}
+
+.dropdown-menu.active {
+  display: block;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 12px 16px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.dropdown-menu a:hover {
+  background-color: rgba(32, 227, 178, 0.1);
+}
+
+.dropdown-menu a i {
+  margin-right: 8px;
+  width: 18px;
+  text-align: center;
 }
 
 /* HERO SECTION */
@@ -828,7 +914,24 @@ footer {
     z-index: 999;
   }
   
-  .nav-links.active {
+  .nav-links.mobile-active {
+    transform: translateY(0);
+  }
+  
+  .auth-buttons {
+    position: fixed;
+    top: calc(70px + 8rem);
+    left: 0;
+    width: 100%;
+    justify-content: center;
+    background-color: var(--bg-color);
+    padding: 1rem 0 2rem;
+    transform: translateY(-150%);
+    transition: transform var(--transition-speed);
+    z-index: 999;
+  }
+  
+  .auth-buttons.mobile-active {
     transform: translateY(0);
   }
   
@@ -854,10 +957,6 @@ footer {
 }
 
 @media screen and (max-width: 576px) {
-  .auth-buttons {
-    display: none;
-  }
-  
   .hero-title {
     font-size: 2rem;
   }
