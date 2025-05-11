@@ -11,12 +11,6 @@
   <!-- Include Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Load Decap CMS script -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js" id="cms-script" defer></script>
-  
-  <!-- Include custom CMS styles -->
-  <link rel="stylesheet" href="admin.css">
-  
   <style>
     :root {
       --primary: #20e3b2;
@@ -262,16 +256,6 @@
       overflow: auto;
       z-index: 1000;
     }
-    
-    /* Force display of the CMS */
-    .cms-active body > [class^="nc-"] {
-      display: block !important;
-    }
-    
-    /* Hide CMS layout until we're ready */
-    body > [class^="nc-"] {
-      display: none !important;
-    }
   </style>
 </head>
 <body>
@@ -294,9 +278,9 @@
           <i class="fas fa-envelope"></i> Log in with Email
         </button>
         
-        <button class="btn btn-primary" id="manual-cms" style="display: none;">
+        <a href="cms.html" class="btn btn-primary" id="cms-button" style="display: none;">
           <i class="fas fa-external-link-alt"></i> Launch Admin Panel
-        </button>
+        </a>
       </div>
       
       <div id="spinner" class="spinner"></div>
@@ -376,94 +360,39 @@
       document.getElementById('spinner').style.display = 'none';
     }
     
-    // Manually launch the CMS
-    function launchCMS() {
-      // Show success message
-      showSuccess('Launching CMS - please wait...');
+    // Function to redirect to CMS page
+    function redirectToCMS() {
+      showSuccess('Login successful! Redirecting to CMS...');
+      document.getElementById('loading-animation').style.display = 'flex';
       
-      // Hide login container
+      // Save login state
+      localStorage.setItem('tedouar_admin_logged_in', 'true');
+      
+      // Show CMS button
+      document.getElementById('cms-button').style.display = 'inline-block';
+      
+      // Redirect after delay
       setTimeout(() => {
-        document.getElementById('login-container').style.display = 'none';
-        document.body.classList.add('cms-active');
-        
-        // Force reload if CMS doesn't appear
-        setTimeout(() => {
-          // Check if CMS elements exist
-          if (!document.querySelector('[class^="nc-"]')) {
-            debug('CMS elements not found, reloading page');
-            window.location.href = '/admin/#/';
-          }
-        }, 3000);
-      }, 1000);
+        window.location.href = 'cms.html';
+      }, 1500);
     }
     
     // Initialize everything
     document.addEventListener('DOMContentLoaded', function() {
       debug('DOM loaded, initializing admin panel');
       
-      // Check hash in URL
-      const hash = window.location.hash;
-      if (hash && hash.startsWith('#/')) {
-        debug('CMS route detected in URL: ' + hash);
-        // Hide login immediately
-        document.getElementById('login-container').style.display = 'none';
-        document.body.classList.add('cms-active');
-      }
-      
       // Check if user is already logged in via localStorage
       const isLoggedIn = localStorage.getItem('tedouar_admin_logged_in') === 'true';
       if (isLoggedIn) {
         debug('User already logged in via localStorage');
-        document.getElementById('manual-cms').style.display = 'inline-block';
+        document.getElementById('cms-button').style.display = 'inline-block';
       }
-      
-      // Setup manual CMS launch button
-      document.getElementById('manual-cms').addEventListener('click', function() {
-        debug('Manual CMS launch button clicked');
-        launchCMS();
-      });
       
       // Set up login buttons
       document.getElementById('github-login').addEventListener('click', function() {
         debug('GitHub login button clicked');
         showSpinner();
-        
         netlifyIdentity.open('login');
-        
-        // Watch for GitHub provider button
-        setTimeout(() => {
-          debug('Searching for GitHub provider button...');
-          const iframeDocument = document.querySelector('iframe.netlify-identity-widget').contentDocument;
-          if (iframeDocument) {
-            debug('Netlify Identity iframe found');
-            const githubButton = iframeDocument.querySelector('[data-provider="github"]');
-            if (githubButton) {
-              debug('GitHub provider button found, clicking it');
-              githubButton.click();
-            } else {
-              debug('GitHub provider button not found in iframe');
-              
-              // Try another selector
-              const allButtons = iframeDocument.querySelectorAll('button');
-              let found = false;
-              allButtons.forEach(button => {
-                if (button.textContent.toLowerCase().includes('github')) {
-                  debug('Found GitHub button via text content');
-                  button.click();
-                  found = true;
-                }
-              });
-              
-              if (!found) {
-                hideSpinner();
-                debug('No GitHub button found by any method');
-              }
-            }
-          } else {
-            debug('Could not access iframe document');
-            hideSpinner();
-          }
-        }, 500);
       });
       
       document.getElementById('email-login').addEventListener('click', function() {
@@ -476,29 +405,14 @@
         debug('Netlify Identity initialized');
         if (user) {
           debug('User is already authenticated: ' + user.email);
-          document.getElementById('manual-cms').style.display = 'inline-block';
-          localStorage.setItem('tedouar_admin_logged_in', 'true');
-          
+          document.getElementById('cms-button').style.display = 'inline-block';
           showSuccess('Already logged in as ' + user.email);
-          
-          // Auto-launch CMS if hash is present
-          if (window.location.hash && window.location.hash.startsWith('#/')) {
-            launchCMS();
-          }
         }
       });
       
       netlifyIdentity.on('login', user => {
         debug('Login event triggered for: ' + (user ? user.email : 'unknown user'));
-        document.getElementById('manual-cms').style.display = 'inline-block';
-        localStorage.setItem('tedouar_admin_logged_in', 'true');
-        
-        showSuccess('Login successful!');
-        
-        // Wait a bit before launching CMS
-        setTimeout(() => {
-          launchCMS();
-        }, 1000);
+        redirectToCMS();
       });
       
       netlifyIdentity.on('error', err => {
@@ -506,13 +420,40 @@
         showError(err.message || 'Authentication error');
       });
       
-      // Register CMS loaded event handler
-      window.addEventListener('message', event => {
-        if (event.data === 'CMS_LOADED') {
-          debug('CMS loaded message received');
-          document.getElementById('login-container').style.display = 'none';
-          document.body.classList.add('cms-active');
-        }
+      // Check for GitHub login button clicks
+      netlifyIdentity.on('open', () => {
+        debug('Netlify Identity widget opened');
+        
+        // Wait for the iframe to load
+        setTimeout(() => {
+          try {
+            const iframe = document.querySelector('iframe.netlify-identity-widget');
+            if (iframe) {
+              debug('Identity iframe found, setting up observer');
+              
+              // Set up observer to detect button clicks
+              const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                  if (mutation.type === 'childList') {
+                    const buttons = iframe.contentDocument.querySelectorAll('button');
+                    buttons.forEach(button => {
+                      if (button.textContent.includes('GitHub')) {
+                        debug('Found GitHub button in iframe: ' + button.textContent);
+                      }
+                    });
+                  }
+                }
+              });
+              
+              observer.observe(iframe.contentDocument.body, { 
+                childList: true, 
+                subtree: true 
+              });
+            }
+          } catch (e) {
+            debug('Error accessing iframe: ' + e.message);
+          }
+        }, 500);
       });
     });
   </script>
