@@ -8,8 +8,8 @@
   <!-- Preload critical assets -->
   <link rel="preconnect" href="https://unpkg.com">
   
-  <!-- Include the styles -->
-  <link href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" rel="stylesheet">
+  <!-- Include the Netlify Identity Widget for authentication -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   
   <style>
     body {
@@ -89,7 +89,7 @@
     <p>Loading admin panel, please wait...</p>
     <div class="spinner"></div>
     <div class="error-message" id="error-message">
-      Could not load the admin panel. Make sure you are using a GitHub account with access to this repository.
+      Could not load the admin panel. Make sure you are logged in with Netlify Identity.
     </div>
     <a href="/" class="back-link" id="back-link">Return to Website</a>
   </div>
@@ -98,6 +98,19 @@
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <script>
+    // Check if user is logged in
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          // If no user, open login modal
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+          window.netlifyIdentity.open();
+        }
+      });
+    }
+    
     // Show error message and back link after timeout
     setTimeout(function() {
       var loading = document.getElementById('loading');
