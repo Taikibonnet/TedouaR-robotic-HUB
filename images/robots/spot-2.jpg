@@ -1,0 +1,34 @@
+<!-- Placeholder for spot-2.jpg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="spotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/>
+      <stop offset="100%" stop-color="#ff8c00"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="#111"/>
+  
+  <!-- Robot Body -->
+  <rect x="250" y="250" width="300" height="100" rx="30" ry="30" fill="#222" stroke="url(#spotGradient)" stroke-width="4"/>
+  
+  <!-- Robot Head -->
+  <rect x="550" y="270" width="100" height="60" rx="20" ry="20" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <circle cx="605" cy="290" r="10" fill="url(#spotGradient)"/>
+  
+  <!-- Robot Legs -->
+  <rect x="280" y="350" width="20" height="100" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <rect x="380" y="350" width="20" height="100" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <rect x="480" y="350" width="20" height="100" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  
+  <rect x="280" y="150" width="20" height="100" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <rect x="380" y="150" width="20" height="100" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <rect x="480" y="150" width="20" height="100" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  
+  <!-- Robot Arm -->
+  <rect x="300" y="200" width="100" height="20" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <rect x="400" y="200" width="20" height="50" rx="5" ry="5" fill="#333" stroke="url(#spotGradient)" stroke-width="2"/>
+  <circle cx="410" cy="250" r="15" fill="#444" stroke="url(#spotGradient)" stroke-width="2"/>
+  
+  <!-- Text Label -->
+  <text x="400" y="520" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">Spot with Robotic Arm (Gallery)</text>
+</svg>
