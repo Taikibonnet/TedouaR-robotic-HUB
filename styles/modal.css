@@ -7,7 +7,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.85);
   z-index: 2000;
   overflow-y: auto;
   opacity: 0;
@@ -23,13 +23,14 @@
 
 .modal-content {
   position: relative;
-  background-color: var(--bg-secondary);
+  background-color: #121212;
   margin: 50px auto;
   padding: 30px;
   border-radius: 15px;
   width: 90%;
   max-width: 1000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid #222;
 }
 
 .close-button {
@@ -40,6 +41,7 @@
   color: var(--text-color);
   cursor: pointer;
   transition: color 0.3s ease;
+  z-index: 10;
 }
 
 .close-button:hover {
@@ -57,6 +59,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 700;
 }
 
 .robot-manufacturer {
@@ -108,6 +111,7 @@
   width: 100%;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid #222;
 }
 
 .robot-video {
@@ -115,23 +119,34 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
 }
 
 .robot-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
+  border: 1px solid #222;
 }
 
 .robot-description {
   margin-bottom: 20px;
   font-size: 1.1rem;
   line-height: 1.6;
+  color: #f5f5f5;
 }
 
 .robot-specs {
-  margin-bottom: 20px;
+  margin: 25px 0;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 20px;
   border-radius: 10px;
+  border: 1px solid #222;
 }
 
 .robot-specs h3 {
@@ -146,24 +161,38 @@
 }
 
 .robot-specs li {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: flex;
   align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.robot-specs li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .robot-specs li strong {
   min-width: 150px;
   display: inline-block;
   margin-right: 10px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .robot-detailed-content {
   font-size: 1rem;
   line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .robot-detailed-content p {
   margin-bottom: 15px;
+}
+
+.robot-detailed-content p:last-child {
+  margin-bottom: 0;
 }
 
 /* For mobile screens */
@@ -180,9 +209,42 @@
   .robot-title {
     font-size: 2rem;
   }
+  
+  .robot-specs li {
+    flex-direction: column;
+  }
+  
+  .robot-specs li strong {
+    margin-bottom: 5px;
+  }
 }
 
 /* Ensuring body can't scroll when modal is open */
 body.modal-open {
   overflow: hidden;
+}
+
+/* Additional styling for the modal interface */
+.robot-content-container {
+  padding-right: 5px;
+}
+
+.robot-body {
+  margin-top: 20px;
+}
+
+/* Animation for the modal */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal.active .modal-content {
+  animation: modalFadeIn 0.4s ease forwards;
 }
