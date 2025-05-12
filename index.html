@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/modal.css">
+    <link rel="stylesheet" href="styles/logo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
 </head>
@@ -167,7 +167,6 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script src="js/encyclopedia.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Mobile menu handling
@@ -190,7 +189,102 @@
                     window.location.href = 'contact.html?assistant=open';
                 });
             }
+            
+            // Load featured robots
+            loadFeaturedRobots();
         });
+        
+        // Function to load featured robots
+        function loadFeaturedRobots() {
+            const robotGrid = document.querySelector('.robot-grid');
+            if (!robotGrid) return;
+            
+            fetch('robots.json')
+                .then(response => response.json())
+                .then(robots => {
+                    // Filter featured robots
+                    const featuredRobots = robots.filter(robot => robot.featured === true);
+                    
+                    // Display featured robots (max 3)
+                    const robotsToShow = featuredRobots.slice(0, 3);
+                    
+                    if (robotsToShow.length > 0) {
+                        robotGrid.innerHTML = '';
+                        robotsToShow.forEach(robot => {
+                            const imageUrl = robot.image || 'images/robots/placeholder.jpg';
+                            const truncatedDescription = robot.description.length > 120 ? 
+                                robot.description.substring(0, 120) + '...' : 
+                                robot.description;
+                            
+                            const robotCard = document.createElement('div');
+                            robotCard.className = 'robot-card';
+                            
+                            robotCard.innerHTML = `
+                                <div class="robot-card-image">
+                                    <img src="${imageUrl}" alt="${robot.title}">
+                                </div>
+                                <div class="robot-card-content">
+                                    <h3 class="robot-card-title">${robot.title}</h3>
+                                    <div class="robot-card-categories">
+                                        ${robot.category ? `<span class="category-pill">${robot.category}</span>` : ''}
+                                    </div>
+                                    ${robot.manufacturer ? `<div class="robot-card-manufacturer">${robot.manufacturer}</div>` : ''}
+                                    <p class="robot-card-description">${truncatedDescription}</p>
+                                    <a href="robots/${robot.slug}.html" class="robot-view-details">View Details</a>
+                                </div>
+                            `;
+                            
+                            robotGrid.appendChild(robotCard);
+                        });
+                    } else {
+                        // If no featured robots, show default/sample robots
+                        showDefaultRobots(robotGrid);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading featured robots:', error);
+                    showDefaultRobots(robotGrid);
+                });
+        }
+        
+        // Function to show default robots if none are featured
+        function showDefaultRobots(container) {
+            const defaultRobots = [
+                {
+                    title: "Tesla Optimus",
+                    slug: "tesla-optimus",
+                    category: "Humanoid",
+                    manufacturer: "Tesla, Inc.",
+                    image: "images/robots/tesla-optimus.jpg",
+                    description: "Tesla Optimus is a humanoid robot designed to perform manual tasks, blending AI with robotics for future labor automation."
+                }
+            ];
+            
+            container.innerHTML = '';
+            defaultRobots.forEach(robot => {
+                const imageUrl = robot.image || 'images/robots/placeholder.jpg';
+                
+                const robotCard = document.createElement('div');
+                robotCard.className = 'robot-card';
+                
+                robotCard.innerHTML = `
+                    <div class="robot-card-image">
+                        <img src="${imageUrl}" alt="${robot.title}">
+                    </div>
+                    <div class="robot-card-content">
+                        <h3 class="robot-card-title">${robot.title}</h3>
+                        <div class="robot-card-categories">
+                            ${robot.category ? `<span class="category-pill">${robot.category}</span>` : ''}
+                        </div>
+                        ${robot.manufacturer ? `<div class="robot-card-manufacturer">${robot.manufacturer}</div>` : ''}
+                        <p class="robot-card-description">${robot.description}</p>
+                        <a href="robots/${robot.slug}.html" class="robot-view-details">View Details</a>
+                    </div>
+                `;
+                
+                container.appendChild(robotCard);
+            });
+        }
     </script>
 </body>
 </html>
