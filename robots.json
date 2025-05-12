@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "title": "Tesla Optimus",
+    "slug": "tesla-optimus",
+    "category": "Humanoid",
+    "manufacturer": "Tesla, Inc.",
+    "image": "images/robots/tesla-optimus.jpg",
+    "description": "Tesla Optimus is a humanoid robot designed to perform manual tasks, blending AI with robotics for future labor automation.",
+    "featured": true,
+    "video_url": "https://www.youtube.com/embed/cpraXaw7dyc",
+    "additional_video_url": "https://www.youtube.com/embed/DrNcXgoFv20",
+    "technical_specs": {
+      "height": "5 ft 8 in (1.73 meters)",
+      "weight": "125 pounds (57 kg)",
+      "payload": "20 pounds (9 kg)",
+      "deadlift": "150 pounds (68 kg)",
+      "speed": "5 miles per hour (8 km/h)",
+      "actuators": "28 structural actuators, 11 hand actuators",
+      "processor": "Tesla's Full Self-Driving Computer (FSD Computer)",
+      "power": "Battery pack (estimated 2.3 kWh)",
+      "runtime": "Full day of work on a single charge (claimed)"
+    },
+    "content": "Tesla's Optimus (also known as the Tesla Bot) is a general-purpose humanoid robot under development by Tesla, Inc. It was unveiled by Elon Musk during Tesla's AI Day event in August 2021. Designed to handle tasks that are repetitive, dangerous, or boring for humans, Optimus aims to revolutionize industries by introducing an affordable, autonomous, and safe labor force. Built with Tesla's expertise in AI, autopilot hardware, and energy systems, the robot represents Tesla's ambition to extend its AI capabilities beyond vehicles. \n\nThe robot features human-like hands with 5 fingers and precision grip capabilities. Its sensor suite includes autopilot cameras, FSD (Full Self-Driving) hardware, force feedback sensing, and tactile sensors, similar to those used in Tesla's autonomous vehicles. \n\nOptimus is designed with several key capabilities: mobility for walking at a moderate pace and navigating complex environments; dexterity for manipulating objects, using tools, and handling items of various weights; perception for understanding its environment via cameras and sensors; cognition for basic decision-making, simple conversations, and task learning through demonstrations; and safety features including lightweight materials and limited physical power to minimize risk to humans. \n\nPotential applications for Optimus span multiple sectors including industrial (manufacturing, warehouse logistics), domestic (household chores), commercial (retail, customer service), healthcare (supporting elderly or disabled individuals), and potentially even space exploration and extraterrestrial missions where human labor is costly and risky.",
+    "tags": ["Humanoid", "Tesla", "AI", "Automation", "Bipedal"]
+  }
+]
