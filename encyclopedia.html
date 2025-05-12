@@ -6,6 +6,7 @@
     <title>Robot Encyclopedia - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/encyclopedia.css">
+    <link rel="stylesheet" href="styles/modal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -197,7 +198,137 @@
             if (isAdminLoggedIn && adminLink) {
                 adminLink.style.display = 'block';
             }
+            
+            // Set up event listeners for filters
+            const categoryFilter = document.getElementById('category-filter');
+            const sortOption = document.getElementById('sort-option');
+            const searchInput = document.getElementById('search-robots');
+            
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterRobots);
+            }
+            
+            if (sortOption) {
+                sortOption.addEventListener('change', filterRobots);
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    // Debounce search to avoid too many searches while typing
+                    clearTimeout(searchInput.timer);
+                    searchInput.timer = setTimeout(filterRobots, 300);
+                });
+            }
+            
+            // Apply URL parameters for initial filtering
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            
+            if (categoryParam && categoryFilter) {
+                // Set the filter dropdown to match URL parameter
+                const options = Array.from(categoryFilter.options);
+                const matchingOption = options.find(option => 
+                    option.value.toLowerCase() === categoryParam.toLowerCase()
+                );
+                
+                if (matchingOption) {
+                    categoryFilter.value = matchingOption.value;
+                    // Trigger the filter to apply immediately
+                    filterRobots();
+                }
+            }
         });
+        
+        // Function to filter and sort robots
+        function filterRobots() {
+            const robotGrid = document.querySelector('.robot-grid');
+            const categoryFilter = document.getElementById('category-filter');
+            const sortOption = document.getElementById('sort-option');
+            const searchInput = document.getElementById('search-robots');
+            
+            if (!robotGrid) return;
+            
+            const category = categoryFilter ? categoryFilter.value : 'all';
+            const sortValue = sortOption ? sortOption.value : 'name-asc';
+            const searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
+            
+            // Show loading state
+            robotGrid.innerHTML = '<div class="loading">Loading robots...</div>';
+            
+            // Fetch all robots from the JSON file
+            fetch('robots.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load robot data');
+                    }
+                    return response.json();
+                })
+                .then(robots => {
+                    // Apply category filter
+                    let filteredRobots = robots;
+                    if (category !== 'all') {
+                        filteredRobots = robots.filter(robot => 
+                            robot.category && robot.category.toLowerCase() === category.toLowerCase()
+                        );
+                    }
+                    
+                    // Apply search filter if needed
+                    if (searchText) {
+                        filteredRobots = filteredRobots.filter(robot => {
+                            const titleMatch = robot.title && robot.title.toLowerCase().includes(searchText);
+                            const manufacturerMatch = robot.manufacturer && robot.manufacturer.toLowerCase().includes(searchText);
+                            const descriptionMatch = robot.description && robot.description.toLowerCase().includes(searchText);
+                            const categoryMatch = robot.category && robot.category.toLowerCase().includes(searchText);
+                            const tagsMatch = robot.tags && robot.tags.some(tag => tag.toLowerCase().includes(searchText));
+                            
+                            return titleMatch || manufacturerMatch || descriptionMatch || categoryMatch || tagsMatch;
+                        });
+                    }
+                    
+                    // Apply sorting
+                    filteredRobots.sort((a, b) => {
+                        switch (sortValue) {
+                            case 'name-asc':
+                                return a.title.localeCompare(b.title);
+                            case 'name-desc':
+                                return b.title.localeCompare(a.title);
+                            case 'manufacturer-asc':
+                                return (a.manufacturer || '').localeCompare(b.manufacturer || '');
+                            case 'manufacturer-desc':
+                                return (b.manufacturer || '').localeCompare(a.manufacturer || '');
+                            default:
+                                return 0;
+                        }
+                    });
+                    
+                    // Display filtered robots
+                    robotGrid.innerHTML = '';
+                    if (filteredRobots.length > 0) {
+                        filteredRobots.forEach(robot => {
+                            const robotCard = createRobotCard(robot);
+                            robotGrid.appendChild(robotCard);
+                        });
+                    } else {
+                        // No robots found
+                        robotGrid.innerHTML = `
+                            <div class="no-results">
+                                <h2>No robots found</h2>
+                                <p>No robots matched your search criteria. Try different filters or search terms.</p>
+                                <a href="encyclopedia.html" class="btn btn-primary">View All Robots</a>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading robots:', error);
+                    robotGrid.innerHTML = `
+                        <div class="error-message">
+                            <h2>Failed to load robot data</h2>
+                            <p>Please try again later or contact the administrator.</p>
+                        </div>
+                    `;
+                });
+        }
     </script>
 </body>
 </html>
