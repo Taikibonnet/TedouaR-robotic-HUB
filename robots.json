@@ -22,5 +22,29 @@
     },
     "content": "Tesla's Optimus (also known as the Tesla Bot) is a general-purpose humanoid robot under development by Tesla, Inc. It was unveiled by Elon Musk during Tesla's AI Day event in August 2021. Designed to handle tasks that are repetitive, dangerous, or boring for humans, Optimus aims to revolutionize industries by introducing an affordable, autonomous, and safe labor force. Built with Tesla's expertise in AI, autopilot hardware, and energy systems, the robot represents Tesla's ambition to extend its AI capabilities beyond vehicles. \n\nThe robot features human-like hands with 5 fingers and precision grip capabilities. Its sensor suite includes autopilot cameras, FSD (Full Self-Driving) hardware, force feedback sensing, and tactile sensors, similar to those used in Tesla's autonomous vehicles. \n\nOptimus is designed with several key capabilities: mobility for walking at a moderate pace and navigating complex environments; dexterity for manipulating objects, using tools, and handling items of various weights; perception for understanding its environment via cameras and sensors; cognition for basic decision-making, simple conversations, and task learning through demonstrations; and safety features including lightweight materials and limited physical power to minimize risk to humans. \n\nPotential applications for Optimus span multiple sectors including industrial (manufacturing, warehouse logistics), domestic (household chores), commercial (retail, customer service), healthcare (supporting elderly or disabled individuals), and potentially even space exploration and extraterrestrial missions where human labor is costly and risky.",
     "tags": ["Humanoid", "Tesla", "AI", "Automation", "Bipedal"]
+  },
+  {
+    "title": "Spot",
+    "slug": "spot",
+    "category": "Quadruped",
+    "manufacturer": "Boston Dynamics",
+    "image": "images/robots/spot.jpg",
+    "description": "Spot is an agile mobile robot designed for sensing, inspection, and remote operation. Customizable for diverse applications, from industrial inspections to public safety.",
+    "featured": true,
+    "video_url": "https://www.youtube.com/embed/wlkCQXHEgjA",
+    "additional_video_url": "https://www.youtube.com/embed/7atZfX85nd4",
+    "technical_specs": {
+      "height": "33 inches (0.84 meters)",
+      "weight": "71 pounds (32.2 kg)",
+      "payload": "14 kg (standard), up to 25 kg with additional equipment",
+      "battery_life": "90 minutes (typical mission)",
+      "speed": "Up to 1.6 m/s (5.76 km/h)",
+      "degrees_of_freedom": "12 (3 per leg)",
+      "sensors": "Stereo cameras, depth cameras, IMU, position/force sensors",
+      "dust_water_resistance": "IP54 rated",
+      "operating_temperature": "-20° to 45°C"
+    },
+    "content": "Spot is a four-legged robot developed by Boston Dynamics that's designed to navigate terrain that would be challenging for wheeled robots. With its advanced mobility, Spot can climb stairs, traverse rough ground, and maintain stability in various environments. Originally introduced in 2016, Spot became commercially available in 2020, marking a significant milestone in deploying advanced robotics for practical applications. \n\nThe robot features a distinctive yellow-black design with an articulated 'head' that contains a suite of sensors for navigating and mapping environments. Its adaptable platform allows for the addition of numerous payloads to customize it for specific tasks, from data collection to physical manipulation using an optional robotic arm attachment. \n\nSpot's capabilities make it valuable across multiple industries, including mobility for navigating stairs, rough terrain, and inclines up to 30 degrees; autonomy with obstacle avoidance; mapping for creating detailed 3D maps of environments; manipulation with an optional robotic arm; data collection through multiple camera options; programmability through an SDK; and remote operation via tablet or computer interface. \n\nSpot has been deployed in numerous industries for applications such as industrial inspection of equipment and facilities; energy sector remote data collection; construction site documentation and monitoring; public safety assessment of hazardous situations; research as a platform for testing new technologies; and entertainment showcasing robotic capabilities.",
+    "tags": ["Quadruped", "Boston Dynamics", "Mobile Robot", "Inspection", "Industrial"]
   }
 ]
