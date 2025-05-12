@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/robot-detail.css">
+    <link rel="stylesheet" href="../styles/logo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="../index.html" class="logo-container">
+                <img src="../images/logo.svg" alt="TedouaR Logo" class="logo">
+            </a>
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="../encyclopedia.html" class="active">Encyclopedia</a>
+                <a href="../about.html">About Us</a>
+                <a href="../contact.html">Contact</a>
+            </nav>
+            
+            <!-- Auth Buttons -->
+            <div class="auth-buttons">
+                <a href="../login.html" class="btn btn-outline">Log In</a>
+                <a href="../signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            
+            <button class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span class="separator">/</span>
+                <a href="../encyclopedia.html">Encyclopedia</a>
+                <span class="separator">/</span>
+                <span class="current">Spot</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Robot Detail Section -->
+    <section class="robot-detail-container">
+        <div class="container">
+            <div class="robot-header">
+                <h1 class="robot-title">Spot</h1>
+                <div class="robot-meta">
+                    <div class="robot-category">Quadruped</div>
+                    <div class="robot-manufacturer">Boston Dynamics</div>
+                </div>
+                <div class="robot-tags">
+                    <span class="tag">Quadruped</span>
+                    <span class="tag">Boston Dynamics</span>
+                    <span class="tag">Mobile Robot</span>
+                    <span class="tag">Inspection</span>
+                    <span class="tag">Industrial</span>
+                </div>
+            </div>
+            
+            <div class="robot-main-content">
+                <div class="robot-image-section">
+                    <img src="../images/robots/spot.jpg" alt="Boston Dynamics Spot" class="main-image">
+                </div>
+                
+                <div class="robot-intro-section">
+                    <p class="robot-description">Spot is an agile mobile robot designed for sensing, inspection, and remote operation. Customizable for diverse applications, from industrial inspections to public safety.</p>
+                    
+                    <div class="robot-specs">
+                        <h3>Technical Specifications</h3>
+                        <table class="specs-table">
+                            <tr>
+                                <td><strong>Height</strong></td>
+                                <td>33 inches (0.84 meters)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weight</strong></td>
+                                <td>71 pounds (32.2 kg)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payload</strong></td>
+                                <td>14 kg (standard), up to 25 kg with additional equipment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Battery Life</strong></td>
+                                <td>90 minutes (typical mission)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Speed</strong></td>
+                                <td>Up to 1.6 m/s (5.76 km/h)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Degrees of Freedom</strong></td>
+                                <td>12 (3 per leg)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sensors</strong></td>
+                                <td>Stereo cameras, depth cameras, IMU, position/force sensors</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dust/Water Resistance</strong></td>
+                                <td>IP54 rated</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Operating Temperature</strong></td>
+                                <td>-20° to 45°C</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="robot-sections">
+                <div class="robot-section">
+                    <h2 class="section-title">Overview</h2>
+                    <div class="section-content">
+                        <p>Spot is a four-legged robot developed by Boston Dynamics that's designed to navigate terrain that would be challenging for wheeled robots. With its advanced mobility, Spot can climb stairs, traverse rough ground, and maintain stability in various environments. Originally introduced in 2016, Spot became commercially available in 2020, marking a significant milestone in deploying advanced robotics for practical applications.</p>
+                        
+                        <p>The robot features a distinctive yellow-black design with an articulated "head" that contains a suite of sensors for navigating and mapping environments. Its adaptable platform allows for the addition of numerous payloads to customize it for specific tasks, from data collection to physical manipulation using an optional robotic arm attachment.</p>
+                    </div>
+                </div>
+                
+                <div class="robot-section">
+                    <h2 class="section-title">Capabilities</h2>
+                    <div class="section-content">
+                        <p>Spot's capabilities make it valuable across multiple industries:</p>
+                        <ul>
+                            <li><strong>Mobility:</strong> Can navigate stairs, rough terrain, and inclines up to 30 degrees</li>
+                            <li><strong>Autonomy:</strong> Features autonomous navigation with obstacle avoidance</li>
+                            <li><strong>Mapping:</strong> Creates detailed 3D maps of environments</li> 
+                            <li><strong>Manipulation:</strong> Optional robotic arm allows for object manipulation and interaction</li>
+                            <li><strong>Data Collection:</strong> Multiple camera options including 360° cameras, thermal imaging, gas detection</li>
+                            <li><strong>Programmability:</strong> SDK allows for custom application development</li>
+                            <li><strong>Remote Operation:</strong> Can be teleoperated from a distance via tablet or computer interface</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="robot-section">
+                    <h2 class="section-title">Applications</h2>
+                    <div class="section-content">
+                        <p>Spot has been deployed in numerous industries for various applications:</p>
+                        <ul>
+                            <li><strong>Industrial Inspection:</strong> Monitoring of equipment, gauges, and facilities in factories, power plants, and construction sites</li>
+                            <li><strong>Energy:</strong> Remote data collection in challenging environments like offshore oil platforms</li>
+                            <li><strong>Construction:</strong> Site documentation, progress monitoring, and safety inspections</li>
+                            <li><strong>Public Safety:</strong> Remote assessment of hazardous situations</li>
+                            <li><strong>Research:</strong> Platform for developing and testing new robotics technologies</li>
+                            <li><strong>Entertainment:</strong> Performances and demonstrations showcasing robotic capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="robot-section">
+                    <h2 class="section-title">Video Gallery</h2>
+                    <div class="section-content video-gallery">
+                        <div class="video-container">
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/wlkCQXHEgjA" frameborder="0" allowfullscreen></iframe>
+                            <p class="video-caption">Spot Launch Video | Boston Dynamics</p>
+                        </div>
+                        
+                        <div class="video-container">
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/7atZfX85nd4" frameborder="0" allowfullscreen></iframe>
+                            <p class="video-caption">Spot in Action | Boston Dynamics</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="robot-section">
+                    <h2 class="section-title">Image Gallery</h2>
+                    <div class="section-content image-gallery">
+                        <div class="gallery-image">
+                            <img src="../images/robots/spot.jpg" alt="Spot Quadruped Robot">
+                        </div>
+                        <div class="gallery-image">
+                            <img src="../images/robots/spot-2.jpg" alt="Spot with robotic arm">
+                        </div>
+                        <div class="gallery-image">
+                            <img src="../images/robots/spot-3.jpg" alt="Spot on construction site">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="related-robots">
+                <h2 class="section-title">Related Robots</h2>
+                <div class="robot-grid mini-grid">
+                    <!-- This will be dynamically populated with JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Assistant Button -->
+    <div class="ai-assistant">
+        <div class="ai-button" id="ai-button">
+            <div class="ai-icon"><i class="fas fa-robot"></i></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="../about.html">Our Mission</a></li>
+                        <li><a href="../about.html#team">The Team</a></li>
+                        <li><a href="../about.html#partners">Partners</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="../encyclopedia.html">Robot Database</a></li>
+                        <li><a href="../encyclopedia.html?category=featured">Popular Robots</a></li>
+                        <li><a href="../encyclopedia.html?category=new">Latest Additions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="../encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="../encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="../encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="../encyclopedia.html?category=space">Space Robotics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="../contact.html">Contact Us</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu handling
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    navLinks.classList.toggle('mobile-active');
+                    authButtons.classList.toggle('mobile-active');
+                });
+            }
+            
+            // AI Assistant button
+            const aiButton = document.getElementById('ai-button');
+            if (aiButton) {
+                aiButton.addEventListener('click', function() {
+                    // Simple redirection to /contact.html with query parameter
+                    window.location.href = '../contact.html?assistant=open';
+                });
+            }
+            
+            // Load related robots
+            loadRelatedRobots();
+        });
+        
+        // Load related robots based on category and tags
+        function loadRelatedRobots() {
+            const relatedRobotsGrid = document.querySelector('.mini-grid');
+            if (!relatedRobotsGrid) return;
+            
+            // Current robot info
+            const currentRobot = {
+                slug: 'spot',
+                category: 'Quadruped',
+                tags: ['Quadruped', 'Boston Dynamics', 'Mobile Robot', 'Inspection', 'Industrial']
+            };
+            
+            fetch('../robots.json')
+                .then(response => response.json())
+                .then(robots => {
+                    // Filter out current robot and find related ones by category or tags
+                    const filteredRobots = robots.filter(robot => {
+                        // Skip current robot
+                        if (robot.slug === currentRobot.slug) return false;
+                        
+                        // Match by category
+                        if (robot.category === currentRobot.category) return true;
+                        
+                        // Match by tags (at least one matching tag)
+                        if (robot.tags && currentRobot.tags) {
+                            return robot.tags.some(tag => currentRobot.tags.includes(tag));
+                        }
+                        
+                        return false;
+                    });
+                    
+                    // Display up to 3 related robots
+                    const relatedRobots = filteredRobots.slice(0, 3);
+                    
+                    if (relatedRobots.length > 0) {
+                        relatedRobotsGrid.innerHTML = '';
+                        relatedRobots.forEach(robot => {
+                            const imageUrl = robot.image || '../images/robots/placeholder.jpg';
+                            const robotCard = document.createElement('div');
+                            robotCard.className = 'robot-card mini-card';
+                            
+                            robotCard.innerHTML = `
+                                <a href="${robot.slug}.html" class="robot-card-link">
+                                    <div class="robot-card-image">
+                                        <img src="../${imageUrl}" alt="${robot.title}">
+                                    </div>
+                                    <div class="robot-card-content">
+                                        <h3 class="robot-card-title">${robot.title}</h3>
+                                        <div class="robot-card-categories">
+                                            ${robot.category ? `<span class="category-pill">${robot.category}</span>` : ''}
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                            
+                            relatedRobotsGrid.appendChild(robotCard);
+                        });
+                    } else {
+                        // Hide the section if no related robots found
+                        const relatedSection = document.querySelector('.related-robots');
+                        if (relatedSection) {
+                            relatedSection.style.display = 'none';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading related robots:', error);
+                    // Hide the section if error
+                    const relatedSection = document.querySelector('.related-robots');
+                    if (relatedSection) {
+                        relatedSection.style.display = 'none';
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
