@@ -1,6 +1,22 @@
 /**
  * Admin functionality for TedouaR Robotics Hub
+ * Enhanced with GitHub API integration for permanent storage
  */
+
+// GitHub repository information
+const GITHUB_REPO = {
+    owner: 'taikibonnet',
+    repo: 'TedouaR-robotic-HUB',
+    branch: 'main'
+};
+
+// Personal access token for GitHub API
+// Note: In a production environment, this would be stored securely server-side
+// For demo purposes, we'll use localStorage for temporary storage
+let GITHUB_TOKEN = localStorage.getItem('github_token');
+
+// GitHub API base URL
+const GITHUB_API_BASE = 'https://api.github.com';
 
 // Check if user is logged in as admin
 function checkAdminAuth() {
@@ -14,21 +30,106 @@ function checkAdminAuth() {
     return isLoggedIn;
 }
 
-// Simulate file upload to server
-function uploadImageToServer(file) {
-    return new Promise((resolve, reject) => {
-        // In a real application, this would be an actual upload to a server
-        // For demo purposes, we'll simulate a successful upload after a short delay
+// GitHub API helpers
+async function getGitHubFile(path) {
+    try {
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}?ref=${GITHUB_REPO.branch}`, {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
         
-        setTimeout(() => {
-            // Generate a fake server path for the image
-            // In a real application, this would be the actual path returned by the server
-            const serverPath = `images/robots/${file.name}`;
-            
-            // Return the path
-            resolve(serverPath);
-        }, 500);
-    });
+        if (!response.ok) {
+            throw new Error(`Failed to get file: ${response.statusText}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error getting GitHub file:', error);
+        throw error;
+    }
+}
+
+async function updateGitHubFile(path, content, message, sha = null) {
+    try {
+        const payload = {
+            message: message,
+            content: btoa(content), // Base64 encode content
+            branch: GITHUB_REPO.branch
+        };
+        
+        if (sha) {
+            payload.sha = sha;
+        }
+        
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to update file: ${response.statusText}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating GitHub file:', error);
+        throw error;
+    }
+}
+
+async function uploadImageToGitHub(file, directory = 'images/robots') {
+    try {
+        // Generate a safe filename
+        const timestamp = new Date().getTime();
+        const safeFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const uniqueFilename = `${timestamp}-${safeFilename}`;
+        const path = `${directory}/${uniqueFilename}`;
+        
+        // Read file as binary
+        const reader = new FileReader();
+        const fileContent = await new Promise((resolve, reject) => {
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = e => reject(e);
+            reader.readAsDataURL(file);
+        });
+        
+        // Extract base64 content from data URL
+        const base64Content = fileContent.split(',')[1];
+        
+        // Upload to GitHub
+        const payload = {
+            message: `Upload image: ${uniqueFilename}`,
+            content: base64Content,
+            branch: GITHUB_REPO.branch
+        };
+        
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to upload image: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        return path;
+    } catch (error) {
+        console.error('Error uploading image to GitHub:', error);
+        throw error;
+    }
 }
 
 // Process image for upload
@@ -38,10 +139,10 @@ async function processImageUpload(file) {
         throw new Error('Invalid image file');
     }
     
-    // Upload to server
-    const serverPath = await uploadImageToServer(file);
+    // Upload to GitHub
+    const filePath = await uploadImageToGitHub(file);
     
-    return serverPath;
+    return filePath;
 }
 
 // Validate image file
@@ -56,14 +157,41 @@ function validateImageFile(file) {
         return false;
     }
     
-    // Check file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    // Check file size (max 2MB - GitHub API limit for files is 100MB but we'll be conservative)
+    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
     if (file.size > maxSize) {
-        alert('File size too large. Please select an image under 5MB.');
+        alert('File size too large. Please select an image under 2MB.');
         return false;
     }
     
     return true;
+}
+
+// Load robots from GitHub
+async function loadRobotsFromGitHub() {
+    try {
+        const file = await getGitHubFile('robots.json');
+        const content = atob(file.content); // Base64 decode content
+        const robots = JSON.parse(content);
+        return {
+            robots,
+            sha: file.sha
+        };
+    } catch (error) {
+        console.error('Error loading robots from GitHub:', error);
+        throw error;
+    }
+}
+
+// Save robots to GitHub
+async function saveRobotsToGitHub(robots, sha) {
+    try {
+        const content = JSON.stringify(robots, null, 2);
+        return await updateGitHubFile('robots.json', content, 'Update robots.json', sha);
+    } catch (error) {
+        console.error('Error saving robots to GitHub:', error);
+        throw error;
+    }
 }
 
 // Generate slug from title
@@ -78,13 +206,15 @@ function generateSlug(title) {
 // Save robot data
 async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
     try {
-        // In a real application, this would save the data to a server
-        // For demo purposes, we'll simulate a successful save
+        // Load existing robots
+        const { robots, sha } = await loadRobotsFromGitHub();
+        
+        // Find if the robot already exists
+        const existingRobotIndex = robots.findIndex(r => r.slug === robotData.slug);
         
         // Process main image if provided
-        let mainImagePath = robotData.image; // Keep existing image if no new one uploaded
         if (mainImageFile) {
-            mainImagePath = await processImageUpload(mainImageFile);
+            const mainImagePath = await processImageUpload(mainImageFile);
             robotData.image = mainImagePath;
         }
         
@@ -100,12 +230,21 @@ async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
             }
             
             // Combine existing and new gallery images
-            // In a real application, you would handle replacements and deletions
             robotData.gallery_images = [...galleryImagePaths, ...newGalleryImagePaths].slice(0, 5);
         }
         
-        // In a real application, you would save the updated robot data to the server
-        console.log('Saving robot data:', robotData);
+        // Update or add the robot
+        if (existingRobotIndex !== -1) {
+            robots[existingRobotIndex] = {
+                ...robots[existingRobotIndex],
+                ...robotData
+            };
+        } else {
+            robots.push(robotData);
+        }
+        
+        // Save to GitHub
+        await saveRobotsToGitHub(robots, sha);
         
         return true;
     } catch (error) {
@@ -117,12 +256,7 @@ async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
 // Load robots for admin management
 async function loadRobotsForAdmin() {
     try {
-        const response = await fetch('robots.json');
-        if (!response.ok) {
-            throw new Error('Failed to load robot data');
-        }
-        
-        const robots = await response.json();
+        const { robots } = await loadRobotsFromGitHub();
         return robots;
     } catch (error) {
         console.error('Error loading robots:', error);
@@ -133,12 +267,22 @@ async function loadRobotsForAdmin() {
 // Delete robot
 async function deleteRobot(robotId) {
     try {
-        // In a real application, this would send a deletion request to the server
-        // For demo purposes, we'll simulate a successful deletion
+        // Load existing robots
+        const { robots, sha } = await loadRobotsFromGitHub();
         
-        console.log('Deleting robot:', robotId);
+        // Find the robot index
+        const robotIndex = robots.findIndex(r => r.slug === robotId);
         
-        // Simulate server response
+        if (robotIndex === -1) {
+            throw new Error(`Robot with ID "${robotId}" not found`);
+        }
+        
+        // Remove the robot
+        robots.splice(robotIndex, 1);
+        
+        // Save to GitHub
+        await saveRobotsToGitHub(robots, sha);
+        
         return { success: true, message: 'Robot deleted successfully' };
     } catch (error) {
         console.error('Error deleting robot:', error);
@@ -348,7 +492,7 @@ function getRobotDataFromForm(form) {
     
     // Get tags and convert to array
     const tagsString = formData.get('tags');
-    const tags = tagsString ? tagsString.split(',').map(tag => tag.trim()) : [];
+    const tags = tagsString ? tagsString.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
     
     // Create robot data object
     const robotData = {
@@ -371,6 +515,12 @@ function getRobotDataFromForm(form) {
 // Handle robot form submission
 async function handleRobotFormSubmission(form) {
     try {
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        submitBtn.disabled = true;
+        
         // Get robot data from form
         const robotData = getRobotDataFromForm(form);
         
@@ -384,6 +534,10 @@ async function handleRobotFormSubmission(form) {
         // Save robot data
         const success = await saveRobotData(robotData, mainImageFile, galleryImageFiles);
         
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        
         if (success) {
             alert('Robot has been saved successfully!');
             window.location.href = 'admin-panel.html';
@@ -393,5 +547,30 @@ async function handleRobotFormSubmission(form) {
     } catch (error) {
         console.error('Error submitting robot form:', error);
         alert('An error occurred while saving the robot. Please try again.');
+        
+        // Restore button state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Robot';
+        submitBtn.disabled = false;
     }
+}
+
+// Initialize GitHub authentication
+async function initGitHubAuth() {
+    // Get token from localStorage or prompt user
+    if (!GITHUB_TOKEN) {
+        GITHUB_TOKEN = prompt('Please enter your GitHub Personal Access Token to enable admin functionality:');
+        
+        if (GITHUB_TOKEN) {
+            localStorage.setItem('github_token', GITHUB_TOKEN);
+        } else {
+            alert('GitHub token is required for admin functionality. Please try again.');
+            window.location.href = 'index.html';
+        }
+    }
+}
+
+// On page load, initialize GitHub auth if admin is logged in
+if (localStorage.getItem('admin_logged_in') === 'true') {
+    initGitHubAuth();
 }
