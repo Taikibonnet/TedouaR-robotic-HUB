@@ -4,11 +4,16 @@
     "slug": "tesla-optimus",
     "category": "Humanoid",
     "manufacturer": "Tesla, Inc.",
-    "image": "images/robots/tesla-optimus.jpg",
+    "image": "images/robots/TeslaProducing5000OptimusRobotsIn2025CourtesyOfTesla.webp",
     "description": "Tesla Optimus is a humanoid robot designed to perform manual tasks, blending AI with robotics for future labor automation.",
     "featured": true,
     "video_url": "https://www.youtube.com/embed/cpraXaw7dyc",
     "additional_video_url": "https://www.youtube.com/embed/DrNcXgoFv20",
+    "gallery_images": [
+      "images/robots/tesla-optimus-image1.jpg",
+      "images/robots/tesla-optimus-image2.jpg",
+      "images/robots/tesla-optimus-image3.jpg"
+    ],
     "technical_specs": {
       "height": "5 ft 8 in (1.73 meters)",
       "weight": "125 pounds (57 kg)",
