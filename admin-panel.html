@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/logo.css">
+    <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.svg" alt="TedouaR Logo" class="logo">
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="encyclopedia.html">Encyclopedia</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="admin-panel.html" class="active">Admin</a>
+            </nav>
+            
+            <!-- Auth Buttons -->
+            <div class="auth-buttons">
+                <button id="logout-btn" class="btn btn-outline">Log Out</button>
+            </div>
+            
+            <button class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Admin Panel Section -->
+    <section class="admin-panel-container">
+        <div class="container">
+            <div class="admin-header">
+                <div class="admin-welcome">
+                    Welcome back, <strong>Admin</strong>. You can manage robots and other content here.
+                </div>
+                <div class="admin-actions">
+                    <a href="admin-add-robot.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Robot
+                    </a>
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <h2 class="admin-section-title">Manage Robots</h2>
+                <div class="admin-cards" id="robot-cards">
+                    <!-- Robot cards will be populated by JavaScript -->
+                    <div class="loading">Loading robots...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Our Mission</a></li>
+                        <li><a href="about.html#team">The Team</a></li>
+                        <li><a href="about.html#partners">Partners</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html">Robot Database</a></li>
+                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="encyclopedia.html?category=space">Space Robotics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in as admin
+            checkAdminAuth();
+            
+            // Mobile menu handling
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    navLinks.classList.toggle('mobile-active');
+                    authButtons.classList.toggle('mobile-active');
+                });
+            }
+            
+            // Logout button
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('admin_logged_in');
+                    window.location.href = 'admin-login.html';
+                });
+            }
+            
+            // Load robots for management
+            loadRobotsForAdmin();
+        });
+        
+        // Check if user is logged in as admin
+        function checkAdminAuth() {
+            const isLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+            
+            if (!isLoggedIn) {
+                // Redirect to login page if not logged in
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // Load robots for admin management
+        function loadRobotsForAdmin() {
+            const robotCards = document.getElementById('robot-cards');
+            
+            fetch('robots.json')
+                .then(response => response.json())
+                .then(robots => {
+                    // Clear loading indicator
+                    robotCards.innerHTML = '';
+                    
+                    // Display all robots
+                    robots.forEach(robot => {
+                        const card = createAdminRobotCard(robot);
+                        robotCards.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading robots:', error);
+                    robotCards.innerHTML = `
+                        <div class="error-message">
+                            <h3>Failed to load robot data</h3>
+                            <p>Please try again later or contact the administrator.</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Create admin robot card
+        function createAdminRobotCard(robot) {
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+            
+            // Set default image if none provided
+            const imageUrl = robot.image || 'images/robots/placeholder.jpg';
+            
+            card.innerHTML = `
+                <div class="admin-card-image">
+                    <img src="${imageUrl}" alt="${robot.title}">
+                </div>
+                <div class="admin-card-content">
+                    <h3 class="admin-card-title">${robot.title}</h3>
+                    <div class="admin-card-meta">
+                        <span>${robot.category}</span>
+                        <span>${robot.manufacturer}</span>
+                    </div>
+                    <div class="admin-card-actions">
+                        <a href="admin-edit-robot.html?id=${robot.slug}" class="btn-edit">Edit</a>
+                        <button class="btn-delete" data-robot-id="${robot.slug}">Delete</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listener for delete button
+            const deleteBtn = card.querySelector('.btn-delete');
+            deleteBtn.addEventListener('click', function() {
+                const robotId = this.getAttribute('data-robot-id');
+                
+                if (confirm(`Are you sure you want to delete the robot "${robot.title}"?`)) {
+                    // In a real application, you would send a deletion request to the backend
+                    // For demo purposes, we'll just show a success message
+                    alert(`Robot "${robot.title}" has been deleted successfully.`);
+                }
+            });
+            
+            return card;
+        }
+    </script>
+</body>
+</html>
