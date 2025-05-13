@@ -62,6 +62,31 @@
     border-color: var(--primary-color);
 }
 
+.form-help {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-help code {
+    background-color: #222;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.form-help a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.form-help a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
 .form-actions {
     margin-top: 30px;
     text-align: center;
@@ -84,6 +109,18 @@
     background-color: rgba(231, 76, 60, 0.2);
     border: 1px solid rgba(231, 76, 60, 0.5);
     color: #e74c3c;
+}
+
+.message.warning {
+    background-color: rgba(241, 196, 15, 0.2);
+    border: 1px solid rgba(241, 196, 15, 0.5);
+    color: #f1c40f;
+}
+
+.message.info {
+    background-color: rgba(52, 152, 219, 0.2);
+    border: 1px solid rgba(52, 152, 219, 0.5);
+    color: #3498db;
 }
 
 .hidden {
@@ -369,6 +406,38 @@ textarea:focus {
 
 .image-delete:hover {
     color: #c0392b;
+}
+
+/* Loading Indicator */
+.loading {
+    text-align: center;
+    padding: 30px 0;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.loading i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+/* GitHub Token Form */
+.github-token-form {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 1px solid #333;
+}
+
+.github-token-form h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.github-token-form p {
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
 }
 
 /* Responsive Adjustments */
