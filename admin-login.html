@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/logo.css">
+    <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.svg" alt="TedouaR Logo" class="logo">
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="encyclopedia.html">Encyclopedia</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <!-- Auth Buttons -->
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            
+            <button class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Admin Login Section -->
+    <section class="admin-login-container">
+        <div class="container">
+            <div class="admin-login-form">
+                <h1 class="admin-title">Admin Login</h1>
+                <p class="admin-subtitle">Please log in to access the admin panel</p>
+                
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-username">Username</label>
+                        <input type="text" id="admin-username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" name="password" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">Login</button>
+                    </div>
+                    
+                    <div id="login-message" class="message hidden"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Our Mission</a></li>
+                        <li><a href="about.html#team">The Team</a></li>
+                        <li><a href="about.html#partners">Partners</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html">Robot Database</a></li>
+                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="encyclopedia.html?category=space">Space Robotics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu handling
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    navLinks.classList.toggle('mobile-active');
+                    authButtons.classList.toggle('mobile-active');
+                });
+            }
+            
+            // Admin login form submission
+            const adminLoginForm = document.getElementById('admin-login-form');
+            const loginMessage = document.getElementById('login-message');
+            
+            if (adminLoginForm) {
+                adminLoginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('admin-username').value;
+                    const password = document.getElementById('admin-password').value;
+                    
+                    // For demonstration purposes, we'll use hardcoded credentials
+                    // In a real application, you would validate against a secure backend
+                    if (username === 'admin' && password === 'password') {
+                        // Store admin session in localStorage (for demo only)
+                        localStorage.setItem('admin_logged_in', 'true');
+                        
+                        // Show success message
+                        loginMessage.textContent = 'Login successful. Redirecting to admin panel...';
+                        loginMessage.className = 'message success';
+                        
+                        // Redirect to admin panel
+                        setTimeout(function() {
+                            window.location.href = 'admin-panel.html';
+                        }, 1500);
+                    } else {
+                        // Show error message
+                        loginMessage.textContent = 'Invalid username or password. Please try again.';
+                        loginMessage.className = 'message error';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
