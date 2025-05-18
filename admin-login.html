@@ -4,177 +4,164 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - TedouaR Robotics Hub</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/logo.css">
-    <link rel="stylesheet" href="styles/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
     <style>
-        .credentials-box {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 15px 0;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
-        .credentials-box h3 {
-            margin-top: 0;
-            font-size: 16px;
+        
+        body {
+            background-color: #f5f5f5;
             color: #333;
+            line-height: 1.6;
         }
-        .credentials-box p {
-            margin: 5px 0;
-            font-family: monospace;
-            background: #eee;
-            padding: 5px;
-            border-radius: 3px;
+        
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .message {
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin: 15px 0;
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
             display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
         }
-        .message.success {
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a89dc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3a77c2;
+        }
+        
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        .message.hidden {
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hidden {
             display: none;
+        }
+        
+        .credentials-box {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .credentials-box h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .credentials-box p {
+            margin: 5px 0;
+            background: #eee;
+            padding: 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            color: #4a89dc;
+            text-decoration: none;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <a href="index.html" class="logo-container">
-                <img src="images/logo.svg" alt="TedouaR Logo" class="logo">
-            </a>
-            <nav class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="encyclopedia.html">Encyclopedia</a>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-            
-            <!-- Auth Buttons -->
-            <div class="auth-buttons">
-                <a href="login.html" class="btn btn-outline">Log In</a>
-                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+    <div class="container">
+        <h1>Admin Login</h1>
+        
+        <div class="credentials-box">
+            <h3>Use these credentials:</h3>
+            <p><strong>Email:</strong> tedouar.robotics@gmail.com</p>
+            <p><strong>Password:</strong> Admin123!</p>
+        </div>
+        
+        <div id="login-message" class="message hidden"></div>
+        
+        <form id="admin-login-form">
+            <div class="form-group">
+                <label for="admin-email">Email</label>
+                <input type="email" id="admin-email" value="tedouar.robotics@gmail.com" required>
             </div>
             
-            <button class="mobile-menu-button">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Admin Login Section -->
-    <section class="admin-login-container">
-        <div class="container">
-            <div class="admin-login-form">
-                <h1 class="admin-title">Admin Login</h1>
-                <p class="admin-subtitle">Please log in to access the admin panel</p>
-                
-                <div class="credentials-box">
-                    <h3>Use these admin credentials:</h3>
-                    <p><strong>Email:</strong> tedouar.robotics@gmail.com</p>
-                    <p><strong>Password:</strong> Admin123!</p>
-                </div>
-                
-                <div id="login-message" class="message hidden"></div>
-                
-                <form id="admin-login-form">
-                    <div class="form-group">
-                        <label for="admin-username">Email</label>
-                        <input type="email" id="admin-username" name="username" value="tedouar.robotics@gmail.com" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="admin-password">Password</label>
-                        <input type="password" id="admin-password" name="password" value="Admin123!" required>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-large">Login</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-section">
-                    <h3>About</h3>
-                    <ul class="footer-links">
-                        <li><a href="about.html">Our Mission</a></li>
-                        <li><a href="about.html#team">The Team</a></li>
-                        <li><a href="about.html#partners">Partners</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="encyclopedia.html">Robot Database</a></li>
-                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
-                        <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Categories</h3>
-                    <ul class="footer-links">
-                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
-                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
-                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
-                        <li><a href="encyclopedia.html?category=space">Space Robotics</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Connect</h3>
-                    <ul class="footer-links">
-                        <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="#" target="_blank">Twitter</a></li>
-                        <li><a href="#" target="_blank">LinkedIn</a></li>
-                    </ul>
-                </div>
+            <div class="form-group">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" value="Admin123!" required>
             </div>
             
-            <div class="copyright">
-                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
-            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="index.html">Back to Home</a>
         </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
+    </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu handling
-            const mobileMenuButton = document.querySelector('.mobile-menu-button');
-            const navLinks = document.querySelector('.nav-links');
-            const authButtons = document.querySelector('.auth-buttons');
-            
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', function() {
-                    navLinks.classList.toggle('mobile-active');
-                    authButtons.classList.toggle('mobile-active');
-                });
-            }
-            
-            // Admin login form submission
             const adminLoginForm = document.getElementById('admin-login-form');
             const loginMessage = document.getElementById('login-message');
             
@@ -182,11 +169,10 @@
                 adminLoginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
-                    const username = document.getElementById('admin-username').value;
+                    const email = document.getElementById('admin-email').value;
                     const password = document.getElementById('admin-password').value;
                     
-                    // Use the provided credentials
-                    if (username === 'tedouar.robotics@gmail.com' && password === 'Admin123!') {
+                    if (email === 'tedouar.robotics@gmail.com' && password === 'Admin123!') {
                         // Store admin session in localStorage
                         localStorage.setItem('admin_logged_in', 'true');
                         
@@ -200,18 +186,16 @@
                         }, 1500);
                     } else {
                         // Show error message
-                        loginMessage.innerHTML = '<strong>Invalid email or password.</strong><br>Make sure you use exactly: tedouar.robotics@gmail.com and Admin123!';
+                        loginMessage.textContent = 'Invalid email or password. Please check credentials and try again.';
                         loginMessage.className = 'message error';
                     }
                 });
-            }
-            
-            // Auto-submit form for convenience
-            setTimeout(function() {
-                if (adminLoginForm) {
+                
+                // Auto-submit form for convenience
+                setTimeout(function() {
                     adminLoginForm.dispatchEvent(new Event('submit'));
-                }
-            }, 500);
+                }, 500);
+            }
         });
     </script>
 </body>
