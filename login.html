@@ -5,38 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/logo.css">
+    <link rel="stylesheet" href="styles/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+    <style>
+        .notice {
+            background-color: #f8f9fa;
+            border-left: 5px solid #4a89dc;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .admin-link {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .admin-button {
+            display: inline-block;
+            background-color: #4a89dc;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .admin-button:hover {
+            background-color: #3a77c2;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="container header-container">
             <a href="index.html" class="logo-container">
-                <!-- SVG Logo -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="180" height="60" class="logo">
-                  <!-- Definition of gradient and glow -->
-                  <defs>
-                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#0cebeb"/>
-                      <stop offset="100%" stop-color="#20e3b2"/>
-                    </linearGradient>
-                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                      <feGaussianBlur stdDeviation="2" result="blur"/>
-                      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                    </filter>
-                  </defs>
-                  
-                  <!-- Path for the 'T' element -->
-                  <path d="M30.96965,130.265109c4.504842-2.783085,98.787866-5.009554,85.997348-5.009554-117.352536,2.860933-40.72106,19.243294-40.493897,14.6112" transform="translate(4.592093-3.339704)" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" filter="url(#glow)"/>
-                  
-                  <!-- Text elements -->
-                  <text dx="0" dy="0" font-family="Arial, sans-serif" font-size="15" font-weight="400" font-style="italic" transform="matrix(2.322194-.031029 0.010676 0.798958 74.435681 137.109235)" fill="url(#logoGradient)" filter="url(#glow)">
-                    <tspan y="0" font-weight="400">edouaR</tspan>
-                  </text>
-                  
-                  <text x="110" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle" fill="url(#logoGradient)" filter="url(#glow)">ROBOTICS</text>
-                </svg>
+                <img src="images/logo.svg" alt="TedouaR Logo" class="logo">
             </a>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
@@ -44,6 +51,13 @@
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
             </nav>
+            
+            <!-- Auth Buttons -->
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline active">Log In</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            
             <button class="mobile-menu-button">
                 <i class="fas fa-bars"></i>
             </button>
@@ -51,52 +65,37 @@
     </header>
 
     <!-- Login Section -->
-    <section class="login-section">
+    <section class="admin-login-container">
         <div class="container">
-            <div class="login-container">
-                <h1 class="login-title">Admin Login</h1>
-                <p class="login-subtitle">Sign in to access the admin panel</p>
+            <div class="admin-login-form">
+                <h1 class="admin-title">User Login</h1>
+                <p class="admin-subtitle">Please log in to access your account</p>
                 
-                <div id="login-error" class="error-message" style="display: none;"></div>
+                <div class="notice">
+                    <p><strong>Note:</strong> This is the regular user login page. If you're an administrator looking to access the admin panel, please use the admin login link at the bottom of this page.</p>
+                </div>
                 
-                <form id="login-form" class="login-form">
+                <form id="login-form">
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                        </div>
+                        <label for="username">Email</label>
+                        <input type="email" id="username" name="username" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                        </div>
+                        <input type="password" id="password" name="password" required>
                     </div>
                     
-                    <div class="form-options">
-                        <div class="remember-me">
-                            <input type="checkbox" id="remember" name="remember">
-                            <label for="remember">Remember me</label>
-                        </div>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">Login</button>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                    <div id="login-message" class="message hidden"></div>
                 </form>
                 
-                <div class="login-separator">
-                    <span>Or</span>
-                </div>
-                
-                <a href="admin/auth.html" class="btn btn-outline btn-block">
-                    <i class="fab fa-github"></i> Login with GitHub
-                </a>
-                
-                <div class="login-footer">
-                    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+                <div class="admin-link">
+                    <p>Are you an administrator?</p>
+                    <a href="admin-login.html" class="admin-button">Go to Admin Login</a>
                 </div>
             </div>
         </div>
@@ -125,6 +124,16 @@
                 </div>
                 
                 <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="encyclopedia.html?category=space">Space Robotics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
                     <h3>Connect</h3>
                     <ul class="footer-links">
                         <li><a href="contact.html">Contact Us</a></li>
@@ -142,6 +151,34 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu handling
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    navLinks.classList.toggle('mobile-active');
+                    authButtons.classList.toggle('mobile-active');
+                });
+            }
+            
+            // Login form submission
+            const loginForm = document.getElementById('login-form');
+            const loginMessage = document.getElementById('login-message');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // For demo purposes, always show error since this is not functional yet
+                    loginMessage.textContent = 'Regular user login functionality is not available in this demo. Please use the admin login if you need to access admin features.';
+                    loginMessage.className = 'message error';
+                });
+            }
+        });
+    </script>
 </body>
 </html>
