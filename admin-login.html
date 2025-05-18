@@ -45,8 +45,8 @@
                 
                 <form id="admin-login-form">
                     <div class="form-group">
-                        <label for="admin-username">Username</label>
-                        <input type="text" id="admin-username" name="username" required>
+                        <label for="admin-username">Email</label>
+                        <input type="email" id="admin-username" name="username" required>
                     </div>
                     
                     <div class="form-group">
@@ -155,13 +155,12 @@
                     const password = document.getElementById('admin-password').value;
                     const githubToken = document.getElementById('github-token').value;
                     
-                    // For demonstration purposes, we'll use hardcoded credentials
-                    // In a real application, you would validate against a secure backend
-                    if (username === 'admin' && password === 'password') {
+                    // Use the provided credentials
+                    if (username === 'tedouar.robotics@gmail.com' && password === 'Admin123!') {
                         // Store GitHub token in localStorage
                         localStorage.setItem('github_token', githubToken);
                         
-                        // Store admin session in localStorage (for demo only)
+                        // Store admin session in localStorage
                         localStorage.setItem('admin_logged_in', 'true');
                         
                         // Show success message
