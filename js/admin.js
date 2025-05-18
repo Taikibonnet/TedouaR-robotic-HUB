@@ -1,6 +1,6 @@
 /**
  * Admin functionality for TedouaR Robotics Hub
- * Enhanced with GitHub API integration for permanent storage
+ * With simplified image hosting approach
  */
 
 // GitHub repository information
@@ -85,97 +85,7 @@ async function updateGitHubFile(path, content, message, sha = null) {
     }
 }
 
-// Improved function to upload image to GitHub with better error handling
-async function uploadImageToGitHub(file, directory = 'images/robots') {
-    try {
-        if (!validateImageFile(file)) {
-            throw new Error('Invalid image file');
-        }
-        
-        // Generate a safe filename
-        const timestamp = new Date().getTime();
-        const safeFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const uniqueFilename = `${timestamp}-${safeFilename}`;
-        const path = `${directory}/${uniqueFilename}`;
-        
-        // Read file as binary using FileReader with proper error handling
-        const fileContent = await readFileAsDataURL(file);
-        
-        // Extract base64 content from data URL
-        const base64Content = fileContent.split(',')[1];
-        
-        // Upload to GitHub with retries
-        let retries = 3;
-        let lastError = null;
-        
-        while (retries > 0) {
-            try {
-                const payload = {
-                    message: `Upload image: ${uniqueFilename}`,
-                    content: base64Content,
-                    branch: GITHUB_REPO.branch
-                };
-                
-                const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`GitHub API error: ${response.status} - ${errorData.message}`);
-                }
-                
-                const data = await response.json();
-                return path;
-            } catch (error) {
-                lastError = error;
-                retries--;
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retrying
-            }
-        }
-        
-        throw lastError || new Error('Failed to upload image after multiple attempts');
-    } catch (error) {
-        console.error('Error uploading image to GitHub:', error);
-        throw error;
-    }
-}
-
-// Helper function to read file as data URL
-function readFileAsDataURL(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error('Error reading file'));
-        reader.readAsDataURL(file);
-    });
-}
-
-// Process image for upload with improved error handling
-async function processImageUpload(file) {
-    try {
-        // Validate file
-        if (!validateImageFile(file)) {
-            throw new Error('Invalid image file');
-        }
-        
-        // Upload to GitHub with retry mechanism
-        const filePath = await uploadImageToGitHub(file);
-        
-        return filePath;
-    } catch (error) {
-        console.error('Error processing image upload:', error);
-        throw error;
-    }
-}
-
-// Validate image file with improved checks
+// Validate image file
 function validateImageFile(file) {
     // Check if file exists
     if (!file) return false;
@@ -188,10 +98,10 @@ function validateImageFile(file) {
         return false;
     }
     
-    // Check file size (max 2MB - GitHub API has a 100MB limit but we'll keep it small for web performance)
-    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    // Check file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
     if (file.size > maxSize) {
-        alert('File size too large. Please select an image under 2MB.');
+        alert('File size too large. Please select an image under 5MB.');
         return false;
     }
     
@@ -245,8 +155,8 @@ function generateSlug(title) {
         .trim();                  // Trim whitespace
 }
 
-// Save robot data with improved image handling
-async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
+// Save robot data with simplified image handling
+async function saveRobotData(robotData) {
     try {
         // Load existing robots
         const { robots, sha } = await loadRobotsFromGitHub();
@@ -254,52 +164,16 @@ async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
         // Find if the robot already exists
         const existingRobotIndex = robots.findIndex(r => r.slug === robotData.slug);
         
-        // Process main image if provided
-        if (mainImageFile) {
-            try {
-                const mainImagePath = await processImageUpload(mainImageFile);
-                robotData.image = mainImagePath;
-            } catch (error) {
-                console.error('Error processing main image:', error);
-                alert(`Failed to upload main image: ${error.message}`);
-                return false;
-            }
-        }
-        
-        // Process gallery images if provided
-        let galleryImagePaths = robotData.gallery_images || [];
-        if (galleryImageFiles && galleryImageFiles.length > 0) {
-            const newGalleryImagePaths = [];
-            
-            for (let i = 0; i < Math.min(galleryImageFiles.length, 5); i++) {
-                try {
-                    const file = galleryImageFiles[i];
-                    const path = await processImageUpload(file);
-                    newGalleryImagePaths.push(path);
-                } catch (error) {
-                    console.error(`Error processing gallery image ${i + 1}:`, error);
-                    alert(`Failed to upload gallery image ${i + 1}: ${error.message}`);
-                }
-            }
-            
-            // Combine existing and new gallery images
-            if (existingRobotIndex !== -1 && robots[existingRobotIndex].gallery_images) {
-                // Keep existing gallery images if not replacing them all
-                galleryImagePaths = robots[existingRobotIndex].gallery_images;
-            }
-            
-            // Add new gallery images
-            robotData.gallery_images = [...galleryImagePaths, ...newGalleryImagePaths].slice(0, 5);
-        } else if (existingRobotIndex !== -1 && robots[existingRobotIndex].gallery_images) {
-            // Keep existing gallery images if not providing new ones
-            robotData.gallery_images = robots[existingRobotIndex].gallery_images;
-        }
-        
         // Update or add the robot
         if (existingRobotIndex !== -1) {
-            // If robot exists and has an image but no new image is provided, keep the existing image
+            // If robot exists and has image but no new image is provided, keep existing image
             if (!robotData.image && robots[existingRobotIndex].image) {
                 robotData.image = robots[existingRobotIndex].image;
+            }
+            
+            // Keep gallery images if not provided
+            if (!robotData.gallery_images && robots[existingRobotIndex].gallery_images) {
+                robotData.gallery_images = robots[existingRobotIndex].gallery_images;
             }
             
             robots[existingRobotIndex] = {
@@ -383,43 +257,45 @@ async function loadRobotForEditing(robotId) {
 }
 
 // Display image preview in form
-function displayImagePreview(file, container, isMainImage) {
-    const reader = new FileReader();
+function displayImagePreview(imageUrl, container, isMainImage, isFromUrl = true) {
+    // Clear container if it's the main image (only one allowed)
+    if (isMainImage) {
+        container.innerHTML = '';
+    }
     
-    reader.onload = function(e) {
-        const imageElement = document.createElement('div');
-        imageElement.className = 'uploaded-image';
-        
-        // Clear container if it's the main image (only one allowed)
-        if (isMainImage) {
-            container.innerHTML = '';
-        }
-        
-        imageElement.innerHTML = `
-            <img src="${e.target.result}" alt="${file.name}">
-            <div class="uploaded-image-overlay">
-                <span class="image-label">${file.name}</span>
-                <span class="image-delete"><i class="fas fa-trash"></i></span>
-            </div>
-        `;
-        
-        container.appendChild(imageElement);
-        
-        // Add event listener for delete button
-        const deleteBtn = imageElement.querySelector('.image-delete');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function() {
-                imageElement.remove();
-                
-                // Clear file input if it's the main image
-                if (isMainImage) {
-                    document.getElementById('main-image-input').value = '';
+    const imageElement = document.createElement('div');
+    imageElement.className = 'uploaded-image';
+    
+    // Get file name from URL or use a default name
+    const fileName = isFromUrl 
+        ? imageUrl.split('/').pop() 
+        : 'Selected Image';
+    
+    imageElement.innerHTML = `
+        <img src="${imageUrl}" alt="${fileName}">
+        <div class="uploaded-image-overlay">
+            <span class="image-label">${fileName}</span>
+            <span class="image-delete"><i class="fas fa-trash"></i></span>
+        </div>
+    `;
+    
+    container.appendChild(imageElement);
+    
+    // Add event listener for delete button
+    const deleteBtn = imageElement.querySelector('.image-delete');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function() {
+            imageElement.remove();
+            
+            // Clear input if it's the main image
+            if (isMainImage) {
+                const mainImageInput = document.getElementById('main-image-url');
+                if (mainImageInput) {
+                    mainImageInput.value = '';
                 }
-            });
-        }
-    };
-    
-    reader.readAsDataURL(file);
+            }
+        });
+    }
 }
 
 // Fill robot form with data
@@ -434,6 +310,32 @@ function fillRobotForm(robot) {
     document.getElementById('robot-content').value = robot.content || '';
     document.getElementById('robot-video').value = robot.video_url || '';
     document.getElementById('robot-additional-video').value = robot.additional_video_url || '';
+    
+    // Set main image URL if present
+    const mainImageUrl = document.getElementById('main-image-url');
+    if (mainImageUrl && robot.image) {
+        mainImageUrl.value = robot.image;
+        displayImagePreview(robot.image, document.getElementById('main-image-preview'), true);
+    }
+    
+    // Set gallery image URLs if present
+    if (robot.gallery_images && robot.gallery_images.length > 0) {
+        const galleryImageUrl = document.getElementById('gallery-images-url');
+        const galleryImagesPreview = document.getElementById('gallery-images-preview');
+        
+        // Clear existing inputs
+        document.querySelectorAll('.gallery-url-input').forEach(el => el.remove());
+        galleryImagesPreview.innerHTML = '';
+        
+        // Display all gallery images
+        robot.gallery_images.forEach((imageUrl, index) => {
+            // Add input field for this gallery image
+            addGalleryImageInput(imageUrl);
+            
+            // Display preview
+            displayImagePreview(imageUrl, galleryImagesPreview, false);
+        });
+    }
     
     // Fill technical specifications
     if (robot.technical_specs) {
@@ -471,62 +373,6 @@ function fillRobotForm(robot) {
         techSpecsContainer.innerHTML = ''; // Clear default row
         addEmptySpecRow(techSpecsContainer);
     }
-    
-    // Show existing images
-    if (robot.image) {
-        const mainImagePreview = document.getElementById('main-image-preview');
-        mainImagePreview.innerHTML = `
-            <div class="uploaded-image">
-                <img src="${robot.image}" alt="${robot.title}">
-                <div class="uploaded-image-overlay">
-                    <span class="image-label">Current Main Image</span>
-                    <span class="image-delete" data-image-type="main"><i class="fas fa-trash"></i></span>
-                </div>
-            </div>
-        `;
-        
-        // Add event listener for delete button
-        const deleteBtn = mainImagePreview.querySelector('.image-delete');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function() {
-                mainImagePreview.innerHTML = '';
-                robot.image = ''; // Mark image for deletion
-            });
-        }
-    }
-    
-    // Show gallery images
-    if (robot.gallery_images && robot.gallery_images.length > 0) {
-        const galleryImagesPreview = document.getElementById('gallery-images-preview');
-        galleryImagesPreview.innerHTML = '';
-        
-        robot.gallery_images.forEach((image, index) => {
-            const imageElement = document.createElement('div');
-            imageElement.className = 'uploaded-image';
-            imageElement.innerHTML = `
-                <img src="${image}" alt="${robot.title} Gallery Image ${index + 1}">
-                <div class="uploaded-image-overlay">
-                    <span class="image-label">Gallery Image ${index + 1}</span>
-                    <span class="image-delete" data-image-type="gallery" data-image-index="${index}"><i class="fas fa-trash"></i></span>
-                </div>
-            `;
-            
-            galleryImagesPreview.appendChild(imageElement);
-            
-            // Add event listener for delete button
-            const deleteBtn = imageElement.querySelector('.image-delete');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', function() {
-                    imageElement.remove();
-                    
-                    // Mark this gallery image for deletion
-                    if (robot.gallery_images) {
-                        robot.gallery_images.splice(index, 1);
-                    }
-                });
-            }
-        });
-    }
 }
 
 // Add empty specification row
@@ -551,6 +397,74 @@ function addEmptySpecRow(container) {
     container.appendChild(newSpecRow);
 }
 
+// Add gallery image URL input field
+function addGalleryImageInput(initialValue = '') {
+    const galleryUrlsContainer = document.getElementById('gallery-urls-container');
+    if (!galleryUrlsContainer) return;
+    
+    // Count existing gallery inputs
+    const existingInputs = document.querySelectorAll('.gallery-url-input').length;
+    
+    // Maximum 5 gallery images
+    if (existingInputs >= 5) {
+        alert('Maximum 5 gallery images allowed.');
+        return;
+    }
+    
+    const inputRow = document.createElement('div');
+    inputRow.className = 'form-row gallery-url-input';
+    inputRow.innerHTML = `
+        <div class="form-col">
+            <div class="form-group">
+                <label>Gallery Image URL ${existingInputs + 1}</label>
+                <input type="url" name="gallery-image-url[]" value="${initialValue}" placeholder="https://example.com/image.jpg">
+            </div>
+        </div>
+        <div class="form-col" style="flex: 0 0 auto; align-self: flex-end;">
+            <button type="button" class="btn btn-outline remove-gallery-url">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    
+    galleryUrlsContainer.appendChild(inputRow);
+    
+    // Add event listener for remove button
+    inputRow.querySelector('.remove-gallery-url').addEventListener('click', function() {
+        inputRow.remove();
+        updateGalleryPreviews();
+    });
+    
+    // Add event listener for URL input
+    const urlInput = inputRow.querySelector('input[name="gallery-image-url[]"]');
+    urlInput.addEventListener('input', function() {
+        updateGalleryPreviews();
+    });
+    
+    return inputRow;
+}
+
+// Update gallery image previews based on URL inputs
+function updateGalleryPreviews() {
+    const galleryImagesPreview = document.getElementById('gallery-images-preview');
+    if (!galleryImagesPreview) return;
+    
+    // Clear existing previews
+    galleryImagesPreview.innerHTML = '';
+    
+    // Get all gallery URL inputs
+    const galleryUrls = Array.from(document.querySelectorAll('input[name="gallery-image-url[]"]'))
+        .map(input => input.value)
+        .filter(url => url.trim() !== '');
+    
+    // Display previews for each URL
+    galleryUrls.forEach(url => {
+        if (url.trim() !== '') {
+            displayImagePreview(url, galleryImagesPreview, false);
+        }
+    });
+}
+
 // Get form data for robot
 function getRobotDataFromForm(form) {
     const formData = new FormData(form);
@@ -573,6 +487,14 @@ function getRobotDataFromForm(form) {
     const tagsString = formData.get('tags');
     const tags = tagsString ? tagsString.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
     
+    // Get main image URL
+    const mainImageUrl = document.getElementById('main-image-url')?.value || '';
+    
+    // Get gallery image URLs
+    const galleryImageUrls = Array.from(document.querySelectorAll('input[name="gallery-image-url[]"]'))
+        .map(input => input.value)
+        .filter(url => url.trim() !== '');
+    
     // Create robot data object
     const robotData = {
         title: formData.get('title'),
@@ -585,7 +507,9 @@ function getRobotDataFromForm(form) {
         content: formData.get('content'),
         video_url: formData.get('video_url'),
         additional_video_url: formData.get('additional_video_url'),
-        technical_specs: techSpecs
+        technical_specs: techSpecs,
+        image: mainImageUrl,
+        gallery_images: galleryImageUrls
     };
     
     return robotData;
@@ -603,15 +527,8 @@ async function handleRobotFormSubmission(form) {
         // Get robot data from form
         const robotData = getRobotDataFromForm(form);
         
-        // Get image files
-        const mainImageInput = document.getElementById('main-image-input');
-        const galleryImagesInput = document.getElementById('gallery-images-input');
-        
-        const mainImageFile = mainImageInput.files[0];
-        const galleryImageFiles = galleryImagesInput.files;
-        
         // Save robot data
-        const success = await saveRobotData(robotData, mainImageFile, galleryImageFiles);
+        const success = await saveRobotData(robotData);
         
         // Restore button state
         submitBtn.innerHTML = originalBtnText;
