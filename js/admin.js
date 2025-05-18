@@ -1,22 +1,7 @@
 /**
  * Admin functionality for TedouaR Robotics Hub
- * With simplified image hosting approach
+ * Simplified version using localStorage for data storage
  */
-
-// GitHub repository information
-const GITHUB_REPO = {
-    owner: 'taikibonnet',
-    repo: 'TedouaR-robotic-HUB',
-    branch: 'main'
-};
-
-// Personal access token for GitHub API
-// Note: In a production environment, this would be stored securely server-side
-// For demo purposes, we'll use localStorage for temporary storage
-let GITHUB_TOKEN = localStorage.getItem('github_token');
-
-// GitHub API base URL
-const GITHUB_API_BASE = 'https://api.github.com';
 
 // Check if user is logged in as admin
 function checkAdminAuth() {
@@ -30,119 +15,25 @@ function checkAdminAuth() {
     return isLoggedIn;
 }
 
-// GitHub API helpers
-async function getGitHubFile(path) {
+// Load robots from localStorage
+function loadRobots() {
     try {
-        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}?ref=${GITHUB_REPO.branch}`, {
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Failed to get file: ${response.statusText}`);
-        }
-        
-        return await response.json();
+        const robotsJSON = localStorage.getItem('robots_data');
+        return robotsJSON ? JSON.parse(robotsJSON) : [];
     } catch (error) {
-        console.error('Error getting GitHub file:', error);
-        throw error;
+        console.error('Error loading robots from localStorage:', error);
+        return [];
     }
 }
 
-async function updateGitHubFile(path, content, message, sha = null) {
+// Save robots to localStorage
+function saveRobots(robots) {
     try {
-        const payload = {
-            message: message,
-            content: btoa(unescape(encodeURIComponent(content))), // Base64 encode content with UTF-8 support
-            branch: GITHUB_REPO.branch
-        };
-        
-        if (sha) {
-            payload.sha = sha;
-        }
-        
-        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Failed to update file: ${response.statusText} - ${errorData.message}`);
-        }
-        
-        return await response.json();
+        localStorage.setItem('robots_data', JSON.stringify(robots));
+        return true;
     } catch (error) {
-        console.error('Error updating GitHub file:', error);
-        throw error;
-    }
-}
-
-// Validate image file
-function validateImageFile(file) {
-    // Check if file exists
-    if (!file) return false;
-    
-    // Check file type
-    const fileType = file.type;
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    if (!validImageTypes.includes(fileType)) {
-        alert('Please select a valid image file (JPG, PNG, GIF, WEBP, or SVG).');
+        console.error('Error saving robots to localStorage:', error);
         return false;
-    }
-    
-    // Check file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    if (file.size > maxSize) {
-        alert('File size too large. Please select an image under 5MB.');
-        return false;
-    }
-    
-    return true;
-}
-
-// Load robots from GitHub with improved error handling
-async function loadRobotsFromGitHub() {
-    try {
-        const file = await getGitHubFile('robots.json');
-        const content = atob(file.content); // Base64 decode content
-        const robots = JSON.parse(content);
-        return {
-            robots,
-            sha: file.sha
-        };
-    } catch (error) {
-        // Check if the error is because the file doesn't exist yet
-        if (error.message.includes('404')) {
-            // Create initial empty robots.json file
-            const initialContent = JSON.stringify([], null, 2);
-            await updateGitHubFile('robots.json', initialContent, 'Create initial robots.json file');
-            return {
-                robots: [],
-                sha: null
-            };
-        }
-        
-        console.error('Error loading robots from GitHub:', error);
-        throw error;
-    }
-}
-
-// Save robots to GitHub with improved error handling
-async function saveRobotsToGitHub(robots, sha) {
-    try {
-        const content = JSON.stringify(robots, null, 2);
-        return await updateGitHubFile('robots.json', content, 'Update robots.json', sha);
-    } catch (error) {
-        console.error('Error saving robots to GitHub:', error);
-        throw error;
     }
 }
 
@@ -155,27 +46,17 @@ function generateSlug(title) {
         .trim();                  // Trim whitespace
 }
 
-// Save robot data with simplified image handling
-async function saveRobotData(robotData) {
+// Save robot data
+function saveRobotData(robotData) {
     try {
         // Load existing robots
-        const { robots, sha } = await loadRobotsFromGitHub();
+        const robots = loadRobots();
         
         // Find if the robot already exists
         const existingRobotIndex = robots.findIndex(r => r.slug === robotData.slug);
         
         // Update or add the robot
         if (existingRobotIndex !== -1) {
-            // If robot exists and has image but no new image is provided, keep existing image
-            if (!robotData.image && robots[existingRobotIndex].image) {
-                robotData.image = robots[existingRobotIndex].image;
-            }
-            
-            // Keep gallery images if not provided
-            if (!robotData.gallery_images && robots[existingRobotIndex].gallery_images) {
-                robotData.gallery_images = robots[existingRobotIndex].gallery_images;
-            }
-            
             robots[existingRobotIndex] = {
                 ...robots[existingRobotIndex],
                 ...robotData,
@@ -189,10 +70,8 @@ async function saveRobotData(robotData) {
             });
         }
         
-        // Save to GitHub
-        await saveRobotsToGitHub(robots, sha);
-        
-        return true;
+        // Save robots
+        return saveRobots(robots);
     } catch (error) {
         console.error('Error saving robot data:', error);
         alert(`Failed to save robot data: ${error.message}`);
@@ -201,21 +80,15 @@ async function saveRobotData(robotData) {
 }
 
 // Load robots for admin management
-async function loadRobotsForAdmin() {
-    try {
-        const { robots } = await loadRobotsFromGitHub();
-        return robots;
-    } catch (error) {
-        console.error('Error loading robots:', error);
-        throw error;
-    }
+function loadRobotsForAdmin() {
+    return loadRobots();
 }
 
 // Delete robot
-async function deleteRobot(robotId) {
+function deleteRobot(robotId) {
     try {
         // Load existing robots
-        const { robots, sha } = await loadRobotsFromGitHub();
+        const robots = loadRobots();
         
         // Find the robot index
         const robotIndex = robots.findIndex(r => r.slug === robotId);
@@ -227,10 +100,13 @@ async function deleteRobot(robotId) {
         // Remove the robot
         robots.splice(robotIndex, 1);
         
-        // Save to GitHub
-        await saveRobotsToGitHub(robots, sha);
+        // Save robots
+        const success = saveRobots(robots);
         
-        return { success: true, message: 'Robot deleted successfully' };
+        return { 
+            success, 
+            message: success ? 'Robot deleted successfully' : 'Failed to save after deletion'
+        };
     } catch (error) {
         console.error('Error deleting robot:', error);
         return { success: false, message: `Failed to delete robot: ${error.message}` };
@@ -238,9 +114,9 @@ async function deleteRobot(robotId) {
 }
 
 // Load robot for editing
-async function loadRobotForEditing(robotId) {
+function loadRobotForEditing(robotId) {
     try {
-        const robots = await loadRobotsForAdmin();
+        const robots = loadRobotsForAdmin();
         
         // Find the robot by ID (slug)
         const robot = robots.find(r => r.slug === robotId);
@@ -320,11 +196,11 @@ function fillRobotForm(robot) {
     
     // Set gallery image URLs if present
     if (robot.gallery_images && robot.gallery_images.length > 0) {
-        const galleryImageUrl = document.getElementById('gallery-images-url');
+        const galleryUrlsContainer = document.getElementById('gallery-urls-container');
         const galleryImagesPreview = document.getElementById('gallery-images-preview');
         
         // Clear existing inputs
-        document.querySelectorAll('.gallery-url-input').forEach(el => el.remove());
+        galleryUrlsContainer.innerHTML = '';
         galleryImagesPreview.innerHTML = '';
         
         // Display all gallery images
@@ -417,7 +293,12 @@ function addGalleryImageInput(initialValue = '') {
         <div class="form-col">
             <div class="form-group">
                 <label>Gallery Image URL ${existingInputs + 1}</label>
-                <input type="url" name="gallery-image-url[]" value="${initialValue}" placeholder="https://example.com/image.jpg">
+                <div class="url-input-group">
+                    <input type="url" name="gallery-image-url[]" value="${initialValue}" placeholder="https://example.com/image.jpg">
+                    <button type="button" class="btn btn-outline preview-gallery-url">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                </div>
             </div>
         </div>
         <div class="form-col" style="flex: 0 0 auto; align-self: flex-end;">
@@ -435,10 +316,17 @@ function addGalleryImageInput(initialValue = '') {
         updateGalleryPreviews();
     });
     
-    // Add event listener for URL input
-    const urlInput = inputRow.querySelector('input[name="gallery-image-url[]"]');
-    urlInput.addEventListener('input', function() {
-        updateGalleryPreviews();
+    // Add event listener for preview button
+    inputRow.querySelector('.preview-gallery-url').addEventListener('click', function() {
+        const urlInput = inputRow.querySelector('input[name="gallery-image-url[]"]');
+        const url = urlInput.value.trim();
+        
+        if (url) {
+            const galleryImagesPreview = document.getElementById('gallery-images-preview');
+            displayImagePreview(url, galleryImagesPreview, false);
+        } else {
+            alert('Please enter an image URL first.');
+        }
     });
     
     return inputRow;
@@ -516,7 +404,7 @@ function getRobotDataFromForm(form) {
 }
 
 // Handle robot form submission
-async function handleRobotFormSubmission(form) {
+function handleRobotFormSubmission(form) {
     try {
         // Show loading state
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -528,7 +416,7 @@ async function handleRobotFormSubmission(form) {
         const robotData = getRobotDataFromForm(form);
         
         // Save robot data
-        const success = await saveRobotData(robotData);
+        const success = saveRobotData(robotData);
         
         // Restore button state
         submitBtn.innerHTML = originalBtnText;
@@ -549,24 +437,4 @@ async function handleRobotFormSubmission(form) {
         submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Robot';
         submitBtn.disabled = false;
     }
-}
-
-// Initialize GitHub authentication
-async function initGitHubAuth() {
-    // Get token from localStorage or prompt user
-    if (!GITHUB_TOKEN) {
-        GITHUB_TOKEN = prompt('Please enter your GitHub Personal Access Token to enable admin functionality:');
-        
-        if (GITHUB_TOKEN) {
-            localStorage.setItem('github_token', GITHUB_TOKEN);
-        } else {
-            alert('GitHub token is required for admin functionality. Please try again.');
-            window.location.href = 'index.html';
-        }
-    }
-}
-
-// On page load, initialize GitHub auth if admin is logged in
-if (localStorage.getItem('admin_logged_in') === 'true') {
-    initGitHubAuth();
 }
