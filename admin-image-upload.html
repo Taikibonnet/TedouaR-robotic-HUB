@@ -1,0 +1,291 @@
+// Simulate upload (for demo purposes)
+            function simulateUpload(content, path, index) {
+                const fileObj = selectedFiles[index];
+                
+                // Progress simulation
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    
+                    if (progress > 90) {
+                        clearInterval(progressInterval);
+                        
+                        // Mark as complete after 1 second
+                        setTimeout(() => {
+                            fileObj.progress = 100;
+                            fileObj.status = 'success';
+                            updateFileList();
+                            
+                            // Move to next file
+                            setTimeout(() => {
+                                uploadNextFile(index + 1);
+                            }, 500);
+                        }, 1000);
+                    } else {
+                        fileObj.progress = progress;
+                        updateFileList();
+                    }
+                }, 100);
+            }
+            
+            // In a real implementation, this function would actually upload to GitHub
+            function uploadToGitHub(content, path, index) {
+                const fileObj = selectedFiles[index];
+                
+                // GitHub API request would go here
+                // For a real implementation with authentication
+                
+                fetch(`https://api.github.com/repos/Taikibonnet/TedouaR-robotic-HUB/contents/${path}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `Upload ${path.split('/').pop()} via admin panel`,
+                        content: content,
+                        branch: 'main'
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Upload failed');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    fileObj.progress = 100;
+                    fileObj.status = 'success';
+                    updateFileList();
+                    
+                    // Move to next file
+                    setTimeout(() => {
+                        uploadNextFile(index + 1);
+                    }, 500);
+                })
+                .catch(error => {
+                    fileObj.status = 'error';
+                    updateFileList();
+                    showNotification(`Failed to upload ${path.split('/').pop()}: ${error.message}`, 'error');
+                    
+                    // Move to next file after a delay
+                    setTimeout(() => {
+                        uploadNextFile(index + 1);
+                    }, 1000);
+                });
+            }
+            
+            // Load image library
+            function loadImageLibrary() {
+                const imageLibrary = document.getElementById('image-library');
+                
+                // Show loading state
+                imageLibrary.innerHTML = '<div class="loading" style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> Loading images...</div>';
+                
+                // In a real implementation, we would fetch the images from GitHub API
+                // For demo purposes, we'll simulate loading with some hard-coded examples
+                setTimeout(() => {
+                    // Fetch directories
+                    const directories = ['images/uploads', 'images/robots'];
+                    loadImagesFromDirectories(directories);
+                }, 1000);
+            }
+            
+            // Load images from directories
+            function loadImagesFromDirectories(directories, currentIndex = 0, allImages = []) {
+                if (currentIndex >= directories.length) {
+                    displayImages(allImages);
+                    return;
+                }
+                
+                const directory = directories[currentIndex];
+                
+                // In a real implementation, this would use the GitHub API
+                // For demo purposes, we'll add some sample images
+                
+                if (directory === 'images/uploads') {
+                    allImages = allImages.concat([
+                        { name: 'sample_upload_1.jpg', path: 'images/uploads/sample_upload_1.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' },
+                        { name: 'sample_upload_2.jpg', path: 'images/uploads/sample_upload_2.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' }
+                    ]);
+                } else if (directory === 'images/robots') {
+                    allImages = allImages.concat([
+                        { name: 'robot_1.jpg', path: 'images/robots/robot_1.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' },
+                        { name: 'robot_2.jpg', path: 'images/robots/robot_2.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' }
+                    ]);
+                }
+                
+                // Move to next directory
+                loadImagesFromDirectories(directories, currentIndex + 1, allImages);
+            }
+            
+            // Display images in the library
+            function displayImages(images) {
+                const imageLibrary = document.getElementById('image-library');
+                
+                if (images.length === 0) {
+                    imageLibrary.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.5);">No images found</p>';
+                    return;
+                }
+                
+                imageLibrary.innerHTML = '';
+                
+                // Sort images by name
+                images.sort((a, b) => a.name.localeCompare(b.name));
+                
+                // Group images by folder
+                const imagesByFolder = {};
+                
+                images.forEach(image => {
+                    const folder = image.path.split('/').slice(0, -1).join('/');
+                    
+                    if (!imagesByFolder[folder]) {
+                        imagesByFolder[folder] = [];
+                    }
+                    
+                    imagesByFolder[folder].push(image);
+                });
+                
+                // Display images by folder
+                Object.keys(imagesByFolder).forEach(folder => {
+                    const folderImages = imagesByFolder[folder];
+                    
+                    // Create folder section
+                    const folderSection = document.createElement('div');
+                    folderSection.className = 'folder-section';
+                    
+                    // Create folder header
+                    const folderHeader = document.createElement('h3');
+                    folderHeader.textContent = folder.split('/').pop();
+                    folderHeader.style.marginTop = '20px';
+                    folderHeader.style.marginBottom = '15px';
+                    folderHeader.style.color = 'rgba(255, 255, 255, 0.9)';
+                    
+                    folderSection.appendChild(folderHeader);
+                    
+                    // Create image grid
+                    const imageGrid = document.createElement('div');
+                    imageGrid.className = 'image-library';
+                    
+                    // Add images to grid
+                    folderImages.forEach(image => {
+                        const imageItem = createImageItem(image);
+                        imageGrid.appendChild(imageItem);
+                    });
+                    
+                    folderSection.appendChild(imageGrid);
+                    imageLibrary.appendChild(folderSection);
+                });
+            }
+            
+            // Create image item
+            function createImageItem(image) {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                
+                // Create image
+                const img = document.createElement('img');
+                img.src = image.download_url;
+                img.alt = image.name;
+                img.loading = 'lazy';
+                
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'image-overlay';
+                
+                // Create image name
+                const imageName = document.createElement('div');
+                imageName.className = 'image-name';
+                imageName.textContent = image.name;
+                
+                overlay.appendChild(imageName);
+                
+                // Create URL field for copying
+                const urlField = document.createElement('input');
+                urlField.type = 'text';
+                urlField.className = 'image-url-field';
+                urlField.value = image.download_url;
+                urlField.id = `url-${image.path.replace(/[^a-z0-9]/gi, '-')}`;
+                
+                // Create actions
+                const actions = document.createElement('div');
+                actions.className = 'image-actions';
+                
+                // Copy URL button
+                const copyButton = document.createElement('div');
+                copyButton.className = 'image-action';
+                copyButton.innerHTML = '<i class="fas fa-link"></i>';
+                copyButton.title = 'Copy URL';
+                
+                copyButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Copy URL to clipboard
+                    const urlField = document.getElementById(`url-${image.path.replace(/[^a-z0-9]/gi, '-')}`);
+                    urlField.select();
+                    document.execCommand('copy');
+                    
+                    // Show success message
+                    const copySuccess = document.createElement('div');
+                    copySuccess.className = 'copy-success';
+                    copySuccess.textContent = 'URL copied!';
+                    
+                    this.appendChild(copySuccess);
+                    copySuccess.classList.add('active');
+                    
+                    setTimeout(() => {
+                        copySuccess.classList.remove('active');
+                        setTimeout(() => {
+                            this.removeChild(copySuccess);
+                        }, 300);
+                    }, 2000);
+                });
+                
+                // Delete button
+                const deleteButton = document.createElement('div');
+                deleteButton.className = 'image-action delete';
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteButton.title = 'Delete';
+                
+                deleteButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    if (confirm(`Are you sure you want to delete ${image.name}?`)) {
+                        // In a real implementation, this would delete the file from GitHub
+                        // For demo purposes, we'll just remove the element from the DOM
+                        
+                        showNotification(`Deleted ${image.name}`, 'success');
+                        imageItem.remove();
+                    }
+                });
+                
+                actions.appendChild(copyButton);
+                actions.appendChild(deleteButton);
+                
+                // Add event listeners
+                imageItem.addEventListener('click', function() {
+                    // Preview image
+                    // This could open a modal with the full-size image
+                    window.open(image.download_url, '_blank');
+                });
+                
+                // Append elements
+                imageItem.appendChild(img);
+                imageItem.appendChild(overlay);
+                imageItem.appendChild(urlField);
+                imageItem.appendChild(actions);
+                
+                return imageItem;
+            }
+            
+            // Refresh library button
+            const refreshLibraryBtn = document.getElementById('refresh-library');
+            if (refreshLibraryBtn) {
+                refreshLibraryBtn.addEventListener('click', function() {
+                    loadImageLibrary();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
