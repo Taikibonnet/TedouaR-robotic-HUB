@@ -20,7 +20,7 @@ Visit the live site: [TedouaR Robotic HUB](https://taikibonnet.github.io/TedouaR
 2. Use the following credentials:
    - Email: tedouar.robotics@gmail.com
    - Password: Admin123!
-3. You'll need to provide a GitHub personal access token with `repo` scope to enable image uploads. 
+3. You'll need to provide a GitHub personal access token with `repo` scope to enable saving content to the repository. 
    - [Generate a GitHub token here](https://github.com/settings/tokens)
    - Required scopes: `repo` (full control of private repositories)
 
@@ -32,28 +32,42 @@ After logging in, you'll have access to the admin panel where you can:
 2. **Edit Existing Robots**: Update information for any robot in the database
 3. **Delete Robots**: Remove robots from the database
 
-### Image Upload Guidelines
+### Image Management
 
-- Main image: Required for all robots, displayed as the primary image
-- Gallery images: Optional, up to 5 additional images
-- Supported formats: JPG, PNG, GIF, WebP, SVG
-- Maximum file size: 2MB per image
-- Recommended size: 800x600px
+For robot images, you can use any image hosting service:
 
-## Development
-
-This project is built with pure HTML, CSS, and JavaScript, using GitHub for content storage.
+1. Upload your images to a service like:
+   - [ImgBB](https://imgbb.com/)
+   - [Imgur](https://imgur.com/)
+   - [Postimages](https://postimages.org/)
+   - Or any other free image hosting site
+   
+2. Copy the direct image URL and paste it into the image URL fields in the admin panel
+3. Click the "Preview" button to see how the image will look
+4. You can add up to 5 gallery images for each robot
 
 ### How It Works
 
-- **Data Storage**: All robot data is stored in `robots.json` in the GitHub repository
-- **Image Storage**: Images are uploaded to the `images/robots` directory in the repository
-- **GitHub API**: The admin panel uses the GitHub API to save changes directly to the repository
+The admin panel uses:
+- GitHub API to store robot data in the `robots.json` file
+- Direct image URLs from third-party hosting services for images
+- GitHub Pages for hosting the entire website
+
+This approach avoids CORS issues and file size limitations of the GitHub API.
+
+## Development
+
+This project is built with:
+- HTML, CSS, and JavaScript
+- GitHub Pages for hosting
+- GitHub API for content storage
+- No server-side code required!
 
 ### Technical Notes
 
 - The site uses GitHub Pages for hosting
-- All content is stored directly in the GitHub repository
+- All robot data is stored in `robots.json` in the GitHub repository
+- Images are hosted on third-party image hosting services
 - Authentication is handled client-side for demonstration purposes
 
 ## Contributing
