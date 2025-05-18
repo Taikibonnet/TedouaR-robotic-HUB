@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="styles/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+    <style>
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .remember-me input {
+            margin-right: 10px;
+        }
+        
+        .remember-me label {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -54,6 +71,11 @@
                     <div class="form-group">
                         <label for="admin-password">Password</label>
                         <input type="password" id="admin-password" name="password" value="Admin123!" required>
+                    </div>
+                    
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember" checked>
+                        <label for="remember">Keep me logged in</label>
                     </div>
                     
                     <div class="form-actions">
@@ -114,6 +136,7 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Mobile menu handling
@@ -128,25 +151,20 @@
                 });
             }
             
+            // Check if already logged in
+            if (validateLoginState()) {
+                showMessage('You are already logged in. Redirecting to admin panel...', 'success');
+                
+                setTimeout(function() {
+                    window.location.href = 'admin-panel.html';
+                }, 1500);
+                
+                return;
+            }
+            
             // Admin login form submission
             const adminLoginForm = document.getElementById('admin-login-form');
             const loginMessage = document.getElementById('login-message');
-            
-            // Check if already logged in
-            function checkAlreadyLoggedIn() {
-                if (localStorage.getItem('admin_logged_in') === 'true' || 
-                    sessionStorage.getItem('admin_logged_in') === 'true') {
-                    
-                    showMessage('You are already logged in. Redirecting to admin panel...', 'success');
-                    
-                    setTimeout(function() {
-                        window.location.href = 'admin-panel.html';
-                    }, 1500);
-                    
-                    return true;
-                }
-                return false;
-            }
             
             // Function to show messages
             function showMessage(text, type) {
@@ -162,11 +180,12 @@
                     
                     const email = document.getElementById('admin-email').value;
                     const password = document.getElementById('admin-password').value;
+                    const rememberMe = document.getElementById('remember').checked;
                     
                     // Use the provided credentials
                     if (email === 'tedouar.robotics@gmail.com' && password === 'Admin123!') {
-                        // Store admin session in localStorage or sessionStorage
-                        localStorage.setItem('admin_logged_in', 'true');
+                        // Set admin login state with remember option
+                        setAdminLoginState(rememberMe);
                         
                         // Show success message
                         showMessage('Login successful. Redirecting to admin panel...', 'success');
@@ -181,13 +200,10 @@
                     }
                 });
                 
-                // Check if already logged in
-                if (!checkAlreadyLoggedIn()) {
-                    // Auto-submit form for convenience
-                    setTimeout(function() {
-                        adminLoginForm.dispatchEvent(new Event('submit'));
-                    }, 500);
-                }
+                // Auto-submit form for convenience
+                setTimeout(function() {
+                    adminLoginForm.dispatchEvent(new Event('submit'));
+                }, 500);
             }
         });
     </script>
