@@ -5,120 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/logo.css">
     <link rel="stylesheet" href="styles/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .credentials-box {
-            background-color: #161616;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .credentials-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
-        }
-        
-        .credentials-box h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            color: var(--primary-color);
-        }
-        
-        .credentials-box p {
-            margin: 10px 0;
-            padding: 8px 12px;
-            background-color: #1a1a1a;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid #333;
-        }
-        
-        .credentials-box p strong {
-            color: var(--primary-color);
-            margin-right: 5px;
-        }
-        
-        .auto-login-toggle {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            user-select: none;
-        }
-        
-        .auto-login-toggle input {
-            margin-right: 10px;
-        }
-        
-        .auto-login-toggle label {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-        }
-        
-        .message {
-            margin-bottom: 25px;
-            padding: 15px;
-            border-radius: 5px;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        
-        .message.success {
-            background-color: rgba(32, 227, 178, 0.15);
-            border: 1px solid rgba(32, 227, 178, 0.3);
-            color: var(--primary-color);
-        }
-        
-        .message.error {
-            background-color: rgba(231, 76, 60, 0.15);
-            border: 1px solid rgba(231, 76, 60, 0.3);
-            color: #e74c3c;
-        }
-        
-        .message.hidden {
-            display: none;
-        }
-        
-        .form-actions {
-            margin-top: 30px;
-        }
-        
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-        
-        .back-link:hover {
-            color: var(--primary-color);
-        }
-        
-        .back-link i {
-            margin-right: 5px;
-        }
-        
-        .admin-login-form {
-            max-width: 500px;
-            width: 100%;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -172,19 +62,10 @@
                         <input type="password" id="admin-password" name="password" value="Admin123!" required>
                     </div>
                     
-                    <div class="auto-login-toggle">
-                        <input type="checkbox" id="remember" name="remember" checked>
-                        <label for="remember">Remember me</label>
-                    </div>
-                    
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary btn-large">Login</button>
                     </div>
                 </form>
-                
-                <a href="index.html" class="back-link">
-                    <i class="fas fa-arrow-left"></i> Return to Website
-                </a>
             </div>
         </div>
     </section>
@@ -287,16 +168,11 @@
                     
                     const email = document.getElementById('admin-email').value;
                     const password = document.getElementById('admin-password').value;
-                    const rememberMe = document.getElementById('remember').checked;
                     
                     // Use the provided credentials
                     if (email === 'tedouar.robotics@gmail.com' && password === 'Admin123!') {
                         // Store admin session in localStorage or sessionStorage
-                        if (rememberMe) {
-                            localStorage.setItem('admin_logged_in', 'true');
-                        } else {
-                            sessionStorage.setItem('admin_logged_in', 'true');
-                        }
+                        localStorage.setItem('admin_logged_in', 'true');
                         
                         // Show success message
                         showMessage('Login successful. Redirecting to admin panel...', 'success');
