@@ -10,50 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
     <style>
-        /* Additional styles for improved image uploads */
-        .file-upload {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: border 0.3s, background 0.3s;
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .file-upload:hover {
-            border-color: #4a89dc;
-            background-color: rgba(74, 137, 220, 0.05);
-        }
-        
-        .file-upload-icon {
-            font-size: 36px;
-            color: #4a89dc;
-            margin-bottom: 10px;
-        }
-        
-        .file-upload-text {
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 5px;
-        }
-        
-        .file-upload-subtext {
-            font-size: 0.85em;
-            color: #888;
-        }
-        
-        .file-upload input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        
+        /* Styles for image previews */
         .uploaded-images {
             display: flex;
             flex-wrap: wrap;
@@ -109,30 +66,25 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        /* Upload progress indicator */
-        .upload-progress-container {
-            display: none;
-            margin-top: 10px;
+        /* URL input with preview button */
+        .url-input-group {
+            display: flex;
+            gap: 10px;
         }
         
-        .upload-progress-bar {
-            height: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            overflow: hidden;
+        .url-input-group input {
+            flex-grow: 1;
         }
         
-        .upload-progress-value {
-            height: 100%;
-            background-color: #4a89dc;
-            width: 0%;
-            transition: width 0.3s;
+        .url-input-group button {
+            flex-shrink: 0;
         }
         
-        .upload-status {
-            margin-top: 5px;
+        /* Help text */
+        .form-help {
             font-size: 0.85em;
             color: #666;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -249,63 +201,45 @@
                     </div>
                 </div>
                 
-                <!-- Image Upload Section with improved handling -->
+                <!-- Image URLs Section -->
                 <div class="form-row">
                     <div class="form-col full">
                         <h3>Robot Images</h3>
-                        <p class="admin-subtitle">Update images for this robot. The first image will be used as the main display image.</p>
+                        <p class="admin-subtitle">
+                            Edit images for this robot. You can use any image hosting service (e.g., Imgur, ImgBB, etc.) and paste the direct image URLs.
+                        </p>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Main Image</label>
-                            <div class="file-upload" id="main-image-upload">
-                                <input type="file" id="main-image-input" accept="image/*">
-                                <div class="file-upload-icon">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                </div>
-                                <div class="file-upload-text">
-                                    Click to upload new main image
-                                </div>
-                                <div class="file-upload-subtext">
-                                    Recommended size: 800x600px, JPG or PNG format
-                                </div>
+                            <label>Main Image URL</label>
+                            <div class="url-input-group">
+                                <input type="url" id="main-image-url" name="main_image_url" placeholder="https://example.com/image.jpg" required>
+                                <button type="button" id="preview-main-image" class="btn btn-outline">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
                             </div>
+                            <p class="form-help">
+                                Direct link to the main image. This will be displayed on cards and as the primary robot image.
+                            </p>
                             <div id="main-image-preview" class="uploaded-images"></div>
-                            <!-- Progress indicator for main image -->
-                            <div id="main-image-progress" class="upload-progress-container">
-                                <div class="upload-progress-bar">
-                                    <div class="upload-progress-value"></div>
-                                </div>
-                                <div class="upload-status">Uploading: 0%</div>
-                            </div>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
                             <label>Gallery Images</label>
-                            <div class="file-upload" id="gallery-images-upload">
-                                <input type="file" id="gallery-images-input" accept="image/*" multiple>
-                                <div class="file-upload-icon">
-                                    <i class="fas fa-images"></i>
-                                </div>
-                                <div class="file-upload-text">
-                                    Click to upload additional gallery images
-                                </div>
-                                <div class="file-upload-subtext">
-                                    Select multiple images (up to 5 total)
-                                </div>
+                            <p class="form-help">
+                                Add up to 5 additional images for the robot gallery.
+                            </p>
+                            <div id="gallery-urls-container">
+                                <!-- Gallery image URL inputs will be added here -->
                             </div>
+                            <button type="button" id="add-gallery-url" class="btn btn-outline">
+                                <i class="fas fa-plus"></i> Add Gallery Image
+                            </button>
                             <div id="gallery-images-preview" class="uploaded-images"></div>
-                            <!-- Progress indicator for gallery images -->
-                            <div id="gallery-images-progress" class="upload-progress-container">
-                                <div class="upload-progress-bar">
-                                    <div class="upload-progress-value"></div>
-                                </div>
-                                <div class="upload-status">Uploading: 0%</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -474,64 +408,31 @@
                 return;
             }
             
-            // Set up file upload for main image with improved handling
-            const mainImageUpload = document.getElementById('main-image-upload');
-            const mainImageInput = document.getElementById('main-image-input');
+            // Set up main image URL preview
+            const mainImageUrl = document.getElementById('main-image-url');
+            const previewMainImage = document.getElementById('preview-main-image');
             const mainImagePreview = document.getElementById('main-image-preview');
-            const mainImageProgress = document.getElementById('main-image-progress');
             
-            mainImageUpload.addEventListener('click', function() {
-                mainImageInput.click();
-            });
-            
-            mainImageInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-                    
-                    // Check file type and size
-                    if (!validateImageFile(file)) return;
-                    
-                    // Display the selected image
-                    displayImagePreview(file, mainImagePreview, true);
-                    
-                    // Reset progress bar
-                    resetProgressBar(mainImageProgress);
-                }
-            });
-            
-            // Set up file upload for gallery images with improved handling
-            const galleryImagesUpload = document.getElementById('gallery-images-upload');
-            const galleryImagesInput = document.getElementById('gallery-images-input');
-            const galleryImagesPreview = document.getElementById('gallery-images-preview');
-            const galleryImagesProgress = document.getElementById('gallery-images-progress');
-            
-            galleryImagesUpload.addEventListener('click', function() {
-                galleryImagesInput.click();
-            });
-            
-            galleryImagesInput.addEventListener('change', function() {
-                if (this.files && this.files.length > 0) {
-                    // Check if too many files selected
-                    if (this.files.length > 5) {
-                        alert('You can upload a maximum of 5 gallery images. Only the first 5 will be used.');
+            if (previewMainImage) {
+                previewMainImage.addEventListener('click', function() {
+                    const url = mainImageUrl.value.trim();
+                    if (url) {
+                        displayImagePreview(url, mainImagePreview, true);
+                    } else {
+                        alert('Please enter an image URL first.');
                     }
-                    
-                    // Process each file (up to 5)
-                    const maxFiles = Math.min(this.files.length, 5);
-                    
-                    for (let i = 0; i < maxFiles; i++) {
-                        const file = this.files[i];
-                        
-                        // Check file type and size
-                        if (validateImageFile(file)) {
-                            displayImagePreview(file, galleryImagesPreview, false);
-                        }
-                    }
-                    
-                    // Reset progress bar
-                    resetProgressBar(galleryImagesProgress);
-                }
-            });
+                });
+            }
+            
+            // Setup for gallery image URLs
+            const addGalleryUrlBtn = document.getElementById('add-gallery-url');
+            const galleryUrlsContainer = document.getElementById('gallery-urls-container');
+            
+            if (addGalleryUrlBtn) {
+                addGalleryUrlBtn.addEventListener('click', function() {
+                    addGalleryImageInput();
+                });
+            }
             
             // Add more specifications button
             const addSpecBtn = document.getElementById('add-spec-btn');
@@ -573,10 +474,10 @@
                 }
             });
             
-            // Form submission with improved handling
+            // Form submission
             const robotForm = document.getElementById('robot-edit-form');
             
-            robotForm.addEventListener('submit', async function(e) {
+            robotForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 // Validate form
@@ -585,74 +486,9 @@
                     return;
                 }
                 
-                // Get image files
-                const mainImageFile = mainImageInput.files[0];
-                const galleryImageFiles = galleryImagesInput.files;
-                
-                // Show progress bars if files are selected
-                if (mainImageFile) {
-                    mainImageProgress.style.display = 'block';
-                }
-                
-                if (galleryImageFiles.length > 0) {
-                    galleryImagesProgress.style.display = 'block';
-                }
-                
-                // Gather form data and submit
-                try {
-                    // Show loading state
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    const originalBtnText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-                    submitBtn.disabled = true;
-                    
-                    // Get robot data from form
-                    const robotData = getRobotDataFromForm(this);
-                    
-                    // Ensure we keep the existing image if no new image is provided
-                    if (!mainImageFile && currentRobot.image) {
-                        robotData.image = currentRobot.image;
-                    }
-                    
-                    // Preserve existing gallery images if they weren't removed
-                    if (currentRobot.gallery_images) {
-                        robotData.gallery_images = currentRobot.gallery_images;
-                    }
-                    
-                    // Save robot data
-                    const success = await saveRobotData(robotData, mainImageFile, galleryImageFiles);
-                    
-                    // Restore button state
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
-                    
-                    if (success) {
-                        alert('Robot has been updated successfully!');
-                        window.location.href = 'admin-panel.html';
-                    } else {
-                        alert('Failed to update robot data. Please try again.');
-                    }
-                } catch (error) {
-                    console.error('Error submitting robot form:', error);
-                    alert('An error occurred while saving the robot. Please try again.');
-                    
-                    // Restore button state
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
-                    submitBtn.disabled = false;
-                }
+                // Submit form
+                handleRobotFormSubmission(this);
             });
-            
-            // Helper function to reset progress bar
-            function resetProgressBar(progressElement) {
-                if (!progressElement) return;
-                
-                const progressBar = progressElement.querySelector('.upload-progress-value');
-                const progressStatus = progressElement.querySelector('.upload-status');
-                
-                if (progressBar) progressBar.style.width = '0%';
-                if (progressStatus) progressStatus.textContent = 'Uploading: 0%';
-            }
         });
     </script>
 </body>
