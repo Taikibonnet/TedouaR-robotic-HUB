@@ -137,45 +137,84 @@
                 });
             }
             
-            // Load robots for management
-            loadRobotsForAdmin();
+            // Display robots from localStorage or load sample data
+            displayRobots();
         });
         
-        // Check if user is logged in as admin
-        function checkAdminAuth() {
-            const isLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+        // Display robots
+        function displayRobots() {
+            const robotCards = document.getElementById('robot-cards');
             
-            if (!isLoggedIn) {
-                // Redirect to login page if not logged in
-                window.location.href = 'admin-login.html';
+            // Get robots from localStorage
+            let robots = loadRobotsForAdmin();
+            
+            // Check if robots exist in localStorage, if not, load sample data
+            if (!robots || robots.length === 0) {
+                // Load sample data from robots.json for initial display
+                fetch('robots.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Save to localStorage
+                        saveRobots(data);
+                        // Refresh display
+                        displayRobotCards(data);
+                    })
+                    .catch(error => {
+                        console.error('Error loading sample robots:', error);
+                        // Create sample data if robots.json fails to load
+                        const sampleRobots = [
+                            {
+                                "title": "Tesla Optimus",
+                                "slug": "tesla-optimus",
+                                "category": "Humanoid",
+                                "manufacturer": "Tesla, Inc.",
+                                "image": "images/robots/tesla-optimus.jpg",
+                                "description": "Tesla Optimus is a humanoid robot designed to perform manual tasks, blending AI with robotics for future labor automation."
+                            },
+                            {
+                                "title": "Spot",
+                                "slug": "spot",
+                                "category": "Quadruped",
+                                "manufacturer": "Boston Dynamics",
+                                "image": "images/robots/spot.jpg",
+                                "description": "Spot is an agile mobile robot designed for sensing, inspection, and remote operation."
+                            }
+                        ];
+                        
+                        // Save to localStorage
+                        saveRobots(sampleRobots);
+                        // Display sample robots
+                        displayRobotCards(sampleRobots);
+                    });
+            } else {
+                // Display robots from localStorage
+                displayRobotCards(robots);
             }
         }
         
-        // Load robots for admin management
-        function loadRobotsForAdmin() {
+        // Display robot cards in the admin panel
+        function displayRobotCards(robots) {
             const robotCards = document.getElementById('robot-cards');
             
-            fetch('robots.json')
-                .then(response => response.json())
-                .then(robots => {
-                    // Clear loading indicator
-                    robotCards.innerHTML = '';
-                    
-                    // Display all robots
-                    robots.forEach(robot => {
-                        const card = createAdminRobotCard(robot);
-                        robotCards.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading robots:', error);
-                    robotCards.innerHTML = `
-                        <div class="error-message">
-                            <h3>Failed to load robot data</h3>
-                            <p>Please try again later or contact the administrator.</p>
-                        </div>
-                    `;
-                });
+            // Clear loading indicator
+            robotCards.innerHTML = '';
+            
+            // Check if we have any robots
+            if (robots.length === 0) {
+                robotCards.innerHTML = `
+                    <div class="empty-message">
+                        <h3>No robots found</h3>
+                        <p>Click "Add New Robot" to create your first robot entry.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Display all robots
+            robots.forEach(robot => {
+                const card = createAdminRobotCard(robot);
+                robotCards.appendChild(card);
+            });
         }
         
         // Create admin robot card
@@ -209,9 +248,16 @@
                 const robotId = this.getAttribute('data-robot-id');
                 
                 if (confirm(`Are you sure you want to delete the robot "${robot.title}"?`)) {
-                    // In a real application, you would send a deletion request to the backend
-                    // For demo purposes, we'll just show a success message
-                    alert(`Robot "${robot.title}" has been deleted successfully.`);
+                    // Delete robot
+                    const result = deleteRobot(robotId);
+                    
+                    if (result.success) {
+                        alert(`Robot "${robot.title}" has been deleted successfully.`);
+                        // Refresh the display
+                        displayRobots();
+                    } else {
+                        alert(`Failed to delete robot: ${result.message}`);
+                    }
                 }
             });
             
