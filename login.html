@@ -5,91 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TedouaR Robotics Hub</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/logo.css">
     <link rel="stylesheet" href="styles/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
     <style>
-        .info-box {
-            background-color: #161616;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .info-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(180deg, #0cebeb, var(--primary-color));
-        }
-        
-        .info-box p {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-        }
-        
-        .message {
-            margin-bottom: 25px;
-            padding: 15px;
-            border-radius: 5px;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        
-        .message.error {
-            background-color: rgba(231, 76, 60, 0.15);
-            border: 1px solid rgba(231, 76, 60, 0.3);
-            color: #e74c3c;
-        }
-        
-        .message.hidden {
-            display: none;
-        }
-        
-        .form-actions {
-            margin-top: 30px;
-        }
-        
-        .auto-login-toggle {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            user-select: none;
-        }
-        
-        .auto-login-toggle input {
-            margin-right: 10px;
-        }
-        
-        .auto-login-toggle label {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-        }
-        
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .signup-link a {
-            color: var(--primary-color);
-            font-weight: 500;
-        }
-        
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-        
         .admin-link {
-            margin-top: 40px;
+            margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
@@ -103,39 +25,34 @@
         .admin-button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #333;
-            color: white;
-            border-radius: 5px;
+            background-color: #161616;
+            color: var(--text-color);
+            border-radius: 50px;
             text-decoration: none;
-            transition: background-color 0.3s, transform 0.3s;
-            border: 1px solid #444;
+            transition: all 0.3s;
+            border: 1px solid #333;
         }
         
         .admin-button:hover {
-            background-color: #444;
+            background-color: rgba(32, 227, 178, 0.1);
             color: var(--primary-color);
-            transform: translateY(-2px);
         }
         
         .admin-button i {
             margin-right: 8px;
         }
         
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
+        .info-box {
+            background-color: #161616;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
         }
         
-        .back-link:hover {
-            color: var(--primary-color);
-        }
-        
-        .back-link i {
-            margin-right: 5px;
+        .info-box p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -189,19 +106,10 @@
                         <input type="password" id="user-password" name="password" required>
                     </div>
                     
-                    <div class="auto-login-toggle">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Remember me</label>
-                    </div>
-                    
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary btn-large">Login</button>
                     </div>
                 </form>
-                
-                <div class="signup-link">
-                    Don't have an account? <a href="signup.html">Sign up</a>
-                </div>
                 
                 <div class="admin-link">
                     <p>Are you an administrator?</p>
@@ -209,10 +117,6 @@
                         <i class="fas fa-lock"></i> Admin Login
                     </a>
                 </div>
-                
-                <a href="index.html" class="back-link">
-                    <i class="fas fa-arrow-left"></i> Return to Website
-                </a>
             </div>
         </div>
     </section>
