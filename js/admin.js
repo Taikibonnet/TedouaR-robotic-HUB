@@ -15,6 +15,55 @@ function checkAdminAuth() {
     return isLoggedIn;
 }
 
+// Set admin login state (with expiration if needed)
+function setAdminLoginState(remember = true) {
+    if (remember) {
+        // Store admin session in localStorage (persistent until explicitly removed)
+        localStorage.setItem('admin_logged_in', 'true');
+        
+        // Optionally set a timestamp for future validation if needed
+        localStorage.setItem('admin_login_time', Date.now().toString());
+    } else {
+        // Use sessionStorage for temporary session (cleared when browser is closed)
+        sessionStorage.setItem('admin_logged_in', 'true');
+    }
+}
+
+// Validate login state and check if it's still valid
+function validateLoginState() {
+    // Check localStorage first
+    if (localStorage.getItem('admin_logged_in') === 'true') {
+        // Optionally check if login has expired
+        const loginTime = parseInt(localStorage.getItem('admin_login_time') || '0', 10);
+        const currentTime = Date.now();
+        
+        // Example: 7-day expiration (in milliseconds)
+        const expirationTime = 7 * 24 * 60 * 60 * 1000; 
+        
+        if (loginTime && (currentTime - loginTime > expirationTime)) {
+            // Login has expired
+            logoutAdmin();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Check sessionStorage as fallback
+    return sessionStorage.getItem('admin_logged_in') === 'true';
+}
+
+// Logout admin user
+function logoutAdmin() {
+    // Clear both storage mechanisms
+    localStorage.removeItem('admin_logged_in');
+    localStorage.removeItem('admin_login_time');
+    sessionStorage.removeItem('admin_logged_in');
+    
+    // Redirect to login page
+    window.location.href = 'admin-login.html';
+}
+
 // Load robots from localStorage
 function loadRobots() {
     try {
