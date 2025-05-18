@@ -9,6 +9,132 @@
     <link rel="stylesheet" href="styles/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles for improved image uploads */
+        .file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: border 0.3s, background 0.3s;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .file-upload:hover {
+            border-color: #4a89dc;
+            background-color: rgba(74, 137, 220, 0.05);
+        }
+        
+        .file-upload-icon {
+            font-size: 36px;
+            color: #4a89dc;
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-text {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+        
+        .file-upload-subtext {
+            font-size: 0.85em;
+            color: #888;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .uploaded-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .uploaded-image {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .uploaded-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .uploaded-image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+        }
+        
+        .image-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 75%;
+        }
+        
+        .image-delete {
+            cursor: pointer;
+            padding: 3px 6px;
+            color: #ff6b6b;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .image-delete:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Upload progress indicator */
+        .upload-progress-container {
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .upload-progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .upload-progress-value {
+            height: 100%;
+            background-color: #4a89dc;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .upload-status {
+            margin-top: 5px;
+            font-size: 0.85em;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -47,6 +173,9 @@
                     </a>
                     <button id="save-robot-btn" class="btn btn-primary">
                         <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button id="delete-robot-btn" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete Robot
                     </button>
                 </div>
             </div>
@@ -87,7 +216,7 @@
                     </div>
                     <div class="form-col">
                         <div class="form-group">
-                            <label for="robot-slug">Slug/URL (auto-generated)</label>
+                            <label for="robot-slug">Slug/URL</label>
                             <input type="text" id="robot-slug" name="slug" readonly>
                         </div>
                     </div>
@@ -120,11 +249,11 @@
                     </div>
                 </div>
                 
-                <!-- Image Upload Section -->
+                <!-- Image Upload Section with improved handling -->
                 <div class="form-row">
                     <div class="form-col full">
                         <h3>Robot Images</h3>
-                        <p class="admin-subtitle">Upload images for this robot. The first image will be used as the main display image.</p>
+                        <p class="admin-subtitle">Update images for this robot. The first image will be used as the main display image.</p>
                     </div>
                 </div>
                 
@@ -138,13 +267,20 @@
                                     <i class="fas fa-cloud-upload-alt"></i>
                                 </div>
                                 <div class="file-upload-text">
-                                    Click to upload main image
+                                    Click to upload new main image
                                 </div>
                                 <div class="file-upload-subtext">
                                     Recommended size: 800x600px, JPG or PNG format
                                 </div>
                             </div>
                             <div id="main-image-preview" class="uploaded-images"></div>
+                            <!-- Progress indicator for main image -->
+                            <div id="main-image-progress" class="upload-progress-container">
+                                <div class="upload-progress-bar">
+                                    <div class="upload-progress-value"></div>
+                                </div>
+                                <div class="upload-status">Uploading: 0%</div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-col">
@@ -156,13 +292,20 @@
                                     <i class="fas fa-images"></i>
                                 </div>
                                 <div class="file-upload-text">
-                                    Click to upload gallery images
+                                    Click to upload additional gallery images
                                 </div>
                                 <div class="file-upload-subtext">
-                                    Select multiple images (up to 5)
+                                    Select multiple images (up to 5 total)
                                 </div>
                             </div>
                             <div id="gallery-images-preview" class="uploaded-images"></div>
+                            <!-- Progress indicator for gallery images -->
+                            <div id="gallery-images-progress" class="upload-progress-container">
+                                <div class="upload-progress-bar">
+                                    <div class="upload-progress-value"></div>
+                                </div>
+                                <div class="upload-status">Uploading: 0%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -171,25 +314,12 @@
                 <div class="form-row">
                     <div class="form-col full">
                         <h3>Technical Specifications</h3>
-                        <p class="admin-subtitle">Enter the robot's technical specifications.</p>
+                        <p class="admin-subtitle">Update the robot's technical specifications.</p>
                     </div>
                 </div>
                 
                 <div id="tech-specs-container">
-                    <div class="form-row tech-spec-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label>Specification Name</label>
-                                <input type="text" name="spec-name[]" placeholder="e.g., Height, Weight, etc.">
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label>Specification Value</label>
-                                <input type="text" name="spec-value[]" placeholder="e.g., 5 ft 8 in (1.73 meters)">
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Technical specifications will be loaded dynamically -->
                 </div>
                 
                 <div class="form-row">
@@ -291,7 +421,7 @@
     <script src="js/main.js"></script>
     <script src="js/admin.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Check if user is logged in as admin
             checkAdminAuth();
             
@@ -320,19 +450,35 @@
             const urlParams = new URLSearchParams(window.location.search);
             const robotId = urlParams.get('id');
             
-            if (robotId) {
-                // Load robot data for editing
-                loadRobotForEditing(robotId);
-            } else {
-                // No robot ID provided, redirect to admin panel
-                alert('No robot ID provided. Redirecting to admin panel.');
+            if (!robotId) {
+                alert('Robot ID is missing. Redirecting to admin panel.');
                 window.location.href = 'admin-panel.html';
+                return;
             }
             
-            // Set up file upload for main image
+            // Load robot data
+            let currentRobot;
+            try {
+                // Show loading state
+                document.querySelector('.admin-editor-title').textContent = 'Loading...';
+                
+                currentRobot = await loadRobotForEditing(robotId);
+                
+                // Update title and fill form
+                document.querySelector('.admin-editor-title').textContent = `Edit Robot: ${currentRobot.title}`;
+                fillRobotForm(currentRobot);
+            } catch (error) {
+                console.error('Error loading robot:', error);
+                alert('Failed to load robot data. Redirecting to admin panel.');
+                window.location.href = 'admin-panel.html';
+                return;
+            }
+            
+            // Set up file upload for main image with improved handling
             const mainImageUpload = document.getElementById('main-image-upload');
             const mainImageInput = document.getElementById('main-image-input');
             const mainImagePreview = document.getElementById('main-image-preview');
+            const mainImageProgress = document.getElementById('main-image-progress');
             
             mainImageUpload.addEventListener('click', function() {
                 mainImageInput.click();
@@ -347,13 +493,17 @@
                     
                     // Display the selected image
                     displayImagePreview(file, mainImagePreview, true);
+                    
+                    // Reset progress bar
+                    resetProgressBar(mainImageProgress);
                 }
             });
             
-            // Set up file upload for gallery images
+            // Set up file upload for gallery images with improved handling
             const galleryImagesUpload = document.getElementById('gallery-images-upload');
             const galleryImagesInput = document.getElementById('gallery-images-input');
             const galleryImagesPreview = document.getElementById('gallery-images-preview');
+            const galleryImagesProgress = document.getElementById('gallery-images-progress');
             
             galleryImagesUpload.addEventListener('click', function() {
                 galleryImagesInput.click();
@@ -361,9 +511,6 @@
             
             galleryImagesInput.addEventListener('change', function() {
                 if (this.files && this.files.length > 0) {
-                    // Clear current preview
-                    galleryImagesPreview.innerHTML = '';
-                    
                     // Check if too many files selected
                     if (this.files.length > 5) {
                         alert('You can upload a maximum of 5 gallery images. Only the first 5 will be used.');
@@ -380,6 +527,9 @@
                             displayImagePreview(file, galleryImagesPreview, false);
                         }
                     }
+                    
+                    // Reset progress bar
+                    resetProgressBar(galleryImagesProgress);
                 }
             });
             
@@ -388,316 +538,122 @@
             const techSpecsContainer = document.getElementById('tech-specs-container');
             
             addSpecBtn.addEventListener('click', function() {
-                const newSpecRow = document.createElement('div');
-                newSpecRow.className = 'form-row tech-spec-row';
-                newSpecRow.innerHTML = `
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Specification Name</label>
-                            <input type="text" name="spec-name[]" placeholder="e.g., Height, Weight, etc.">
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Specification Value</label>
-                            <input type="text" name="spec-value[]" placeholder="e.g., 5 ft 8 in (1.73 meters)">
-                        </div>
-                    </div>
-                `;
-                
-                techSpecsContainer.appendChild(newSpecRow);
+                addEmptySpecRow(techSpecsContainer);
             });
             
-            // Auto-generate slug from title
-            const titleInput = document.getElementById('robot-title');
-            const slugInput = document.getElementById('robot-slug');
+            // Delete robot button
+            const deleteRobotBtn = document.getElementById('delete-robot-btn');
             
-            titleInput.addEventListener('input', function() {
-                const title = this.value.trim();
-                const slug = generateSlug(title);
-                slugInput.value = slug;
-            });
-            
-            // Form submission
-            const robotForm = document.getElementById('robot-edit-form');
-            
-            robotForm.addEventListener('submit', function(e) {
+            deleteRobotBtn.addEventListener('click', async function(e) {
                 e.preventDefault();
                 
-                // Gather form data
-                const formData = new FormData(this);
-                
-                // Get technical specifications
-                const techSpecs = {};
-                const specNames = document.querySelectorAll('input[name="spec-name[]"]');
-                const specValues = document.querySelectorAll('input[name="spec-value[]"]');
-                
-                for (let i = 0; i < specNames.length; i++) {
-                    const name = specNames[i].value.trim();
-                    const value = specValues[i].value.trim();
-                    
-                    if (name && value) {
-                        techSpecs[name] = value;
+                if (confirm(`Are you sure you want to delete "${currentRobot.title}"? This action cannot be undone.`)) {
+                    try {
+                        // Show loading state
+                        deleteRobotBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+                        deleteRobotBtn.disabled = true;
+                        
+                        // Delete robot
+                        const result = await deleteRobot(currentRobot.slug);
+                        
+                        if (result.success) {
+                            alert('Robot has been deleted successfully!');
+                            window.location.href = 'admin-panel.html';
+                        } else {
+                            alert(`Failed to delete robot: ${result.message}`);
+                            deleteRobotBtn.innerHTML = '<i class="fas fa-trash"></i> Delete Robot';
+                            deleteRobotBtn.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('Error deleting robot:', error);
+                        alert('An error occurred while deleting the robot. Please try again.');
+                        deleteRobotBtn.innerHTML = '<i class="fas fa-trash"></i> Delete Robot';
+                        deleteRobotBtn.disabled = false;
                     }
                 }
+            });
+            
+            // Form submission with improved handling
+            const robotForm = document.getElementById('robot-edit-form');
+            
+            robotForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
                 
-                // Get tags and convert to array
-                const tagsString = formData.get('tags');
-                const tags = tagsString ? tagsString.split(',').map(tag => tag.trim()) : [];
-                
-                // Create robot data object
-                const robotData = {
-                    title: formData.get('title'),
-                    slug: formData.get('slug'),
-                    category: formData.get('category'),
-                    manufacturer: formData.get('manufacturer'),
-                    description: formData.get('description'),
-                    featured: formData.get('featured') === 'true',
-                    tags: tags,
-                    content: formData.get('content'),
-                    video_url: formData.get('video_url'),
-                    additional_video_url: formData.get('additional_video_url'),
-                    technical_specs: techSpecs
-                };
+                // Validate form
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
                 
                 // Get image files
                 const mainImageFile = mainImageInput.files[0];
                 const galleryImageFiles = galleryImagesInput.files;
                 
-                // In a real application, you would upload these files to a server
-                // For demo purposes, we'll just show a success message
-                console.log('Robot Data:', robotData);
-                console.log('Main Image:', mainImageFile);
-                console.log('Gallery Images:', galleryImageFiles);
+                // Show progress bars if files are selected
+                if (mainImageFile) {
+                    mainImageProgress.style.display = 'block';
+                }
                 
-                alert('Robot has been saved successfully!');
-                window.location.href = 'admin-panel.html';
-            });
-        });
-        
-        // Check if user is logged in as admin
-        function checkAdminAuth() {
-            const isLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
-            
-            if (!isLoggedIn) {
-                // Redirect to login page if not logged in
-                window.location.href = 'admin-login.html';
-            }
-        }
-        
-        // Load robot data for editing
-        function loadRobotForEditing(robotId) {
-            fetch('robots.json')
-                .then(response => response.json())
-                .then(robots => {
-                    // Find the robot by ID (slug)
-                    const robot = robots.find(r => r.slug === robotId);
+                if (galleryImageFiles.length > 0) {
+                    galleryImagesProgress.style.display = 'block';
+                }
+                
+                // Gather form data and submit
+                try {
+                    // Show loading state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    submitBtn.disabled = true;
                     
-                    if (robot) {
-                        // Fill the form with robot data
-                        fillRobotForm(robot);
-                    } else {
-                        // Robot not found
-                        alert(`Robot with ID "${robotId}" not found. Redirecting to admin panel.`);
+                    // Get robot data from form
+                    const robotData = getRobotDataFromForm(this);
+                    
+                    // Ensure we keep the existing image if no new image is provided
+                    if (!mainImageFile && currentRobot.image) {
+                        robotData.image = currentRobot.image;
+                    }
+                    
+                    // Preserve existing gallery images if they weren't removed
+                    if (currentRobot.gallery_images) {
+                        robotData.gallery_images = currentRobot.gallery_images;
+                    }
+                    
+                    // Save robot data
+                    const success = await saveRobotData(robotData, mainImageFile, galleryImageFiles);
+                    
+                    // Restore button state
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                    
+                    if (success) {
+                        alert('Robot has been updated successfully!');
                         window.location.href = 'admin-panel.html';
+                    } else {
+                        alert('Failed to update robot data. Please try again.');
                     }
-                })
-                .catch(error => {
-                    console.error('Error loading robot data:', error);
-                    alert('Failed to load robot data. Please try again later.');
-                });
-        }
-        
-        // Fill the form with robot data
-        function fillRobotForm(robot) {
-            document.getElementById('robot-title').value = robot.title || '';
-            document.getElementById('robot-slug').value = robot.slug || '';
-            document.getElementById('robot-manufacturer').value = robot.manufacturer || '';
-            document.getElementById('robot-category').value = robot.category || '';
-            document.getElementById('robot-description').value = robot.description || '';
-            document.getElementById('robot-featured').value = robot.featured ? 'true' : 'false';
-            document.getElementById('robot-tags').value = robot.tags ? robot.tags.join(', ') : '';
-            document.getElementById('robot-content').value = robot.content || '';
-            document.getElementById('robot-video').value = robot.video_url || '';
-            document.getElementById('robot-additional-video').value = robot.additional_video_url || '';
-            
-            // Fill technical specifications
-            if (robot.technical_specs) {
-                const techSpecsContainer = document.getElementById('tech-specs-container');
-                techSpecsContainer.innerHTML = ''; // Clear default row
-                
-                Object.entries(robot.technical_specs).forEach(([name, value]) => {
-                    const newSpecRow = document.createElement('div');
-                    newSpecRow.className = 'form-row tech-spec-row';
-                    newSpecRow.innerHTML = `
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label>Specification Name</label>
-                                <input type="text" name="spec-name[]" value="${name}" placeholder="e.g., Height, Weight, etc.">
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label>Specification Value</label>
-                                <input type="text" name="spec-value[]" value="${value}" placeholder="e.g., 5 ft 8 in (1.73 meters)">
-                            </div>
-                        </div>
-                    `;
+                } catch (error) {
+                    console.error('Error submitting robot form:', error);
+                    alert('An error occurred while saving the robot. Please try again.');
                     
-                    techSpecsContainer.appendChild(newSpecRow);
-                });
-                
-                // Add empty row if no specs
-                if (Object.keys(robot.technical_specs).length === 0) {
-                    addEmptySpecRow(techSpecsContainer);
+                    // Restore button state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                    submitBtn.disabled = false;
                 }
-            } else {
-                // Add empty row
-                const techSpecsContainer = document.getElementById('tech-specs-container');
-                techSpecsContainer.innerHTML = ''; // Clear default row
-                addEmptySpecRow(techSpecsContainer);
+            });
+            
+            // Helper function to reset progress bar
+            function resetProgressBar(progressElement) {
+                if (!progressElement) return;
+                
+                const progressBar = progressElement.querySelector('.upload-progress-value');
+                const progressStatus = progressElement.querySelector('.upload-status');
+                
+                if (progressBar) progressBar.style.width = '0%';
+                if (progressStatus) progressStatus.textContent = 'Uploading: 0%';
             }
-            
-            // Show existing images
-            if (robot.image) {
-                const mainImagePreview = document.getElementById('main-image-preview');
-                mainImagePreview.innerHTML = `
-                    <div class="uploaded-image">
-                        <img src="${robot.image}" alt="${robot.title}">
-                        <div class="uploaded-image-overlay">
-                            <span class="image-label">Current Main Image</span>
-                            <span class="image-delete" data-image-type="main"><i class="fas fa-trash"></i></span>
-                        </div>
-                    </div>
-                `;
-                
-                // Add event listener for delete button
-                const deleteBtn = mainImagePreview.querySelector('.image-delete');
-                if (deleteBtn) {
-                    deleteBtn.addEventListener('click', function() {
-                        mainImagePreview.innerHTML = '';
-                    });
-                }
-            }
-            
-            // Show gallery images
-            if (robot.gallery_images && robot.gallery_images.length > 0) {
-                const galleryImagesPreview = document.getElementById('gallery-images-preview');
-                galleryImagesPreview.innerHTML = '';
-                
-                robot.gallery_images.forEach((image, index) => {
-                    const imageElement = document.createElement('div');
-                    imageElement.className = 'uploaded-image';
-                    imageElement.innerHTML = `
-                        <img src="${image}" alt="${robot.title} Gallery Image ${index + 1}">
-                        <div class="uploaded-image-overlay">
-                            <span class="image-label">Gallery Image ${index + 1}</span>
-                            <span class="image-delete" data-image-type="gallery" data-image-index="${index}"><i class="fas fa-trash"></i></span>
-                        </div>
-                    `;
-                    
-                    galleryImagesPreview.appendChild(imageElement);
-                    
-                    // Add event listener for delete button
-                    const deleteBtn = imageElement.querySelector('.image-delete');
-                    if (deleteBtn) {
-                        deleteBtn.addEventListener('click', function() {
-                            imageElement.remove();
-                        });
-                    }
-                });
-            }
-        }
-        
-        // Add empty specification row
-        function addEmptySpecRow(container) {
-            const newSpecRow = document.createElement('div');
-            newSpecRow.className = 'form-row tech-spec-row';
-            newSpecRow.innerHTML = `
-                <div class="form-col">
-                    <div class="form-group">
-                        <label>Specification Name</label>
-                        <input type="text" name="spec-name[]" placeholder="e.g., Height, Weight, etc.">
-                    </div>
-                </div>
-                <div class="form-col">
-                    <div class="form-group">
-                        <label>Specification Value</label>
-                        <input type="text" name="spec-value[]" placeholder="e.g., 5 ft 8 in (1.73 meters)">
-                    </div>
-                </div>
-            `;
-            
-            container.appendChild(newSpecRow);
-        }
-        
-        // Validate image file
-        function validateImageFile(file) {
-            // Check file type
-            const fileType = file.type;
-            if (!fileType.startsWith('image/')) {
-                alert('Please select an image file (JPG, PNG, etc.).');
-                return false;
-            }
-            
-            // Check file size (max 5MB)
-            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-            if (file.size > maxSize) {
-                alert('File size too large. Please select an image under 5MB.');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        // Display image preview
-        function displayImagePreview(file, container, isMainImage) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const imageElement = document.createElement('div');
-                imageElement.className = 'uploaded-image';
-                
-                // Clear container if it's the main image (only one allowed)
-                if (isMainImage) {
-                    container.innerHTML = '';
-                }
-                
-                imageElement.innerHTML = `
-                    <img src="${e.target.result}" alt="${file.name}">
-                    <div class="uploaded-image-overlay">
-                        <span class="image-label">${file.name}</span>
-                        <span class="image-delete"><i class="fas fa-trash"></i></span>
-                    </div>
-                `;
-                
-                container.appendChild(imageElement);
-                
-                // Add event listener for delete button
-                const deleteBtn = imageElement.querySelector('.image-delete');
-                if (deleteBtn) {
-                    deleteBtn.addEventListener('click', function() {
-                        imageElement.remove();
-                        
-                        // Clear file input if it's the main image
-                        if (isMainImage) {
-                            document.getElementById('main-image-input').value = '';
-                        }
-                    });
-                }
-            };
-            
-            reader.readAsDataURL(file);
-        }
-        
-        // Generate slug from title
-        function generateSlug(title) {
-            return title.toLowerCase()
-                .replace(/[^\w\s-]/g, '') // Remove special characters
-                .replace(/\s+/g, '-')     // Replace spaces with hyphens
-                .replace(/-+/g, '-')      // Replace multiple hyphens with single hyphen
-                .trim();                  // Trim whitespace
-        }
+        });
     </script>
 </body>
 </html>
