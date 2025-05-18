@@ -366,8 +366,11 @@
     <script src="js/admin.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in as admin
-            checkAdminAuth();
+            // Validate admin authentication and redirect if not logged in
+            if (!validateLoginState()) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
             
             // Mobile menu handling
             const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -385,8 +388,7 @@
             const logoutBtn = document.getElementById('logout-btn');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function() {
-                    localStorage.removeItem('admin_logged_in');
-                    window.location.href = 'admin-login.html';
+                    logoutAdmin();
                 });
             }
             
