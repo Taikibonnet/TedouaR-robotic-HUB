@@ -455,7 +455,7 @@
                         deleteRobotBtn.disabled = true;
                         
                         // Delete robot
-                        const result = await deleteRobot(currentRobot.slug);
+                        const result = deleteRobot(currentRobot.slug);
                         
                         if (result.success) {
                             alert('Robot has been deleted successfully!');
