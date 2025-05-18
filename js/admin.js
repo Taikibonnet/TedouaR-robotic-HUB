@@ -55,7 +55,7 @@ async function updateGitHubFile(path, content, message, sha = null) {
     try {
         const payload = {
             message: message,
-            content: btoa(content), // Base64 encode content
+            content: btoa(unescape(encodeURIComponent(content))), // Base64 encode content with UTF-8 support
             branch: GITHUB_REPO.branch
         };
         
@@ -74,7 +74,8 @@ async function updateGitHubFile(path, content, message, sha = null) {
         });
         
         if (!response.ok) {
-            throw new Error(`Failed to update file: ${response.statusText}`);
+            const errorData = await response.json();
+            throw new Error(`Failed to update file: ${response.statusText} - ${errorData.message}`);
         }
         
         return await response.json();
@@ -84,80 +85,110 @@ async function updateGitHubFile(path, content, message, sha = null) {
     }
 }
 
+// Improved function to upload image to GitHub with better error handling
 async function uploadImageToGitHub(file, directory = 'images/robots') {
     try {
+        if (!validateImageFile(file)) {
+            throw new Error('Invalid image file');
+        }
+        
         // Generate a safe filename
         const timestamp = new Date().getTime();
         const safeFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const uniqueFilename = `${timestamp}-${safeFilename}`;
         const path = `${directory}/${uniqueFilename}`;
         
-        // Read file as binary
-        const reader = new FileReader();
-        const fileContent = await new Promise((resolve, reject) => {
-            reader.onload = e => resolve(e.target.result);
-            reader.onerror = e => reject(e);
-            reader.readAsDataURL(file);
-        });
+        // Read file as binary using FileReader with proper error handling
+        const fileContent = await readFileAsDataURL(file);
         
         // Extract base64 content from data URL
         const base64Content = fileContent.split(',')[1];
         
-        // Upload to GitHub
-        const payload = {
-            message: `Upload image: ${uniqueFilename}`,
-            content: base64Content,
-            branch: GITHUB_REPO.branch
-        };
+        // Upload to GitHub with retries
+        let retries = 3;
+        let lastError = null;
         
-        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Failed to upload image: ${response.statusText}`);
+        while (retries > 0) {
+            try {
+                const payload = {
+                    message: `Upload image: ${uniqueFilename}`,
+                    content: base64Content,
+                    branch: GITHUB_REPO.branch
+                };
+                
+                const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.repo}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API error: ${response.status} - ${errorData.message}`);
+                }
+                
+                const data = await response.json();
+                return path;
+            } catch (error) {
+                lastError = error;
+                retries--;
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retrying
+            }
         }
         
-        const data = await response.json();
-        return path;
+        throw lastError || new Error('Failed to upload image after multiple attempts');
     } catch (error) {
         console.error('Error uploading image to GitHub:', error);
         throw error;
     }
 }
 
-// Process image for upload
-async function processImageUpload(file) {
-    // Validate file
-    if (!validateImageFile(file)) {
-        throw new Error('Invalid image file');
-    }
-    
-    // Upload to GitHub
-    const filePath = await uploadImageToGitHub(file);
-    
-    return filePath;
+// Helper function to read file as data URL
+function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Error reading file'));
+        reader.readAsDataURL(file);
+    });
 }
 
-// Validate image file
+// Process image for upload with improved error handling
+async function processImageUpload(file) {
+    try {
+        // Validate file
+        if (!validateImageFile(file)) {
+            throw new Error('Invalid image file');
+        }
+        
+        // Upload to GitHub with retry mechanism
+        const filePath = await uploadImageToGitHub(file);
+        
+        return filePath;
+    } catch (error) {
+        console.error('Error processing image upload:', error);
+        throw error;
+    }
+}
+
+// Validate image file with improved checks
 function validateImageFile(file) {
     // Check if file exists
     if (!file) return false;
     
     // Check file type
     const fileType = file.type;
-    if (!fileType.startsWith('image/')) {
-        alert('Please select an image file (JPG, PNG, etc.).');
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    if (!validImageTypes.includes(fileType)) {
+        alert('Please select a valid image file (JPG, PNG, GIF, WEBP, or SVG).');
         return false;
     }
     
-    // Check file size (max 2MB - GitHub API limit for files is 100MB but we'll be conservative)
+    // Check file size (max 2MB - GitHub API has a 100MB limit but we'll keep it small for web performance)
     const maxSize = 2 * 1024 * 1024; // 2MB in bytes
     if (file.size > maxSize) {
         alert('File size too large. Please select an image under 2MB.');
@@ -167,7 +198,7 @@ function validateImageFile(file) {
     return true;
 }
 
-// Load robots from GitHub
+// Load robots from GitHub with improved error handling
 async function loadRobotsFromGitHub() {
     try {
         const file = await getGitHubFile('robots.json');
@@ -178,12 +209,23 @@ async function loadRobotsFromGitHub() {
             sha: file.sha
         };
     } catch (error) {
+        // Check if the error is because the file doesn't exist yet
+        if (error.message.includes('404')) {
+            // Create initial empty robots.json file
+            const initialContent = JSON.stringify([], null, 2);
+            await updateGitHubFile('robots.json', initialContent, 'Create initial robots.json file');
+            return {
+                robots: [],
+                sha: null
+            };
+        }
+        
         console.error('Error loading robots from GitHub:', error);
         throw error;
     }
 }
 
-// Save robots to GitHub
+// Save robots to GitHub with improved error handling
 async function saveRobotsToGitHub(robots, sha) {
     try {
         const content = JSON.stringify(robots, null, 2);
@@ -203,7 +245,7 @@ function generateSlug(title) {
         .trim();                  // Trim whitespace
 }
 
-// Save robot data
+// Save robot data with improved image handling
 async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
     try {
         // Load existing robots
@@ -214,8 +256,14 @@ async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
         
         // Process main image if provided
         if (mainImageFile) {
-            const mainImagePath = await processImageUpload(mainImageFile);
-            robotData.image = mainImagePath;
+            try {
+                const mainImagePath = await processImageUpload(mainImageFile);
+                robotData.image = mainImagePath;
+            } catch (error) {
+                console.error('Error processing main image:', error);
+                alert(`Failed to upload main image: ${error.message}`);
+                return false;
+            }
         }
         
         // Process gallery images if provided
@@ -224,23 +272,47 @@ async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
             const newGalleryImagePaths = [];
             
             for (let i = 0; i < Math.min(galleryImageFiles.length, 5); i++) {
-                const file = galleryImageFiles[i];
-                const path = await processImageUpload(file);
-                newGalleryImagePaths.push(path);
+                try {
+                    const file = galleryImageFiles[i];
+                    const path = await processImageUpload(file);
+                    newGalleryImagePaths.push(path);
+                } catch (error) {
+                    console.error(`Error processing gallery image ${i + 1}:`, error);
+                    alert(`Failed to upload gallery image ${i + 1}: ${error.message}`);
+                }
             }
             
             // Combine existing and new gallery images
+            if (existingRobotIndex !== -1 && robots[existingRobotIndex].gallery_images) {
+                // Keep existing gallery images if not replacing them all
+                galleryImagePaths = robots[existingRobotIndex].gallery_images;
+            }
+            
+            // Add new gallery images
             robotData.gallery_images = [...galleryImagePaths, ...newGalleryImagePaths].slice(0, 5);
+        } else if (existingRobotIndex !== -1 && robots[existingRobotIndex].gallery_images) {
+            // Keep existing gallery images if not providing new ones
+            robotData.gallery_images = robots[existingRobotIndex].gallery_images;
         }
         
         // Update or add the robot
         if (existingRobotIndex !== -1) {
+            // If robot exists and has an image but no new image is provided, keep the existing image
+            if (!robotData.image && robots[existingRobotIndex].image) {
+                robotData.image = robots[existingRobotIndex].image;
+            }
+            
             robots[existingRobotIndex] = {
                 ...robots[existingRobotIndex],
-                ...robotData
+                ...robotData,
+                updated_at: new Date().toISOString() // Add update timestamp
             };
         } else {
-            robots.push(robotData);
+            robots.push({
+                ...robotData,
+                created_at: new Date().toISOString(), // Add creation timestamp
+                updated_at: new Date().toISOString()  // Add update timestamp
+            });
         }
         
         // Save to GitHub
@@ -249,6 +321,7 @@ async function saveRobotData(robotData, mainImageFile, galleryImageFiles) {
         return true;
     } catch (error) {
         console.error('Error saving robot data:', error);
+        alert(`Failed to save robot data: ${error.message}`);
         return false;
     }
 }
@@ -286,7 +359,7 @@ async function deleteRobot(robotId) {
         return { success: true, message: 'Robot deleted successfully' };
     } catch (error) {
         console.error('Error deleting robot:', error);
-        return { success: false, message: 'Failed to delete robot' };
+        return { success: false, message: `Failed to delete robot: ${error.message}` };
     }
 }
 
@@ -417,6 +490,7 @@ function fillRobotForm(robot) {
         if (deleteBtn) {
             deleteBtn.addEventListener('click', function() {
                 mainImagePreview.innerHTML = '';
+                robot.image = ''; // Mark image for deletion
             });
         }
     }
@@ -444,6 +518,11 @@ function fillRobotForm(robot) {
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', function() {
                     imageElement.remove();
+                    
+                    // Mark this gallery image for deletion
+                    if (robot.gallery_images) {
+                        robot.gallery_images.splice(index, 1);
+                    }
                 });
             }
         });
