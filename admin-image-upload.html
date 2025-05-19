@@ -1,142 +1,18 @@
-// Simulate upload (for demo purposes)
-            function simulateUpload(content, path, index) {
-                const fileObj = selectedFiles[index];
+ padding: 20px; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> Loading images...</div>';
                 
-                // Progress simulation
-                let progress = 0;
-                const progressInterval = setInterval(() => {
-                    progress += 5;
-                    
-                    if (progress > 90) {
-                        clearInterval(progressInterval);
-                        
-                        // Mark as complete after 1 second
-                        setTimeout(() => {
-                            fileObj.progress = 100;
-                            fileObj.status = 'success';
-                            updateFileList();
-                            
-                            // Move to next file
-                            setTimeout(() => {
-                                uploadNextFile(index + 1);
-                            }, 500);
-                        }, 1000);
-                    } else {
-                        fileObj.progress = progress;
-                        updateFileList();
-                    }
-                }, 100);
-            }
-            
-            // In a real implementation, this function would actually upload to GitHub
-            function uploadToGitHub(content, path, index) {
-                const fileObj = selectedFiles[index];
+                // Get uploaded images from local storage
+                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images')) || [];
                 
-                // GitHub API request would go here
-                // For a real implementation with authentication
-                
-                fetch(`https://api.github.com/repos/Taikibonnet/TedouaR-robotic-HUB/contents/${path}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: `Upload ${path.split('/').pop()} via admin panel`,
-                        content: content,
-                        branch: 'main'
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Upload failed');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    fileObj.progress = 100;
-                    fileObj.status = 'success';
-                    updateFileList();
-                    
-                    // Move to next file
-                    setTimeout(() => {
-                        uploadNextFile(index + 1);
-                    }, 500);
-                })
-                .catch(error => {
-                    fileObj.status = 'error';
-                    updateFileList();
-                    showNotification(`Failed to upload ${path.split('/').pop()}: ${error.message}`, 'error');
-                    
-                    // Move to next file after a delay
-                    setTimeout(() => {
-                        uploadNextFile(index + 1);
-                    }, 1000);
-                });
-            }
-            
-            // Load image library
-            function loadImageLibrary() {
-                const imageLibrary = document.getElementById('image-library');
-                
-                // Show loading state
-                imageLibrary.innerHTML = '<div class="loading" style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> Loading images...</div>';
-                
-                // In a real implementation, we would fetch the images from GitHub API
-                // For demo purposes, we'll simulate loading with some hard-coded examples
-                setTimeout(() => {
-                    // Fetch directories
-                    const directories = ['images/uploads', 'images/robots'];
-                    loadImagesFromDirectories(directories);
-                }, 1000);
-            }
-            
-            // Load images from directories
-            function loadImagesFromDirectories(directories, currentIndex = 0, allImages = []) {
-                if (currentIndex >= directories.length) {
-                    displayImages(allImages);
+                // If no images found, show message
+                if (uploadedImages.length === 0) {
+                    imageLibrary.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.5);">No images uploaded yet. Use the upload tab to add images.</p>';
                     return;
                 }
-                
-                const directory = directories[currentIndex];
-                
-                // In a real implementation, this would use the GitHub API
-                // For demo purposes, we'll add some sample images
-                
-                if (directory === 'images/uploads') {
-                    allImages = allImages.concat([
-                        { name: 'sample_upload_1.jpg', path: 'images/uploads/sample_upload_1.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' },
-                        { name: 'sample_upload_2.jpg', path: 'images/uploads/sample_upload_2.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' }
-                    ]);
-                } else if (directory === 'images/robots') {
-                    allImages = allImages.concat([
-                        { name: 'robot_1.jpg', path: 'images/robots/robot_1.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' },
-                        { name: 'robot_2.jpg', path: 'images/robots/robot_2.jpg', download_url: 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png' }
-                    ]);
-                }
-                
-                // Move to next directory
-                loadImagesFromDirectories(directories, currentIndex + 1, allImages);
-            }
-            
-            // Display images in the library
-            function displayImages(images) {
-                const imageLibrary = document.getElementById('image-library');
-                
-                if (images.length === 0) {
-                    imageLibrary.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.5);">No images found</p>';
-                    return;
-                }
-                
-                imageLibrary.innerHTML = '';
-                
-                // Sort images by name
-                images.sort((a, b) => a.name.localeCompare(b.name));
                 
                 // Group images by folder
                 const imagesByFolder = {};
                 
-                images.forEach(image => {
+                uploadedImages.forEach(image => {
                     const folder = image.path.split('/').slice(0, -1).join('/');
                     
                     if (!imagesByFolder[folder]) {
@@ -145,6 +21,9 @@
                     
                     imagesByFolder[folder].push(image);
                 });
+                
+                // Clear library
+                imageLibrary.innerHTML = '';
                 
                 // Display images by folder
                 Object.keys(imagesByFolder).forEach(folder => {
@@ -178,14 +57,14 @@
                 });
             }
             
-            // Create image item
+            // Create image item for library
             function createImageItem(image) {
                 const imageItem = document.createElement('div');
                 imageItem.className = 'image-item';
                 
                 // Create image
                 const img = document.createElement('img');
-                img.src = image.download_url;
+                img.src = image.url;
                 img.alt = image.name;
                 img.loading = 'lazy';
                 
@@ -204,7 +83,7 @@
                 const urlField = document.createElement('input');
                 urlField.type = 'text';
                 urlField.className = 'image-url-field';
-                urlField.value = image.download_url;
+                urlField.value = image.url;
                 urlField.id = `url-${image.path.replace(/[^a-z0-9]/gi, '-')}`;
                 
                 // Create actions
@@ -251,11 +130,14 @@
                     e.stopPropagation();
                     
                     if (confirm(`Are you sure you want to delete ${image.name}?`)) {
-                        // In a real implementation, this would delete the file from GitHub
-                        // For demo purposes, we'll just remove the element from the DOM
+                        // Delete image from local storage
+                        deleteUploadedImage(image.path);
                         
-                        showNotification(`Deleted ${image.name}`, 'success');
+                        // Remove element from DOM
                         imageItem.remove();
+                        
+                        // Show notification
+                        showNotification(`Deleted ${image.name}`, 'success');
                     }
                 });
                 
@@ -265,8 +147,7 @@
                 // Add event listeners
                 imageItem.addEventListener('click', function() {
                     // Preview image
-                    // This could open a modal with the full-size image
-                    window.open(image.download_url, '_blank');
+                    window.open(image.url, '_blank');
                 });
                 
                 // Append elements
@@ -278,12 +159,92 @@
                 return imageItem;
             }
             
+            // Delete uploaded image from local storage
+            function deleteUploadedImage(path) {
+                // Get existing uploaded images
+                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images')) || [];
+                
+                // Filter out the deleted image
+                const filteredImages = uploadedImages.filter(img => img.path !== path);
+                
+                // Save back to local storage
+                localStorage.setItem('uploaded_images', JSON.stringify(filteredImages));
+            }
+            
+            // Add sample images if none exist
+            function addSampleImages() {
+                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images')) || [];
+                
+                if (uploadedImages.length === 0) {
+                    // Use a default image for samples
+                    const defaultImage = 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png';
+                    
+                    // Sample images
+                    const sampleImages = [
+                        {
+                            path: 'images/uploads/sample_upload_1.jpg',
+                            url: defaultImage,
+                            name: 'sample_upload_1.jpg',
+                            timestamp: new Date().getTime() - 86400000 // Yesterday
+                        },
+                        {
+                            path: 'images/uploads/sample_upload_2.jpg',
+                            url: defaultImage,
+                            name: 'sample_upload_2.jpg',
+                            timestamp: new Date().getTime() - 172800000 // 2 days ago
+                        },
+                        {
+                            path: 'images/robots/robot_1.jpg',
+                            url: defaultImage,
+                            name: 'robot_1.jpg',
+                            timestamp: new Date().getTime() - 259200000 // 3 days ago
+                        },
+                        {
+                            path: 'images/robots/robot_2.jpg',
+                            url: defaultImage,
+                            name: 'robot_2.jpg',
+                            timestamp: new Date().getTime() - 345600000 // 4 days ago
+                        }
+                    ];
+                    
+                    // Save to local storage
+                    localStorage.setItem('uploaded_images', JSON.stringify(sampleImages));
+                }
+            }
+            
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // If switching to library tab, load images
+                    if (tabId === 'library') {
+                        loadImageLibrary();
+                    }
+                });
+            });
+            
             // Refresh library button
             const refreshLibraryBtn = document.getElementById('refresh-library');
-            if (refreshLibraryBtn) {
-                refreshLibraryBtn.addEventListener('click', function() {
-                    loadImageLibrary();
-                });
+            refreshLibraryBtn.addEventListener('click', loadImageLibrary);
+            
+            // Initialize
+            addSampleImages();
+            
+            // If on library tab, load images
+            if (document.querySelector('.tab[data-tab="library"]').classList.contains('active')) {
+                loadImageLibrary();
             }
         });
     </script>
