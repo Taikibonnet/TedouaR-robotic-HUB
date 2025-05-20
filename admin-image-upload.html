@@ -1,252 +1,602 @@
- padding: 20px; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i> Loading images...</div>';
-                
-                // Get uploaded images from local storage
-                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images')) || [];
-                
-                // If no images found, show message
-                if (uploadedImages.length === 0) {
-                    imageLibrary.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.5);">No images uploaded yet. Use the upload tab to add images.</p>';
-                    return;
-                }
-                
-                // Group images by folder
-                const imagesByFolder = {};
-                
-                uploadedImages.forEach(image => {
-                    const folder = image.path.split('/').slice(0, -1).join('/');
-                    
-                    if (!imagesByFolder[folder]) {
-                        imagesByFolder[folder] = [];
-                    }
-                    
-                    imagesByFolder[folder].push(image);
-                });
-                
-                // Clear library
-                imageLibrary.innerHTML = '';
-                
-                // Display images by folder
-                Object.keys(imagesByFolder).forEach(folder => {
-                    const folderImages = imagesByFolder[folder];
-                    
-                    // Create folder section
-                    const folderSection = document.createElement('div');
-                    folderSection.className = 'folder-section';
-                    
-                    // Create folder header
-                    const folderHeader = document.createElement('h3');
-                    folderHeader.textContent = folder.split('/').pop();
-                    folderHeader.style.marginTop = '20px';
-                    folderHeader.style.marginBottom = '15px';
-                    folderHeader.style.color = 'rgba(255, 255, 255, 0.9)';
-                    
-                    folderSection.appendChild(folderHeader);
-                    
-                    // Create image grid
-                    const imageGrid = document.createElement('div');
-                    imageGrid.className = 'image-library';
-                    
-                    // Add images to grid
-                    folderImages.forEach(image => {
-                        const imageItem = createImageItem(image);
-                        imageGrid.appendChild(imageItem);
-                    });
-                    
-                    folderSection.appendChild(imageGrid);
-                    imageLibrary.appendChild(folderSection);
-                });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload - TedouaR Robotics Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/logo.css">
+    <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
+    <style>
+        .upload-section {
+            background-color: #111;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid #222;
+        }
+        
+        .upload-container {
+            border: 2px dashed #333;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background-color: #161616;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .upload-container:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(32, 227, 178, 0.05);
+        }
+        
+        .upload-container.active {
+            border-color: var(--primary-color);
+            background-color: rgba(32, 227, 178, 0.1);
+        }
+        
+        .upload-container input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .upload-icon {
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .upload-title {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .upload-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+        }
+        
+        .upload-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: #000;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .upload-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(32, 227, 178, 0.3);
+        }
+        
+        .upload-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .file-list {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 30px;
+        }
+        
+        .file-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #161616;
+            border-radius: 8px;
+            border: 1px solid #333;
+            align-items: center;
+        }
+        
+        .file-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 20px;
+            flex-shrink: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .file-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .file-info {
+            flex-grow: 1;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .file-size {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+        }
+        
+        .file-status {
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        
+        .status-pending {
+            color: #f39c12;
+        }
+        
+        .status-uploading {
+            color: #3498db;
+        }
+        
+        .status-success {
+            color: var(--primary-color);
+        }
+        
+        .status-error {
+            color: #e74c3c;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .file-actions button {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        
+        .file-actions button:hover {
+            color: var(--primary-color);
+        }
+        
+        .file-actions .file-remove:hover {
+            color: #e74c3c;
+        }
+        
+        .upload-progress {
+            height: 4px;
+            width: 100%;
+            background-color: #222;
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .image-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .image-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #161616;
+            border: 1px solid #333;
+            aspect-ratio: 1;
+        }
+        
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .image-item:hover .image-overlay {
+            opacity: 1;
+        }
+        
+        .image-name {
+            font-size: 0.8em;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .image-url-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+        
+        .image-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .image-item:hover .image-actions {
+            opacity: 1;
+        }
+        
+        .image-action {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .image-action:hover {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+        
+        .image-action.delete:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(32, 227, 178, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 1.2em;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .notification.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: var(--primary-color);
+        }
+        
+        .notification.error {
+            background-color: #e74c3c;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            background-color: #161616;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid #333;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            background-color: #111;
+            color: var(--primary-color);
+            border-bottom-color: #111;
+            position: relative;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #111;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .refresh-button:hover {
+            text-decoration: underline;
+        }
+        
+        .copy-success {
+            padding: 4px 8px;
+            background-color: var(--primary-color);
+            color: black;
+            font-size: 0.8em;
+            border-radius: 4px;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .copy-success.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.svg" alt="TedouaR Logo" class="logo">
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="encyclopedia.html">Encyclopedia</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="admin-panel.html" class="active">Admin</a>
+            </nav>
             
-            // Create image item for library
-            function createImageItem(image) {
-                const imageItem = document.createElement('div');
-                imageItem.className = 'image-item';
-                
-                // Create image
-                const img = document.createElement('img');
-                img.src = image.url;
-                img.alt = image.name;
-                img.loading = 'lazy';
-                
-                // Create overlay
-                const overlay = document.createElement('div');
-                overlay.className = 'image-overlay';
-                
-                // Create image name
-                const imageName = document.createElement('div');
-                imageName.className = 'image-name';
-                imageName.textContent = image.name;
-                
-                overlay.appendChild(imageName);
-                
-                // Create URL field for copying
-                const urlField = document.createElement('input');
-                urlField.type = 'text';
-                urlField.className = 'image-url-field';
-                urlField.value = image.url;
-                urlField.id = `url-${image.path.replace(/[^a-z0-9]/gi, '-')}`;
-                
-                // Create actions
-                const actions = document.createElement('div');
-                actions.className = 'image-actions';
-                
-                // Copy URL button
-                const copyButton = document.createElement('div');
-                copyButton.className = 'image-action';
-                copyButton.innerHTML = '<i class="fas fa-link"></i>';
-                copyButton.title = 'Copy URL';
-                
-                copyButton.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Copy URL to clipboard
-                    const urlField = document.getElementById(`url-${image.path.replace(/[^a-z0-9]/gi, '-')}`);
-                    urlField.select();
-                    document.execCommand('copy');
-                    
-                    // Show success message
-                    const copySuccess = document.createElement('div');
-                    copySuccess.className = 'copy-success';
-                    copySuccess.textContent = 'URL copied!';
-                    
-                    this.appendChild(copySuccess);
-                    copySuccess.classList.add('active');
-                    
-                    setTimeout(() => {
-                        copySuccess.classList.remove('active');
-                        setTimeout(() => {
-                            this.removeChild(copySuccess);
-                        }, 300);
-                    }, 2000);
-                });
-                
-                // Delete button
-                const deleteButton = document.createElement('div');
-                deleteButton.className = 'image-action delete';
-                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-                deleteButton.title = 'Delete';
-                
-                deleteButton.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    if (confirm(`Are you sure you want to delete ${image.name}?`)) {
-                        // Delete image from local storage
-                        deleteUploadedImage(image.path);
-                        
-                        // Remove element from DOM
-                        imageItem.remove();
-                        
-                        // Show notification
-                        showNotification(`Deleted ${image.name}`, 'success');
-                    }
-                });
-                
-                actions.appendChild(copyButton);
-                actions.appendChild(deleteButton);
-                
-                // Add event listeners
-                imageItem.addEventListener('click', function() {
-                    // Preview image
-                    window.open(image.url, '_blank');
-                });
-                
-                // Append elements
-                imageItem.appendChild(img);
-                imageItem.appendChild(overlay);
-                imageItem.appendChild(urlField);
-                imageItem.appendChild(actions);
-                
-                return imageItem;
-            }
+            <!-- Auth Buttons -->
+            <div class="auth-buttons">
+                <button id="logout-btn" class="btn btn-outline">Log Out</button>
+            </div>
             
-            // Delete uploaded image from local storage
-            function deleteUploadedImage(path) {
-                // Get existing uploaded images
-                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images')) || [];
+            <button class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Image Upload Section -->
+    <section class="admin-editor-container">
+        <div class="container">
+            <div class="admin-editor-header">
+                <h1 class="admin-editor-title">Image Management</h1>
+                <div class="admin-editor-actions">
+                    <a href="admin-panel.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Admin Panel
+                    </a>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="upload">Upload Images</div>
+                <div class="tab" data-tab="library">Image Library</div>
+            </div>
+            
+            <div class="tab-content active" id="upload-tab">
+                <div class="upload-section">
+                    <div class="upload-container" id="upload-dropzone">
+                        <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg, image/gif, image/webp" multiple>
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="upload-title">Drag & Drop Files Here</h3>
+                        <p class="upload-subtitle">Or click to browse your files</p>
+                        <button class="upload-button" id="select-files-btn">
+                            <i class="fas fa-folder-open"></i> Select Files
+                        </button>
+                    </div>
+                    
+                    <div class="file-list" id="file-list"></div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-primary btn-large" id="upload-all-btn" disabled>
+                            <i class="fas fa-upload"></i> Upload All Files
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="library-tab">
+                <div class="upload-section">
+                    <div class="section-header">
+                        <h2>Your Uploaded Images</h2>
+                        <button class="refresh-button" id="refresh-library">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="image-library" id="image-library">
+                        <!-- Images will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Uploading images...</div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Our Mission</a></li>
+                        <li><a href="about.html#team">The Team</a></li>
+                        <li><a href="about.html#partners">Partners</a></li>
+                    </ul>
+                </div>
                 
-                // Filter out the deleted image
-                const filteredImages = uploadedImages.filter(img => img.path !== path);
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html">Robot Database</a></li>
+                        <li><a href="encyclopedia.html?category=featured">Popular Robots</a></li>
+                        <li><a href="encyclopedia.html?category=new">Latest Additions</a></li>
+                    </ul>
+                </div>
                 
-                // Save back to local storage
-                localStorage.setItem('uploaded_images', JSON.stringify(filteredImages));
-            }
-            
-            // Add sample images if none exist
-            function addSampleImages() {
-                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images')) || [];
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="encyclopedia.html?category=industrial">Industrial Robotics</a></li>
+                        <li><a href="encyclopedia.html?category=service">Service Robots</a></li>
+                        <li><a href="encyclopedia.html?category=humanoid">Humanoids</a></li>
+                        <li><a href="encyclopedia.html?category=space">Space Robotics</a></li>
+                    </ul>
+                </div>
                 
-                if (uploadedImages.length === 0) {
-                    // Use a default image for samples
-                    const defaultImage = 'https://raw.githubusercontent.com/Taikibonnet/TedouaR-robotic-HUB/main/images/hero-robot.png';
-                    
-                    // Sample images
-                    const sampleImages = [
-                        {
-                            path: 'images/uploads/sample_upload_1.jpg',
-                            url: defaultImage,
-                            name: 'sample_upload_1.jpg',
-                            timestamp: new Date().getTime() - 86400000 // Yesterday
-                        },
-                        {
-                            path: 'images/uploads/sample_upload_2.jpg',
-                            url: defaultImage,
-                            name: 'sample_upload_2.jpg',
-                            timestamp: new Date().getTime() - 172800000 // 2 days ago
-                        },
-                        {
-                            path: 'images/robots/robot_1.jpg',
-                            url: defaultImage,
-                            name: 'robot_1.jpg',
-                            timestamp: new Date().getTime() - 259200000 // 3 days ago
-                        },
-                        {
-                            path: 'images/robots/robot_2.jpg',
-                            url: defaultImage,
-                            name: 'robot_2.jpg',
-                            timestamp: new Date().getTime() - 345600000 // 4 days ago
-                        }
-                    ];
-                    
-                    // Save to local storage
-                    localStorage.setItem('uploaded_images', JSON.stringify(sampleImages));
-                }
-            }
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
             
-            // Tab switching
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // Remove active class from all tabs and contents
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Add active class to current tab and content
-                    this.classList.add('active');
-                    document.getElementById(`${tabId}-tab`).classList.add('active');
-                    
-                    // If switching to library tab, load images
-                    if (tabId === 'library') {
-                        loadImageLibrary();
-                    }
-                });
-            });
-            
-            // Refresh library button
-            const refreshLibraryBtn = document.getElementById('refresh-library');
-            refreshLibraryBtn.addEventListener('click', loadImageLibrary);
-            
-            // Initialize
-            addSampleImages();
-            
-            // If on library tab, load images
-            if (document.querySelector('.tab[data-tab="library"]').classList.contains('active')) {
-                loadImageLibrary();
-            }
-        });
-    </script>
+            <div class="copyright">
+                &copy; 2025 TedouaR Robotics Hub. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/image-upload.js"></script>
 </body>
 </html>
