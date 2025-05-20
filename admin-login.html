@@ -25,6 +25,31 @@
             color: rgba(255, 255, 255, 0.9);
             cursor: pointer;
         }
+        
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+            display: block;
+        }
+        
+        .message.success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+            display: block;
+        }
+        
+        .message.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -65,17 +90,17 @@
                 <form id="admin-login-form">
                     <div class="form-group">
                         <label for="admin-email">Email</label>
-                        <input type="email" id="admin-email" name="email" value="tedouar.robotics@gmail.com" required>
+                        <input type="email" id="admin-email" name="email" value="admin@tedouar.com" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="admin-password">Password</label>
-                        <input type="password" id="admin-password" name="password" value="Admin123!" required>
+                        <input type="password" id="admin-password" name="password" value="admin123" required>
                     </div>
                     
                     <div class="remember-me">
-                        <input type="checkbox" id="remember" name="remember" checked>
-                        <label for="remember">Keep me logged in</label>
+                        <input type="checkbox" id="admin-remember" name="remember" checked>
+                        <label for="admin-remember">Keep me logged in</label>
                     </div>
                     
                     <div class="form-actions">
@@ -137,75 +162,5 @@
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/admin.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu handling
-            const mobileMenuButton = document.querySelector('.mobile-menu-button');
-            const navLinks = document.querySelector('.nav-links');
-            const authButtons = document.querySelector('.auth-buttons');
-            
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', function() {
-                    navLinks.classList.toggle('mobile-active');
-                    authButtons.classList.toggle('mobile-active');
-                });
-            }
-            
-            // Check if already logged in
-            if (validateLoginState()) {
-                showMessage('You are already logged in. Redirecting to admin panel...', 'success');
-                
-                setTimeout(function() {
-                    window.location.href = 'admin-panel.html';
-                }, 1500);
-                
-                return;
-            }
-            
-            // Admin login form submission
-            const adminLoginForm = document.getElementById('admin-login-form');
-            const loginMessage = document.getElementById('login-message');
-            
-            // Function to show messages
-            function showMessage(text, type) {
-                loginMessage.textContent = text;
-                loginMessage.className = type === 'success' 
-                    ? 'message success' 
-                    : 'message error';
-            }
-            
-            if (adminLoginForm) {
-                adminLoginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const email = document.getElementById('admin-email').value;
-                    const password = document.getElementById('admin-password').value;
-                    const rememberMe = document.getElementById('remember').checked;
-                    
-                    // Use the provided credentials
-                    if (email === 'tedouar.robotics@gmail.com' && password === 'Admin123!') {
-                        // Set admin login state with remember option
-                        setAdminLoginState(rememberMe);
-                        
-                        // Show success message
-                        showMessage('Login successful. Redirecting to admin panel...', 'success');
-                        
-                        // Redirect to admin panel
-                        setTimeout(function() {
-                            window.location.href = 'admin-panel.html';
-                        }, 1500);
-                    } else {
-                        // Show error message
-                        showMessage('Invalid email or password. Please check your credentials and try again.', 'error');
-                    }
-                });
-                
-                // Auto-submit form for convenience
-                setTimeout(function() {
-                    adminLoginForm.dispatchEvent(new Event('submit'));
-                }, 500);
-            }
-        });
-    </script>
 </body>
 </html>
