@@ -10,38 +10,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fasthand&display=swap" rel="stylesheet">
     <style>
-        .remember-me {
+        .admin-login-container {
+            padding: 100px 0;
+            min-height: calc(100vh - 300px);
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: center;
         }
         
-        .remember-me input {
-            margin-right: 10px;
+        .admin-login-form {
+            background-color: #111;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid #222;
         }
         
-        .remember-me label {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
+        .admin-title {
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+        }
+        
+        .admin-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
         }
         
         .message {
-            padding: 15px;
+            padding: 12px 15px;
             border-radius: 5px;
             margin-bottom: 20px;
             display: none;
         }
         
         .message.error {
-            background-color: rgba(231, 76, 60, 0.2);
+            background-color: rgba(231, 76, 60, 0.1);
             border: 1px solid #e74c3c;
             color: #e74c3c;
             display: block;
         }
         
         .message.success {
-            background-color: rgba(46, 204, 113, 0.2);
+            background-color: rgba(46, 204, 113, 0.1);
             border: 1px solid #2ecc71;
             color: #2ecc71;
             display: block;
@@ -49,6 +64,56 @@
         
         .message.hidden {
             display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background-color: #1a1a1a;
+            color: white;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .remember-me input {
+            margin-right: 10px;
+        }
+        
+        .remember-me label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+        }
+        
+        .form-actions {
+            text-align: center;
+        }
+        
+        .form-actions button {
+            width: 100%;
         }
     </style>
 </head>
@@ -104,7 +169,7 @@
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-large">Login</button>
+                        <button type="submit" id="login-btn" class="btn btn-primary btn-large">Log In</button>
                     </div>
                 </form>
             </div>
@@ -161,6 +226,77 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script src="js/admin.js"></script>
+    <script>
+        // Simple admin login script - works directly with no dependencies
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu handling
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const navLinks = document.querySelector('.nav-links');
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    navLinks.classList.toggle('mobile-active');
+                    authButtons.classList.toggle('mobile-active');
+                });
+            }
+            
+            // Login message functionality
+            const loginMessage = document.getElementById('login-message');
+            
+            function showMessage(text, type) {
+                if (!loginMessage) return;
+                
+                loginMessage.textContent = text;
+                loginMessage.className = `message ${type}`;
+            }
+            
+            // Check if already logged in
+            const loginData = JSON.parse(localStorage.getItem('admin_logged_in'));
+            if (loginData && loginData.loggedIn) {
+                showMessage('You are already logged in. Redirecting to admin panel...', 'success');
+                
+                setTimeout(function() {
+                    window.location.href = 'admin-panel.html';
+                }, 1500);
+            }
+            
+            // Login form handling
+            const loginForm = document.getElementById('admin-login-form');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('admin-email').value;
+                    const password = document.getElementById('admin-password').value;
+                    const remember = document.getElementById('admin-remember').checked;
+                    
+                    // Validate credentials
+                    if (email === 'admin@tedouar.com' && password === 'admin123') {
+                        // Set login data in localStorage
+                        const loginData = {
+                            loggedIn: true,
+                            timestamp: new Date().getTime(),
+                            remember: remember
+                        };
+                        
+                        localStorage.setItem('admin_logged_in', JSON.stringify(loginData));
+                        
+                        // Show success message
+                        showMessage('Login successful! Redirecting to admin panel...', 'success');
+                        
+                        // Redirect to admin panel
+                        setTimeout(function() {
+                            window.location.href = 'admin-panel.html';
+                        }, 1500);
+                    } else {
+                        // Show error message
+                        showMessage('Invalid email or password. Please try again.', 'error');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
